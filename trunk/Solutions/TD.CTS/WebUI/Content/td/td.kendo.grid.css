@@ -1,0 +1,103 @@
+﻿.td-grid-button {
+    padding: 0 !important;
+    line-height: 1.3em;
+    min-width: 0 !important;
+}
+
+.td-grid-button-image{
+    margin: 3px !important;
+}
+
+.k-grid-header th.k-header {
+    padding: .3em .6em .2em .6em;
+}
+
+.k-menu .k-item>.k-link{
+    min-height: 19px;
+}
+
+.k-header>.k-grid-filter{
+    padding: .25em .2em .4em;
+}
+
+.k-grid-header th.k-with-icon .k-link{
+    margin-right: .9em;
+}
+
+.k-filter-row th{
+    padding: .3em .6em .2em .6em;
+}
+
+.td-filter-label{
+    padding-right: 5px;
+    background-image: none;
+    background-color: transparent;
+}
+
+.td-filter-input{
+    font-size: .85em;
+}
+
+.td-filter-input.k-textbox,
+input.td-filter-input{
+    height: 24px !important;
+    padding: 0;
+    line-height: inherit;
+    margin: 0 0 1px 0;
+    width:100%;
+}
+
+.td-filter-input.k-dropdown{
+    height: 22px !important;
+    width:100%;
+    margin-bottom: 7px;
+}
+
+.td-filter-input .k-dropdown-wrap .k-input{
+    height: 18px;
+    padding: 0 0 8px 0;
+}
+
+.td-filter-input .k-dropdown-wrap .k-select .k-icon{
+    vertical-align: sub;
+}
+
+.td-filter-input .k-datepicker{
+    width: 105px;
+    margin-bottom: 2px;
+}
+
+.td-filter-input .k-datepicker .k-picker-wrap{
+    height: 23px;
+}
+
+.td-filter-input .k-datepicker .k-input{
+    height: 18px;
+}
+
+.k-filter-row input[type="date"]{
+    margin: 0;
+    padding: 0;
+}
+
+.td-filter-input .k-datepicker .k-select{
+    line-height: 1.3em;
+}
+
+.td-filter-input.k-header{
+    background-image: none;
+    background-color: transparent;
+}
+
+.td-filter-input input[type="checkbox"]{
+    margin: 0 5px 0 0;
+}
+
+.td-grid-listCell ul{
+    list-style-type: none;
+    padding: 0;
+}
+
+.k-edit-form-container{
+    width: auto;
+}

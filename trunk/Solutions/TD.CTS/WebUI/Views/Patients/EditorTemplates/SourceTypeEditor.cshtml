@@ -1,0 +1,13 @@
+﻿@model string
+
+@(
+ Html.Kendo().DropDownListFor(m => m)        
+        .BindTo((System.Collections.IEnumerable)ViewBag.SorceTypes)
+        .Events(e => e.Change("sourceTypeChanged"))
+)
+
+<!--script>
+    function sourceTypeChanged(e) {
+        
+    }
+</script-->

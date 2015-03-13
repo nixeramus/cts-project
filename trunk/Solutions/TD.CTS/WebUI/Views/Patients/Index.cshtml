@@ -1,0 +1,78 @@
+﻿@using TD.Common.Kendo.Mvc5.Grid
+
+@section head{
+    <link href="@Url.Content("~/Content/td/td.kendo.grid.css")" rel="stylesheet" type="text/css" />
+
+    <script src="@Url.Content("~/Scripts/td/td.kendo.grid.js")"></script>
+}
+
+@{
+    var filterRow = new TD.Common.Kendo.Mvc5.Grid.Filters.FilterRow(Html);
+    System.Collections.IEnumerable hospitals = ViewBag.Hospitals;
+    System.Collections.IEnumerable referals = ViewBag.Referals;
+}
+
+@(Html.Kendo().Grid<TD.CTS.Data.Entities.Patient>()
+    .Init("Grid")
+    .Editable()
+    .Columns(columns =>
+    {
+        columns.CrudCommands(filterRow).Width(80);
+        columns.ForeignKey(e => e.HospitalId, hospitals, "Id", "Name", filterRow).Width(200).Title("Мед. учреждение");
+        columns.Bound(e => e.FullName, filterRow).Width(300).Title("ФИО");
+        columns.Bound(e => e.BirthDate).Width(265).Title("Дата рождения").Format("{0:dd.MM.yyyy}").EditorTemplateName("Date");
+        filterRow.AddCell(new TD.Common.Kendo.Mvc5.Grid.Filters.DateRangeFilterCell("BirthDate"));
+        columns.Bound(e => e.SourceType, filterRow).Width(200).Title("Тип источника").EditorTemplateName("SourceTypeEditor");
+        columns.ForeignKey(e => e.ReferalId, referals, "Id", "FullName", filterRow).Width(200).Title("Реферал");
+        columns.Bound(e => e.Email, filterRow).Width(200).Title("E-mail").EditorTemplateName("EmailAddress");
+        columns.Bound(e => e.Phone, filterRow).Width(150).Title("Телефон");
+        columns.Bound(e => e.Address, filterRow).Width(250).Title("Физический адрес");
+        columns.Bound(e => e.ContactRelatives, filterRow).Width(300).Title("Контактные данные родственников");
+    })
+
+    .DataSource(dataSource => dataSource
+        .Ajax()
+        .PageSize(20)
+        .Model(model =>
+        {
+            model.Id(e => e.Id);
+        })
+        .Read(read => read.Action("GetPatients", "Patients").Data("kendo_grid_getfilters"))
+        .Create(create => create.Action("AddPatient", "Patients"))
+        .Update(update => update.Action("UpdatePatient", "Patients"))
+        .Destroy(update => update.Action("DeletePatient", "Patients"))
+        .Events(events => events.Error("kendo_grid_error_handler"))
+     )
+         .Events(events => events.Edit("onEdit").Save("onSave"))
+
+)
+
+<script>
+    $(document).ready(function () {
+        kendo_grid_init($("#Grid"), true, '@Html.Raw(filterRow.HtmlFilterRow())');
+    });
+
+    function onEdit(e) {
+        var sourceType = e.container.find("#SourceType").data("kendoDropDownList");
+        sourceTypeChanged({ sender: sourceType });
+        kendo_grid_onrowedit(e);
+    }
+
+    function onSave(e) {
+       var referalId = e.container.find("#ReferalId").data("kendoDropDownList").value();
+       e.model.set("ReferalId", referalId);
+    }
+
+    function sourceTypeChanged(e) {
+        var value = e.sender.value();
+
+        var referalId = $("#ReferalId").data("kendoDropDownList");
+        if (value === "Реферал") {
+            referalId.enable();
+        } else {
+            referalId.value("");
+            referalId.enable(false);
+        }
+    }
+
+</script>

@@ -1,0 +1,109 @@
+﻿@model TD.CTS.Auth.Credentials
+@{
+    Layout = null;
+    string selectedTheme = TD.CTS.WebUI.Common.ThemeManager.DefaultTheme.Name;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" href="@Url.Content("~/favicon.ico")?v=2" />
+    <title>Clinical Trial Schedules</title>
+
+    <link href="@Url.Content("~/Content/Site.css")" rel="stylesheet" type="text/css" />
+
+    <link href="@Url.Content("~/Content/kendo/2014.2.903/kendo.common.min.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/kendo/2014.2.903/kendo.mobile.all.min.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/kendo/2014.2.903/kendo.dataviz.min.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/kendo/2014.2.903/kendo." + selectedTheme + ".min.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/kendo/2014.2.903/kendo.dataviz." + selectedTheme + ".min.css")" rel="stylesheet" type="text/css" />
+
+    <link href="@Url.Content("~/Content/td/td.common.css")" rel="stylesheet" type="text/css" />
+
+    <script src="@Url.Content("~/Scripts/kendo/2014.2.903/jquery.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/kendo/2014.2.903/kendo.all.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/kendo/2014.2.903/kendo.aspnetmvc.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/kendo.modernizr.custom.js")"></script>
+
+    <script src="@Url.Content("~/Scripts/plugins/jquery.redirect.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/td/td.common.js")"></script>
+    <script src="@Url.Content("~/Scripts/td/td.kendo.validation.js")"></script>
+    
+    <script src="@Url.Content("~/Scripts/kendo/2014.2.903/cultures/kendo.culture.ru-RU.min.js")"></script>
+
+    <script type="text/javascript">
+
+            kendo.culture("ru-RU");
+
+    </script>
+</head>
+<body>
+    <div>
+        @(Html.Kendo().Window()
+            .Name("LoginWindow")
+            .Modal(true)
+            .Title("Вход в систему")
+            .Visible(false)
+            .Animation(true)
+            .Width(305)
+            .Actions(a => a.Clear())
+            .Content(@<text>
+                @Html.ValidationSummary(true)
+                <table id="loginForm" class="td-formTable" style="margin:0;">
+                    <tr>
+                        <td class="td-formTable-caption">Логин</td>
+                        <td style="padding:0;">
+                            @Html.EditorFor(model => model.Username)
+                            @*Html.ValidationMessageFor(model => model.Username)*@
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="td-formTable-caption">Пароль</td>
+                        <td style="padding:0;">
+                            @Html.EditorFor(model => model.Password, "Password")
+                            @*Html.ValidationMessageFor(model => model.Password)*@
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td style="padding: 5px 0;">
+                            @(Html.Kendo().Button()
+                                .Name("LoginButton")
+                                .SpriteCssClass("k-icon k-update")
+                                .Content("Войти")
+                                .HtmlAttributes(new { style = "width:100%;" })
+                                .Events(e => e.Click("Login"))
+                            )
+                        </td>
+                    </tr>
+                </table>
+            </text>))
+    </div>
+
+    <script>
+        var validator = $("#loginForm").kendoValidator().data("kendoValidator");
+
+        $(document).ready(function () {
+            kendo_validation_showSummary();
+            var mainWindow = $("#LoginWindow").data("kendoWindow");
+            mainWindow.center().open();
+
+            $(window).bind("resize", function () {
+                mainWindow.center();
+            });
+        });
+
+        function Login() {
+            if (validator.validate()) {
+                $().redirect("@Url.Action("Login", "Auth")", {
+                    "Username": $("#Username").val(),
+                    "Password": $("#Password").val(),
+                    "returnUrl": "@ViewBag.ReturnUrl"
+                });
+            }
+        }
+    </script>
+</body>
+</html>

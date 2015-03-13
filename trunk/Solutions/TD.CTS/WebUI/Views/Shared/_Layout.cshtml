@@ -1,0 +1,114 @@
+﻿@using TD.Common.Web.Mvc
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="icon" href="@Url.Content("~/favicon.ico")?v=2" />
+        <title>Clinical Trial Schedules</title>
+
+        @{
+            string selectedTheme = ViewBag.SelectedTheme;
+            TD.CTS.Data.Entities.User currentUser = ViewBag.CurrentUser;
+        }
+
+        
+
+        <link href="@Url.Content("~/Content/Site.css")" rel="stylesheet" type="text/css" />
+
+    	<link href="@Url.Content("~/Content/kendo/2014.2.903/kendo.common.min.css")" rel="stylesheet" type="text/css" />
+	    <link href="@Url.Content("~/Content/kendo/2014.2.903/kendo.mobile.all.min.css")" rel="stylesheet" type="text/css" />
+	    <link href="@Url.Content("~/Content/kendo/2014.2.903/kendo.dataviz.min.css")" rel="stylesheet" type="text/css" />
+	    <link href="@Url.Content("~/Content/kendo/2014.2.903/kendo." + selectedTheme + ".min.css")" rel="stylesheet" type="text/css" />
+	    <link href="@Url.Content("~/Content/kendo/2014.2.903/kendo.dataviz." + selectedTheme + ".min.css")" rel="stylesheet" type="text/css" />
+        
+        <link href="@Url.Content("~/Content/td/td.common.css")" rel="stylesheet" type="text/css" />
+	    
+        <script src="@Url.Content("~/Scripts/kendo/2014.2.903/jquery.min.js")"></script>
+	    <script src="@Url.Content("~/Scripts/kendo/2014.2.903/kendo.all.min.js")"></script>
+	    <script src="@Url.Content("~/Scripts/kendo/2014.2.903/kendo.aspnetmvc.min.js")"></script>
+	    <script src="@Url.Content("~/Scripts/kendo.modernizr.custom.js")"></script>
+
+        <script src="@Url.Content("~/Scripts/td/td.common.js")"></script>
+
+        <script src="@Url.Content("~/Scripts/plugins/jquery.redirect.min.js")"></script>
+
+        <script src="@Url.Content("~/Scripts/kendo/2014.2.903/cultures/kendo.culture.ru-RU.min.js")"></script>
+
+        <script type="text/javascript">
+
+            kendo.culture("ru-RU");
+
+        </script>
+
+        @RenderSection("head", required: false)
+</head>
+    <body>
+        <div id="body">
+            <section class="content-wrapper main-content clear-fix">
+                @(Html.Kendo().Menu()
+                    .Name("MainMenu")
+                    .Items(items =>
+                        {
+                            items.Add().Text("Справочники").Items(i =>
+                            {
+                                i.Add().Text("Пациентов").Action("Index", "Patients");
+                                i.Add().Text("Рефералов").Action("Index", "Referals");
+                                i.Add().Text("Сотрудников").Action("Index", "Users");
+                                i.Add().Text("Процедур").Action("Index", "Procedures");
+                                i.Add().Text("Городов").Action("Index", "Cities");
+                                i.Add().Text("Медицинских учреждений").Action("Index", "Hospitals");
+                            });
+                            items.Add().Text("Исследования").Action("Index", "Trials");
+                            items.Add().Text("Расписания").Action("Index", "Home");
+                            items.Add().Text("Процедуры").Action("Index", "Home");
+                            items.Add().Text("Мониторинг").Action("Index", "Home");
+                            items.Add().Text("Правила").Action("Index", "Home");
+                            items.Add().Text("Материалы").Action("Index", "Home");
+                            items.Add().Text(currentUser.FullName)
+                                .HtmlAttributes(new { style = "float:right;" })
+                                .Items(children =>
+                                    {
+                                        children.Add().Text("Тема")
+                                            .Content(
+                    @<text>
+                    <ul class="k-header td-theme-list">
+                        @foreach (var theme in (IEnumerable<TD.CTS.WebUI.Common.Theme>)ViewBag.Themes)
+                        {
+                            <li class="td-theme-listitem @(selectedTheme.Equals(theme.Name) ? " k-state-selected" : "")">
+                                @Html.Hidden("Theme", theme.Name)
+                                @theme.Description
+                            </li>
+                        }
+                    </ul>
+                    </text>);
+                                        children.Add().Separator(true);
+                                        children.Add().Text("Сменить пароль")
+                                            .Action("ChangePassword", "Auth", new { returnUrl = Url.Action(Html.ActionName(), Html.ControllerName()) });
+                                        children.Add().Text("Выход").Action("Logout", "Auth");
+                                    });
+                        })
+                )
+
+                <div class="k-header td-pagetitle">@ViewBag.Title</div>
+
+                @RenderBody()
+            </section>
+        </div>
+
+        <script>
+            initializer.changeThemeUrl = "@Url.Action("ChangeTheme", "Home")";
+
+            $(document).ready(function () {
+                $(".td-theme-listitem:not(.k-state-selected)")
+                    .hover(MenuItemHoverIn, MenuItemHoverOut)
+                    .click(ThemeMenuClick)
+                    .css("cursor", "pointer");
+
+                $(window).trigger("resize");
+            });            
+
+        </script>
+
+        <div class="td-endPage"></div>
+        </body>
+    </html>

@@ -1,0 +1,45 @@
+﻿@using TD.Common.Kendo.Mvc5.Grid
+
+@section head{
+    <link href="@Url.Content("~/Content/td/td.kendo.grid.css")" rel="stylesheet" type="text/css" />
+
+    <script src="@Url.Content("~/Scripts/td/td.kendo.grid.js")"></script>
+}
+
+@{
+    System.Collections.IEnumerable cities = ViewBag.Cities;
+    var filterRow = new TD.Common.Kendo.Mvc5.Grid.Filters.FilterRow(Html);
+}
+
+@(Html.Kendo().Grid<TD.CTS.Data.Entities.Hospital>()
+    .Init("Grid")
+    .Columns(columns =>
+    {
+        columns.CrudCommands(filterRow).Width(80);
+        columns.Bound(e => e.Name, filterRow).Width(200).Title("Наименование");
+        columns.ForeignKey(e => e.CityId, cities, "Id", "Name", filterRow).Width("100%").Title("Город");
+    })
+    .Editable()
+    .DataSource(dataSource => dataSource
+        .Ajax()
+        .PageSize(20)
+        .Model(model =>
+        {
+            model.Id(e => e.Id);
+        })
+        .Read(read => read.Action("GetHospitals", "Hospitals").Data("kendo_grid_getfilters"))
+        .Create(create => create.Action("AddHospital", "Hospitals"))
+        .Update(update => update.Action("UpdateHospital", "Hospitals"))
+        .Destroy(update => update.Action("DeleteHospital", "Hospitals"))
+        .Events(events => events.Error("kendo_grid_error_handler"))
+     )
+     .Events(events => events.Edit("kendo_grid_onrowedit"))
+
+)
+
+<script>
+    $(document).ready(function () {
+        kendo_grid_init($("#Grid"), true, '@Html.Raw(filterRow.HtmlFilterRow())');
+    });
+</script>
+

@@ -1,0 +1,10 @@
+﻿@model IEnumerable<TD.CTS.Data.Entities.Role>
+
+@(
+ Html.Kendo().MultiSelectFor(m => m)
+        .DataTextField("Name")
+        .DataValueField("Code")
+        .BindTo((IEnumerable<TD.CTS.Data.Entities.Role>)ViewBag.RolesList)
+        //.HtmlAttributes(new { style = "width:230px; height:200px; overflow:scroll" })
+       
+)

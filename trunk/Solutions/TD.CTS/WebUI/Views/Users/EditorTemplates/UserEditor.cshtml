@@ -1,0 +1,48 @@
+﻿@model TD.CTS.Data.Entities.User
+
+<table class="td-formTable">
+    <tr>
+        <td class ="td-formTable-caption">Логин</td>
+        <td>
+            @Html.EditorFor(model => model.Login)
+            @Html.ValidationMessageFor(model => model.Login)
+        </td>
+        <td class="td-formTable-caption">Пароль</td>
+        <td>
+            @Html.EditorFor(model => model.Password, "Password")
+            @Html.ValidationMessageFor(model => model.Password)
+        </td>
+    </tr>
+    <tr>
+        <td class="td-formTable-caption">ФИО</td>
+        <td>
+            @Html.EditorFor(model => model.FullName)
+            @Html.ValidationMessageFor(model => model.FullName)
+        </td>
+        <td class="td-formTable-caption">Мед. учерждение</td>
+        <td>
+            @Html.EditorFor(model => model.HospitalId, "GridForeignKey")
+            @Html.ValidationMessageFor(model => model.HospitalId)
+        </td>
+    </tr>
+    <tr>
+        <td class="td-formTable-caption">Email</td>
+        <td>
+            @Html.EditorFor(model => model.Email, "EmailAddress")
+            @Html.ValidationMessageFor(model => model.Email)
+        </td>
+        <td class="td-formTable-caption">Телефон</td>
+        <td>
+            @Html.EditorFor(model => model.Phone)
+            @Html.ValidationMessageFor(model => model.Phone)
+        </td>
+    </tr>
+    <tr>
+        <td class="td-formTable-caption">Роли</td>
+        <td colspan="3">
+            @Html.EditorFor(model => model.Roles, "RolesEditor")
+            @Html.ValidationMessageFor(model => model.Roles)
+        </td>
+    </tr>
+</table>
+

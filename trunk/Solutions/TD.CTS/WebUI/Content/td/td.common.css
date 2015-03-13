@@ -1,0 +1,48 @@
+﻿.td-pagetitle{
+    padding: 7px 20px;
+    font-size: large;
+    font-weight: bold;
+    border-style: none !important;
+}
+
+.td-username{
+    margin:0;
+    padding-top: 5px;
+    float:right;
+}
+
+.td-theme-list{
+    list-style-type: none;
+    padding: 0;
+}
+
+.td-theme-listitem{
+    padding: 0 5px;
+}
+
+.td-formTable{
+    width: 100%
+}
+
+.td-formTable-caption{
+    padding: 0 5px;
+    text-align: right;
+}
+
+.td-formTable .k-textbox,
+.td-formTable .k-dropdown{
+    width: 230px;
+}
+
+.td-formTable .k-multiselect{
+    width: 608px;
+}
+
+.td-formTable .k-multiselect-wrap{
+    height: 120px;
+    overflow: auto;
+}
+
+.td-textarea-edit{
+    resize: none;
+}

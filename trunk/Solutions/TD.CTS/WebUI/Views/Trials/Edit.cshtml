@@ -1,0 +1,509 @@
+﻿@using TD.Common.Kendo.Mvc5.Grid
+
+@model TD.CTS.Data.Entities.Trial
+
+@section head{
+    <link href="@Url.Content("~/Content/td/td.kendo.grid.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/td/td.kendo.tabstrip.css")" rel="stylesheet" type="text/css" />
+
+    <script src="@Url.Content("~/Scripts/td/td.kendo.grid.js")"></script>
+
+    <style type="text/css">
+        .td-textarea-edit{
+            width: 300px !important;
+            height: 100px !important;
+        }
+    </style>
+}
+
+@{
+    var isNew = ViewBag.IsNew;
+    //var buttonsRow = new System.Text.StringBuilder(@"<tr class='k-filter-row'><th/><th style='text-align:right;'><a class='k-button k-button-icontext k-grid-add td-grid-button' title='Добавить визит' href='javascript: void(0)'><span class='k-icon k-add td-grid-button-image'></span></a></th>");
+}
+
+@(Html.Kendo().TabStrip()
+    .Name("TabStrip")
+    .Animation(false)
+    .Events(events => events.Show("ShowTab"))
+    .Items(tabs =>
+                {
+                    tabs.Add().Text("Основное")
+                        //.Selected(true)
+                        .Content(@<text>
+<table id="trialForm" class="td-formTable" style="width:auto;">
+    <tr>
+        <td style="width:120px;">
+            @(Html.Kendo().Button()
+                .Name("BackButton")
+                .SpriteCssClass("k-icon k-i-arrow-w")
+                .Tag("a")
+                .Content("Назад")
+                .HtmlAttributes(new { style = "width:100%;", href=Url.Action("Index", "Trials") })
+                //.Events(e => e.Click("Back"))
+            )
+        </td>
+        <td style="width:40px;"></td>
+        <td>@(Html.Kendo().Button()
+                .Name("SaveButton")
+                .SpriteCssClass("k-icon k-update")
+                .Content("Сохранить")
+                .HtmlAttributes(new { style = "width:230px;" })
+                .Events(e => e.Click("SaveTrial"))
+        )</td>
+    </tr>
+    <tr>
+        <td class="td-formTable-caption" colspan="2" style="width:250px;">Код исследования</td>
+        <td>
+            @Html.EditorFor(model => model.Code)
+        </td>
+    </tr>
+    <tr>
+        <td class="td-formTable-caption" colspan="2">Наименование исследования</td>
+        <td>
+            @Html.EditorFor(model => model.Name)
+        </td>
+    </tr>
+    <tr>
+        <td class="td-formTable-caption" colspan="2">Администратор исследования</td>
+        <td>
+            @Html.EditorFor(model => model.AdministratorLogin, "GridForeignKey")
+        </td>
+    </tr>
+    <tr>
+        <td class="td-formTable-caption" style="width:100px;">Заказ такси</td>
+        <td colspan="2">
+            @Html.EditorFor(model => model.TaxiBooking)
+        </td>
+    </tr>
+    <tr>
+        <td class="td-formTable-caption">Службы такси</td>
+        <td colspan="2">
+            @Html.EditorFor(model => model.TaxiService, "Text")
+        </td>
+    </tr>
+    <tr>
+        <td class="td-formTable-caption">Утверждено</td>
+        <td colspan="2">
+            @Html.EditorFor(model => model.Approved)
+        </td>
+    </tr>
+    <tr>
+        <td class="td-formTable-caption"></td>
+        <td colspan="3"></td>
+    </tr>
+</table>
+
+@(Html.Kendo().Notification()
+    .Name("SaveNotification")
+    .Position(p => p.Pinned(true).Top(115).Right(30))
+    .Width(150)
+)
+
+@(Html.Kendo().Grid<TD.CTS.Data.Entities.TrialCenter>()
+    .Init("CentersGrid")
+    .Editable()
+    .HtmlAttributes(new { style = "display:" + (isNew ? "none" : "block") })
+    .Columns(columns =>
+    {
+        columns.CrudCommands().Width(80);
+        columns.ForeignKey(e => e.HospitalId, (System.Collections.IEnumerable)ViewBag.Hospitals, "Id", "Name").Width(200).Title("Мед. учреждение");
+        columns.Bound(e => e.Number).Width(200).Title("№ иссл. центра");
+        columns.ForeignKey(e => e.AnatomistLogin, (System.Collections.IEnumerable)ViewBag.Users, "Login", "FullName").Width(200).Title("ФИО главного исслед.");
+        columns.ForeignKey(e => e.CoordinatorLogin, (System.Collections.IEnumerable)ViewBag.Users, "Login", "FullName").Width("100%").Title("ФИО координатора");
+    })
+        .DataSource(dataSource => dataSource
+            .Ajax()
+            .PageSize(20)
+            .Model(model =>
+            {
+                model.Id(e => e.Id);
+                model.Field(e => e.TrialCode).DefaultValue(Model.Code);
+            })
+            .Read(read => read.Action("GetTrialCenters", "Trials", new { TrialCode = Model.Code }))
+            .Create(create => create.Action("AddTrialCenter", "Trials"))
+            .Update(update => update.Action("UpdateTrialCenter", "Trials"))
+            .Destroy(destroy => destroy.Action("DeleteTrialCenter", "Trials"))
+            .Events(events => events.Error("kendo_grid_error_handler"))
+         )
+         .Events(events => events.Edit("kendo_grid_onrowedit"))
+)
+                        </text>);
+                    tabs.Add().Text("Материалы")
+                        .ContentHtmlAttributes(new { style = "padding:0;" })
+                        .Content(@<text>
+@(Html.Kendo().Grid<TD.CTS.Data.Entities.TrialMaterial>()
+    .Init("MaterialsGrid")
+    .Editable()
+    .Columns(columns =>
+    {
+        columns.CrudCommands().Width(80);
+        columns.ForeignKey(e => e.MaterialId, (System.Collections.IEnumerable)ViewBag.Materials, "Id", "Name").Width("100%").Title("Наименование материала");
+    })
+        .DataSource(dataSource => dataSource
+            .Ajax()
+            .PageSize(20)
+            .Model(model =>
+            {
+                model.Id(e => e.Id);
+                model.Field(e => e.TrialCode).DefaultValue(Model.Code);
+            })
+            .Read(read => read.Action("GetTrialMaterials", "Trials", new { TrialCode = Model.Code }))
+            .Create(create => create.Action("AddTrialMaterial", "Trials"))
+            .Update(update => update.Action("UpdateTrialMaterial", "Trials"))
+            .Destroy(destroy => destroy.Action("DeleteTrialMaterial", "Trials"))
+            .Events(events => events.Error("kendo_grid_error_handler"))
+         )
+         .Events(events => events.Edit("kendo_grid_onrowedit"))
+)
+                        </text>)
+                        .Enabled(!isNew);
+                    tabs.Add().Text("Визиты")
+                        .Selected(true)
+                        .ContentHtmlAttributes(new { style = "padding:0;" })
+                        .Content(@<text>
+@(Html.Kendo().Grid<TD.CTS.Data.Entities.TrialProcedure>()
+    .Name("ProceduresGrid")
+    .Selectable(select => select.Type(GridSelectionType.Cell))
+    .Editable()
+    .Columns(columns =>
+    {
+        //columns.Bound(e => e.ProcedureCode);
+        columns.CrudCommands()
+            .Width(80)
+            .HeaderHtmlAttributes(new { style = "min-width:60px;vertical-align:bottom;text-align:right;" })
+            .HtmlAttributes(new { @class = "k-group-cell" });
+        columns.ForeignKey(e => e.ProcedureCode, (System.Collections.IEnumerable)ViewBag.Procedures, "Code", "Name")
+            .Width(400)
+            .Filterable(false)
+            .HeaderTemplate(@"<div style=""text-align:right;width:200px;""><a class='k-button k-button-icontext k-grid-addcolumn td-grid-button' title='Добавить визит' href='javascript: void(0)'><span class='k-icon k-add td-grid-button-image'></span></a></div><div style=""text-align:right;width:200px;"">Визиты</div><div>Процедуры</div>")
+            .HtmlAttributes(new { @class = "k-group-cell" });
+
+        var visits = (List<TD.CTS.Data.Entities.TrialVisit>)ViewBag.Visits;
+        foreach (var visit in visits)
+        {
+            columns.Template(e => { })
+                .ClientTemplate("#= SelectedVisit(" + visit.Id + ", data) #")
+                .HeaderTemplate(string.Format(@"<div style='text-align:center;'><a class='k-button k-button-icontext td-grid-editcolumn td-grid-button' href='javascript: void(0)' title='Изменить визит'><span class='k-icon k-edit td-grid-button-image'></span></a>
+<a class='k-button k-button-icontext td-grid-deletecolumn td-grid-button' href='javascript: void(0)' title='Удалить визит'><span class='k-icon k-delete td-grid-button-image'></span></a></div>
+<div style=""text-align:center;"">{0}</div><div style=""text-align:center;"">{1}&plusmn;{2}</div>", visit.Name, visit.Days, visit.Punctuality))
+                .HtmlAttributes(new { style = "text-align:center;" })
+                .Width(100);
+
+            //buttonsRow.Append(@"<th style='text-align:center; style='text-align:right;><a class='k-button k-button-icontext k-grid-edit td-grid-button' href='\#' title='Изменить визит'><span class='k-icon k-edit td-grid-button-image'></span></a>");
+            //buttonsRow.Append(@"<a class='k-button k-button-icontext k-grid-delete td-grid-button' href='\#' title='Удалить визит'><span class='k-icon k-delete td-grid-button-image'></span></a></th>");
+        }
+        columns.Template(e => { }).ClientTemplate(" ").Width("100%").HtmlAttributes(new { @class = "k-group-cell" });
+
+        //buttonsRow.Append("<th/></tr>");
+    })
+    .DataSource(dataSource => dataSource
+       .Ajax()
+       .Model(model =>
+       {
+           model.Id(e => e.Id);
+           model.Field(e => e.ProcedureCode).Editable(false);
+           model.Field(e => e.TrialCode).DefaultValue(Model.Code);
+           model.Field(e => e.VisitIds).DefaultValue(new List<int>());
+       })
+       .Read(read => read.Action("GetTrialProcedures", "Trials", new { TrialCode = Model.Code }))
+       .Create(create => create.Action("AddTrialProcedure", "Trials"))
+       .Update(update => update.Action("UpdateTrialProcedure", "Trials"))
+       .Destroy(destroy => destroy.Action("DeleteTrialProcedure", "Trials"))
+       .Events(events => events
+           .Error("kendo_grid_error_handler").RequestEnd("RequestEnd"))
+    )
+    .Events(events => events
+        .Edit("OnProcedureEdit")
+        .Change("OnChange")
+        .Save("OnProcedureSave")
+        .Cancel("OnProcedureCancel"))
+)
+                        </text>)
+                        .Enabled(!isNew);
+                }
+    )
+)
+
+<script id="procedureTemplate" type="text/x-kendo-template">
+    @(Html.Kendo().DropDownList()
+        .Name("ProcedureCode")
+        .DataTextField("Name")
+        .DataValueField("Code")
+        .DataSource(source => {
+            source.Read(read =>
+            {
+                read.Action("GetProcedures", "Trials", new { TrialCode = Model.Code }).Data("GetTrialProcedureId");
+            }); 
+        })
+        .Value("#: value #")
+        .ToClientTemplate()
+    )
+</script>
+
+<script>
+    var validator = $("#trialForm").kendoValidator().data("kendoValidator");
+
+    $(document).ready(function () {
+        SetContentBlock($("#TabStrip .k-content"));
+
+        kendo_grid_init($("#CentersGrid"));
+
+        kendo_grid_init($("#MaterialsGrid"));
+
+        kendo_grid_init($("#ProceduresGrid"));
+
+        var procGrid = $("#ProceduresGrid");
+        //$("#ProceduresGrid .k-grid-add.td-grid-button").click(function () {
+        procGrid.on("click", ".k-grid-add.td-grid-button", function () {
+            ClearSelection();
+            kendo_grid_createrow(procGrid);
+            isProcedureEdit = true;
+        });
+
+        //$("#ProceduresGrid .k-grid-addcolumn.td-grid-button").click(function () {
+        procGrid.on("click", ".k-grid-addcolumn.td-grid-button", function () {
+            ClearSelection();
+            AddColumn(15);
+        });
+
+        $(window).bind("resize", function () {
+            var tabStrip = $("#TabStrip").data("kendoTabStrip");
+            var tab = tabStrip.select();
+            var index = tab.index();
+            if (index === 1 || index === 2) {
+                var conteiner = tabStrip.contentElements[index];
+                StretchGrid($(conteiner), $(conteiner.firstElementChild));
+            }
+        });
+    });
+
+    var isNew = @isNew.ToString().ToLower();
+    function SaveTrial() {
+        if (validator.validate()) {
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action(isNew ? "AddTrial" : "UpdateTrial", "Trials")",
+                data: {
+                    "Code": $("#Code").val(),
+                    "Name": $("#Name").val(),
+                    "AdministratorLogin": $("#AdministratorLogin").val(),
+                    "TaxiBooking": $("#TaxiBooking").is(":checked"),
+                    "TaxiService": $("#TaxiService").val(),
+                    "Approved": $("#Approved").is(":checked")
+                },
+                success: function (result) {
+                    if(isNew) {
+                        $("#CentersGrid").css("display", "block");
+                        var tabStrip = $("#TabStrip").data("kendoTabStrip");
+                        var tabs = tabStrip.tabGroup.children();
+                        tabStrip.enable(tabs.eq(1), true);
+                        tabStrip.enable(tabs.eq(2), true);
+                        isNew = false;
+                    }
+
+                    var saveNotification = $("#SaveNotification").data("kendoNotification");
+                    saveNotification.show("Сохранено", "success");
+                },
+                error: function (error) {
+                    alert(error.responseText);
+                }
+            });
+        }
+    }
+
+    function StretchGrid(conteiner, grid) {
+        var conteinerHeight = conteiner.height();
+
+        var gridHeight = grid.height();
+
+        var delta = conteinerHeight - gridHeight;
+
+        var gridContent = grid.find(".k-grid-content");
+        var contentHeight = gridContent.height();
+
+        gridContent.height(contentHeight + delta - 2);
+    }
+
+    function AddColumnButtons(){
+        @*$("#ProceduresGrid table thead").prepend("@Html.Raw(buttonsRow.ToString())");*@
+        $("#ProceduresGrid .k-filter-row .k-grid-add.td-grid-button").click(function () {
+            ClearSelection();
+            AddColumn(15);
+        });
+    }
+
+    var visitLoad = true;
+    function ShowTab(e){
+        var index = $(e.item).index();
+
+        if (index === 1){
+            StretchGrid($(e.contentElement), $(e.contentElement.firstElementChild));
+            return;
+        }
+
+        if(index === 2){
+            if(visitLoad){
+                //AddColumnButtons();
+                visitLoad = false;
+            }
+
+            StretchGrid($(e.contentElement), $(e.contentElement.firstElementChild));
+        }
+    }
+
+    function SelectedVisit(visitId, data){
+        if($.inArray(visitId, data.VisitIds) !== -1)
+            return "<input type=\"checkbox\" value=\"" + visitId + "\" checked style=\"display:none;margin:0;\" /><span class=\"k-icon k-i-tick\"></span>";
+
+        return "<input type=\"checkbox\" value=\"" + visitId + "\" style=\"display:none;margin:0;\" />";
+    }
+
+    var selectedCell;
+
+    var isProcedureEdit = false;
+    function RequestEnd(e){
+        if(e.type === "update" || e.type === "create")
+        {
+            isProcedureEdit = false;
+        }
+    }
+
+    function OnProcedureCancel(e){
+        isProcedureEdit = false;
+    }
+
+    function OnProcedureSave(e){
+        e.model.ProcedureCode = e.container.find("#ProcedureCode").val();
+        e.model.dirty = true;
+    }
+
+    function OnChange(e){
+        if (isProcedureEdit){
+            var grid = $("#ProceduresGrid").data("kendoGrid");
+            if(grid.select().length > 0)
+                grid.clearSelection();
+            return;
+        }
+
+        if(Update())
+            OnSelect($("#ProceduresGrid").data("kendoGrid"));
+    }
+
+    function Update(){
+        var result = true;
+        if(selectedCell != null){
+            var input = selectedCell.find("input");
+            var checked = input.is(':checked');
+            var visitId = parseInt(input.val());
+            var row = selectedCell.closest("tr");
+            var grid = $("#ProceduresGrid").data("kendoGrid");
+            var data = grid.dataItem(row);
+            var inArray = $.inArray(visitId, data.VisitIds) !== -1;
+            if((checked && inArray) || (!checked && !inArray)){
+                selectedCell.html(SelectedVisit(visitId, data));
+                return result;
+            }
+            var values = $(row).find('input:checkbox:checked').map(function () {
+                return parseInt(this.value);
+            }).get();
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("UpdateTrialProcedure", "Trials")",
+                data: {
+                    "Id": data.Id,
+                    "ProcedureCode": data.ProcedureCode,
+                    "TrialCode": data.TrialCode,
+                    "VisitIds": values
+                },
+                async: false,
+                success: function (data) {
+                    data.VisitIds = values;
+                    selectedCell.html(SelectedVisit(visitId, data));
+                },
+                error: function (error) {
+                    result = false;
+                    grid.select(selectedCell);
+                    alert(error.responseText);
+                }
+            });
+        }
+
+        return result;
+    }
+
+    function OnSelect(grid){
+        var cell = grid.select();
+        if(cell.length > 0){
+            cell.find("input").css("display","inline-block");
+            cell.find("span").remove();
+            selectedCell = cell;
+        } else {
+            selectedCell = null;
+        }
+    }
+
+    function ClearSelection(){
+        var grid = $("#ProceduresGrid").data("kendoGrid");
+        selectedCell = null;
+        grid.clearSelection();
+    }
+
+    function OnProcedureEdit(e){
+        if(!Update()){
+            e.preventDefault();
+            return;
+        }
+
+        isProcedureEdit = true;
+        ClearSelection();
+
+        kendo_grid_onrowedit(e);
+
+        var dropDown = kendo.template($("#procedureTemplate").html());
+        e.container.find("td:eq(1)").html(dropDown({ value: e.model.ProcedureCode }));
+    }
+
+    function GetTrialProcedureId(){
+        var jGrid = $("#ProceduresGrid");
+        var grid = jGrid.data("kendoGrid");
+        var data = grid.dataItem(jGrid.find(".k-grid-edit-row"));
+        return { trialProcedureId: data.Id };
+    }
+
+    function AddColumn(id){
+        var jGrid = $("#ProceduresGrid");
+        var grid = jGrid.data("kendoGrid");
+
+        jGrid.css("visibility", "hidden");
+
+        var options = grid.options;
+
+        var newColumn = {
+            "attributes" : { "style" : "text-align:center;" },
+            "width" : "100px",
+            "template" : "#= SelectedVisit(" + id + ", data) #"
+        };
+
+        options.columns.splice(options.columns.length - 1, 0, newColumn);
+
+        var cols = jGrid.find("colgroup col");
+        var ths = jGrid.find("thead th");
+
+        grid.destroy();
+
+        jGrid.empty
+
+        jGrid.html("<table><colgroup></colgroup><thead class='k-grid-header'><tr></tr></thead><tbody></tbody></table>");
+        jGrid.find("colgroup").append(cols);
+        jGrid.find("tr").append(ths);
+
+        jGrid.kendoGrid(options);
+
+        jGrid.css("visibility", "visible");
+    }
+
+</script>
+
+
+
