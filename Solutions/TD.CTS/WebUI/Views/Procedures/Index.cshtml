@@ -1,0 +1,52 @@
+﻿@using TD.Common.Kendo.Mvc5.Grid
+
+@section head{
+    <link href="@Url.Content("~/Content/td/td.kendo.grid.css")" rel="stylesheet" type="text/css" />
+
+    <script src="@Url.Content("~/Scripts/td/td.kendo.grid.js")"></script>
+}
+
+@{
+    var filterRow = new TD.Common.Kendo.Mvc5.Grid.Filters.FilterRow(Html);
+}
+
+@(Html.Kendo().Grid<TD.CTS.Data.Entities.Procedure>()
+    .Init("Grid")
+    .Editable()
+    .Columns(columns =>
+    {
+        columns.CrudCommands(filterRow).Width(80);
+        columns.Bound(e => e.Code, filterRow).Width(100).Title("Код");
+        columns.Bound(e => e.Name, filterRow).Width("100%").Title("Наименование");
+    })
+    .DataSource(dataSource => dataSource
+        .Ajax()
+        .PageSize(20)
+        .Model(model =>
+        {
+            model.Id(e => e.Code);
+        })
+        .Read(read => read.Action("GetProcedures", "Procedures").Data("kendo_grid_getfilters"))
+        .Create(create => create.Action("AddProcedure", "Procedures"))
+        .Update(update => update.Action("UpdateProcedure", "Procedures"))
+        .Destroy(update => update.Action("DeleteProcedure", "Procedures"))
+        .Events(events => events.Error("kendo_grid_error_handler"))
+     )
+     .Events(events => events.Edit("OnEdit"))
+
+)
+
+<script>
+    $(document).ready(function () {
+        kendo_grid_init($("#Grid"), true, '@Html.Raw(filterRow.HtmlFilterRow())');
+    });
+
+    function OnEdit(e) {
+        kendo_grid_onrowedit(e);
+
+        if (!e.model.isNew()) {
+            $("#Code").attr("readonly", "readonly");
+        }
+    }
+
+</script>

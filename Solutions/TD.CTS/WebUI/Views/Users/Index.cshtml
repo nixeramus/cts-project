@@ -1,0 +1,65 @@
+﻿@using TD.Common.Kendo.Mvc5.Grid
+
+@section head{
+    <link href="@Url.Content("~/Content/td/td.kendo.grid.css")" rel="stylesheet" type="text/css" />
+
+    <script src="@Url.Content("~/Scripts/td/td.kendo.grid.js")"></script>
+}
+
+@{
+    System.Collections.IEnumerable hospitals = ViewBag.Hospitals;
+    System.Collections.IEnumerable roles = ViewBag.RolesList;
+    var filterRow = new TD.Common.Kendo.Mvc5.Grid.Filters.FilterRow(Html);
+}
+
+@(Html.Kendo().Grid<TD.CTS.Data.Entities.User>()
+    .Init("Grid")
+    .Columns(columns =>
+    {
+        columns.CrudCommands(filterRow).Width(80);
+        columns.ForeignKey(e => e.HospitalId, hospitals, "Id", "Name", filterRow).Width(200).Title("Мед. учреждение");
+        columns.Bound(e => e.FullName, filterRow).Width(300).Title("ФИО");
+        columns.Bound(e => e.Email, filterRow).Width(200).Title("E-mail");
+        columns.Bound(e => e.Phone, filterRow).Width(150).Title("Телефон");
+        columns.Bound(e => e.Roles).Width("100%").Title("Роли")
+            .Sortable(false)
+            .Encoded(false)
+            .ClientTemplate("#= CreateUlList(Roles, 'Name') #")
+            .HtmlAttributes(new { @class = "td-grid-listCell" });
+        filterRow.AddCell(new TD.Common.Kendo.Mvc5.Grid.Filters.DropDownFilterCell("RoleId", roles, "Code", "Name"));
+    })
+    .Editable(editable => editable.Mode(GridEditMode.PopUp)
+        .Window(window => window.Title("Сотрудник"))
+        .TemplateName("UserEditor"))
+    .DataSource(dataSource => dataSource
+        .Ajax()
+        .PageSize(20)
+        .Model(model =>
+        {
+            model.Id(e => e.Login);
+            model.Field(e => e.Roles).DefaultValue(new List<TD.CTS.Data.Entities.Role>());
+        })
+        .Read(read => read.Action("GetUsers", "Users").Data("kendo_grid_getfilters"))
+        .Create(create => create.Action("AddUser", "Users"))
+        .Update(update => update.Action("UpdateUser", "Users"))
+        .Destroy(update => update.Action("DeleteUser", "Users"))
+        .Events(events => events.Error("kendo_grid_error_handler"))
+     )
+    .Events(events => events.Edit("GridEdit"))
+ 
+    )
+
+<script>
+    $(document).ready(function () {
+        kendo_grid_init($("#Grid"), true, '@Html.Raw(filterRow.HtmlFilterRow())');
+    });
+
+    function GridEdit(e) {
+        if (!e.model.isNew()) {
+            e.container.find(".td-formTable tr:first").css("display", "none");
+        }
+        kendo_grid_onpopupedit(e);
+    }
+
+</script>
+
