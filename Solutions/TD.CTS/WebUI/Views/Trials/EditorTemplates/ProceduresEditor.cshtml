@@ -1,0 +1,86 @@
+﻿@using TD.Common.Kendo.Mvc5.Grid
+
+@model TD.CTS.Data.Entities.Trial
+
+@(Html.Kendo().Grid<TD.CTS.Data.Entities.TrialProcedure>()
+    .Name("ProceduresGrid")
+    .Selectable(select => select.Type(GridSelectionType.Cell))
+    .Editable()
+    .Columns(columns =>
+    {
+        //columns.Bound(e => e.ProcedureCode);
+        columns.CrudCommands()
+            .Width(80)
+            .HeaderHtmlAttributes(new { style = "min-width:60px;vertical-align:bottom;text-align:right;" })
+            .HtmlAttributes(new { @class = "k-group-cell" });
+        columns.ForeignKey(e => e.ProcedureCode, (System.Collections.IEnumerable)ViewBag.Procedures, "Code", "Name")
+            .Width(400)
+            .Filterable(false)
+            .HeaderTemplate(@"<div style=""text-align:right;width:200px;""><a class='k-button k-button-icontext k-grid-addcolumn td-grid-button' title='Добавить визит' href='javascript: void(0)'><span class='k-icon k-add td-grid-button-image'></span></a></div><div style=""text-align:right;width:200px;"">Визиты</div><div>Процедуры</div>")
+            .HtmlAttributes(new { @class = "k-group-cell" });
+
+        var visits = (List<TD.CTS.Data.Entities.TrialVisit>)ViewBag.Visits;
+        foreach (var visit in visits)
+        {
+            columns.Template(e => { })
+                .ClientTemplate("#= SelectedVisit(" + visit.Id + ", data) #")
+                .HeaderTemplate(string.Format(@"<div style='text-align:center;'><a class='k-button k-button-icontext td-grid-editcolumn td-grid-button' href='javascript: void(0)' title='Изменить визит'><span class='k-icon k-edit td-grid-button-image'></span><input type='hidden' value='{3}'/></a>
+<a class='k-button k-button-icontext td-grid-deletecolumn td-grid-button' href='javascript: void(0)' title='Удалить визит'><span class='k-icon k-delete td-grid-button-image'></span></a></div>
+<div style=""text-align:center;"">{0}</div><div style=""text-align:center;"">{1}&plusmn;{2}</div>", visit.Name, visit.Days, visit.Punctuality, visit.Id))
+                .HtmlAttributes(new { style = "text-align:center;" })
+                .Width(100);
+
+            //buttonsRow.Append(@"<th style='text-align:center; style='text-align:right;><a class='k-button k-button-icontext k-grid-edit td-grid-button' href='\#' title='Изменить визит'><span class='k-icon k-edit td-grid-button-image'></span></a>");
+            //buttonsRow.Append(@"<a class='k-button k-button-icontext k-grid-delete td-grid-button' href='\#' title='Удалить визит'><span class='k-icon k-delete td-grid-button-image'></span></a></th>");
+        }
+        columns.Template(e => { }).ClientTemplate(" ").Width("100%").HtmlAttributes(new { @class = "k-group-cell" });
+
+        //buttonsRow.Append("<th/></tr>");
+    })
+    .DataSource(dataSource => dataSource
+       .Ajax()
+       .Model(model =>
+       {
+           model.Id(e => e.Id);
+           model.Field(e => e.ProcedureCode).Editable(false);
+           model.Field(e => e.TrialCode).DefaultValue(Model.Code);
+           model.Field(e => e.VisitIds).DefaultValue(new List<int>());
+       })
+       .Read(read => read.Action("GetTrialProcedures", "Trials", new { TrialCode = Model.Code }))
+       .Create(create => create.Action("AddTrialProcedure", "Trials"))
+       .Update(update => update.Action("UpdateTrialProcedure", "Trials"))
+       .Destroy(destroy => destroy.Action("DeleteTrialProcedure", "Trials"))
+       .Events(events => events
+           .Error("kendo_grid_error_handler").RequestEnd("RequestEnd"))
+    )
+    .Events(events => events
+        .Edit("OnProcedureEdit")
+        .Change("OnChange")
+        .Save("OnProcedureSave")
+        .Cancel("OnProcedureCancel"))
+)
+
+<script>
+    kendo_grid_init($("#ProceduresGrid"));
+    var procGrid = $("#ProceduresGrid");
+    //$("#ProceduresGrid .k-grid-add.td-grid-button").click(function () {
+    procGrid.on("click", ".k-grid-add.td-grid-button", function () {
+        ClearSelection();
+        kendo_grid_createrow(procGrid);
+        isProcedureEdit = true;
+    });
+
+    //$("#ProceduresGrid .k-grid-addcolumn.td-grid-button").click(function () {
+    procGrid.on("click", ".k-grid-addcolumn.td-grid-button", function () {
+        ClearSelection();
+        LoadVisitEdit();
+        //AddColumn(15);
+    });
+
+    procGrid.on("click", ".td-grid-editcolumn.td-grid-button", function () {
+        ClearSelection();
+        var id = $(this).find("input").val();
+        LoadVisitEdit(id);
+        //AddColumn(15);
+    });
+</script>

@@ -243,5 +243,26 @@ namespace TD.CTS.WebUI.Controllers
         }
 
         #endregion
+
+        #region TrialVisits
+
+        public ActionResult GetVisitEditor(int? id, string trialCode)
+        {
+            var visit = id.HasValue ? DataProvider.GetItem(new TrialVisitDataFilter { Id = id }) : new TrialVisit{ TrialCode = trialCode };
+
+            return PartialView("EditorTemplates/VisitEditor", visit);
+        }
+        public ActionResult GetProceduresEditor(string trialCode)
+        {
+            var trial = DataProvider.GetItem(new TrialDataFilter { Code = trialCode });
+
+            ViewBag.Procedures = DataProvider.GetList(new ProcedureDataFilter());
+
+            ViewBag.Visits = DataProvider.GetList(new TrialVisitDataFilter { TrialCode = trialCode });
+
+            return PartialView("EditorTemplates/ProceduresEditor", trial);
+        }
+
+        #endregion
     }
 }

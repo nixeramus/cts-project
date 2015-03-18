@@ -736,6 +736,9 @@
     <Content Include="Views\Trials\Index.cshtml" />
     <Content Include="Views\Trials\Edit.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Text.cshtml" />
+    <Content Include="Views\Trials\EditorTemplates\VisitEditor.cshtml" />
+    <Content Include="Views\Trials\EditorTemplates\VisitShift.cshtml" />
+    <Content Include="Views\Trials\EditorTemplates\ProceduresEditor.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

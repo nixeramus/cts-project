@@ -1,0 +1,28 @@
+﻿@model TD.CTS.Data.Entities.TrialVisit
+
+<div class="k-edit-form-container">
+    @Html.HiddenFor(model => model.Id)
+    @Html.HiddenFor(model => model.TrialCode)
+    <table class="td-formTable">
+        <tr>
+            <td class="td-formTable-caption">Наименование</td>
+            <td>
+                @Html.EditorFor(model => model.Name)
+                @Html.ValidationMessageFor(model => model.Name)
+            </td>
+        </tr>
+        <tr>
+            <td class="td-formTable-caption">Смещение</td>
+            <td>
+                @Html.EditorFor(model => model.Days, "VisitShift")&nbsp;&plusmn;&nbsp;@Html.EditorFor(model => model.Punctuality, "VisitShift")
+                @Html.ValidationMessageFor(model => model.Days)
+                @Html.ValidationMessageFor(model => model.Punctuality)
+            </td>
+        </tr>
+    </table>
+    <div class="k-edit-buttons k-state-default">
+        <a id="saveVisit" class="k-button k-button-icontext" href="javascript: void(0)"><span class="k-icon k-update"></span>Сохранить</a>
+        <a id="cancelVisit" class="k-button k-button-icontext" href="javascript: void(0)"><span class="k-icon k-cancel"></span>Отменить</a>
+    </div>
+</div>
+
