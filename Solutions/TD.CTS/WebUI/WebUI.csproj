@@ -141,6 +141,7 @@
     <Compile Include="Common\Theme.cs" />
     <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\ScheduleController.cs" />
     <Compile Include="Controllers\TrialController.cs" />
     <Compile Include="Controllers\PatientController.cs" />
     <Compile Include="Controllers\ReferalController.cs" />
@@ -739,6 +740,8 @@
     <Content Include="Views\Trials\EditorTemplates\VisitEditor.cshtml" />
     <Content Include="Views\Trials\EditorTemplates\VisitShift.cshtml" />
     <Content Include="Views\Trials\EditorTemplates\ProceduresEditor.cshtml" />
+    <Content Include="Views\Schedules\Edit.cshtml" />
+    <Content Include="Views\Schedules\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

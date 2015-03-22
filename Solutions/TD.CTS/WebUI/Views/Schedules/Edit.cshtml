@@ -1,0 +1,171 @@
+﻿@using TD.Common.Kendo.Mvc5.Grid
+
+@model TD.CTS.Data.Entities.Schedule
+
+@section head{
+    <link href="@Url.Content("~/Content/td/td.kendo.grid.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/td/td.kendo.tabstrip.css")" rel="stylesheet" type="text/css" />
+
+    <script src="@Url.Content("~/Scripts/td/td.kendo.grid.js")"></script>
+
+    <style type="text/css">
+        .td-textarea-edit {
+            width: 300px !important;
+            height: 100px !important;
+        }
+    </style>
+}
+@{
+    var isNew = ViewBag.IsNew;
+    //var buttonsRow = new System.Text.StringBuilder(@"<tr class='k-filter-row'><th/><th style='text-align:right;'><a class='k-button k-button-icontext k-grid-add td-grid-button' title='Добавить визит' href='javascript: void(0)'><span class='k-icon k-add td-grid-button-image'></span></a></th>");
+}
+@(Html.Kendo().TabStrip()
+    .Name("TabStrip")
+    .Animation(false)
+    .Items(tabs =>
+    {
+        tabs.Add()
+            .Text("Основное")
+            .Selected(true)
+            .Content(@<text>
+                          <table id="scheduleForm" class="td-formTable" style="width:auto;">
+                              @*margin-top: 0 k-content*@
+                              <tr>
+                                  <td style="width:120px;">
+                                      @(Html.Kendo().Button().Name("BackButton").SpriteCssClass("k-icon k-i-arrow-w").Tag("a").Content("Назад").HtmlAttributes(new { style = "width:100%;", href = Url.Action("Index", "Schedules") })/*.Events(e => e.Click("Back"))*/)
+                                  </td>
+                                  <td style="width:40px;"></td>
+                                  <td>
+                                      @(Html.Kendo().Button().Name("SaveButton").SpriteCssClass("k-icon k-update").Content("Сохранить").HtmlAttributes(new { style = "width:230px;" }).Events(e => e.Click("SaveSchedule")))
+                                  </td>
+                              </tr>
+                              <tr>
+                                  <td class="td-formTable-caption" colspan="2" style="width:250px;">Дата начала исследования</td>
+                                  <td>
+                                      @Html.HiddenFor(model=>model.Id)
+                                      @Html.EditorFor(model => model.BeginDate, "Date")
+                                  </td>
+                              </tr>
+                              <tr>
+                                  <td class="td-formTable-caption" colspan="2">Пациент</td>
+                                  <td>
+                                      @Html.EditorFor(model => model.PatientCode, "GridForeignKey")
+                                  </td>
+                              </tr>
+                              <tr>
+                                  <td class="td-formTable-caption" colspan="2">Центр</td>
+                                  <td>
+                                      @Html.EditorFor(model => model.TrialCenterID, "GridForeignKey")
+                                  </td>
+                              </tr>
+                              <tr>
+                                  <td class="td-formTable-caption">Примечание</td>
+                                  <td colspan="2">
+                                      @Html.EditorFor(model => model.Comment, "Text")
+                                  </td>
+                              </tr>
+                              <tr>
+                                  <td class="td-formTable-caption"></td>
+                                  <td colspan="3"></td>
+                              </tr>
+                          </table>
+
+
+
+@(Html.Kendo().Grid<TD.CTS.Data.Entities.ScheduleVisit>()
+    .Init("VisitsGrid")
+    .Editable()
+    .HtmlAttributes(new { style = "display:" + (isNew ? "none" : "block") })
+    .Columns(columns =>
+    {
+        columns.Command(command => command.Edit()).Width(172);
+        columns.Bound(e => e.TrialVisitName).Width(200).Title("Наименование");
+        columns.Bound(e => e.BaseDay).Width(100).Title("Смещение");
+        columns.Bound(e => e.ScheduleDate).Width(200).EditorTemplateName("Date").Format("{0:dd.MM.yyyy}").Title("Назначенная дата");
+    })
+        .DataSource(dataSource => dataSource
+            .Ajax()
+            .PageSize(20)
+            .Model(model =>
+            {
+                model.Id(e=>e.ScheduleID);  //(e => e.Id);
+                model.Field(e => e.TrialCode).DefaultValue(Model.TrialCode);
+                model.Field(e => e.TrialCenterID).DefaultValue(Model.TrialCenterID);
+                model.Field(e => e.BaseDay).Editable(false);
+                model.Field(e => e.TrialVisitName).Editable(false);
+            })
+               .Read(read => read.Action("GetScheduleVisits", "Schedules", new { ScheduleID = Model.Id }))
+            //.Create(create => create.Action("AddTrialCenter", "Trials"))
+                    .Update(update => update.Action("UpdateScheduleVisit", "Schedules"))
+            //.Destroy(destroy => destroy.Action("DeleteTrialCenter", "Trials"))
+            .Events(events => events.Error("kendo_grid_error_handler"))
+         )
+         //.Events(events => events.Edit("kendo_grid_onrowedit"))
+)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                      </text>
+);
+    }
+
+      )
+)
+
+@(Html.Kendo().Notification().Name("SaveNotification").Position(p => p.Pinned(true).Top(115).Right(30)).Width(150))
+<script>
+    var validator = $("#scheduleForm").kendoValidator().data("kendoValidator");
+    
+    var isNew = @isNew.ToString().ToLower();
+    function SaveSchedule() {
+        if (validator.validate()) {
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action(isNew ? "AddSchedule" : "UpdateSchedule", "Schedules")",
+                data: {
+                    "Id": $("#Id").val(),
+                    "BeginDate": $("#BeginDate").val(),
+                    "PatientCode": $("#PatientCode").val(),
+                    "TrialCenterID": $("#TrialCenterID").val(),
+                    //"TrialCode": $("#TrialCode").val(),
+                    "Comment": $("#Comment").val()
+                },
+            success: function (result) {
+                if(isNew) {
+                    //$("#CentersGrid").css("display", "block");
+                    //var tabStrip = $("#TabStrip").data("kendoTabStrip");
+                    //var tabs = tabStrip.tabGroup.children();
+                    //tabStrip.enable(tabs.eq(1), true);
+                    //tabStrip.enable(tabs.eq(2), true);
+                    isNew = false;
+                }
+
+                var saveNotification = $("#SaveNotification").data("kendoNotification");
+                saveNotification.show("Сохранено", "success");
+            },
+            error: function (error) {
+                alert(error.responseText);
+            }
+        });
+    }
+    }
+
+</script>
