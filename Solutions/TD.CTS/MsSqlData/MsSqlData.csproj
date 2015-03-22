@@ -52,6 +52,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Builders\ScheduleCommandBuilder.cs" />
     <Compile Include="Builders\TrialCommandBuilder.cs" />
     <Compile Include="Builders\ProcedureCommandBuilder.cs" />
     <Compile Include="Builders\PatientCommandBuilder.cs" />
@@ -66,6 +67,7 @@
     <Compile Include="MsSqlDataProvider.cs" />
     <Compile Include="DBHelper.cs" />
     <Compile Include="MsSqlExceptionManager.cs" />
+    <Compile Include="Builders\ScheduleVisitCommandBuilder.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Builders\CommandBuilder.cs" />
