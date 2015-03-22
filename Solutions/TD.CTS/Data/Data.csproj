@@ -57,7 +57,9 @@
     <Compile Include="Entities\Entity.cs" />
     <Compile Include="Entities\Hospital.cs" />
     <Compile Include="Entities\Role.cs" />
+    <Compile Include="Entities\Schedule.cs" />
     <Compile Include="Entities\Trial.cs" />
+    <Compile Include="Entities\ScheduleVisit.cs" />
     <Compile Include="Entities\TrialMaterial.cs" />
     <Compile Include="Entities\TrialCenter.cs" />
     <Compile Include="Entities\TrialProcedure.cs" />
@@ -70,6 +72,8 @@
     <Compile Include="Filters\CityDataFilter.cs" />
     <Compile Include="Filters\HospitalDataFilter.cs" />
     <Compile Include="Filters\RoleDataFilter.cs" />
+    <Compile Include="Filters\ScheduleVisitDataFilter.cs" />
+    <Compile Include="Filters\ScheduleDataFilter.cs" />
     <Compile Include="Filters\TrialProcedureDataFilter.cs" />
     <Compile Include="Filters\TrialVisitDataFilter.cs" />
     <Compile Include="Filters\TrialMaterialDataFilter.cs" />
