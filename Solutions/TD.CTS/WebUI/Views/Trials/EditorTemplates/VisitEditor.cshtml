@@ -1,12 +1,13 @@
 ﻿@model TD.CTS.Data.Entities.TrialVisit
 
-<div class="k-edit-form-container">
-    @Html.HiddenFor(model => model.Id)
-    @Html.HiddenFor(model => model.TrialCode)
-    <table class="td-formTable">
+<div class="k-edit-form-container" style="width:400px;">
+    <table id="visitForm" class="td-formTable">
         <tr>
             <td class="td-formTable-caption">Наименование</td>
             <td>
+                @Html.HiddenFor(model => model.Id)
+                @Html.HiddenFor(model => model.TrialCode)
+                @Html.Hidden("IsNew", (bool)ViewBag.IsNew)
                 @Html.EditorFor(model => model.Name)
                 @Html.ValidationMessageFor(model => model.Name)
             </td>

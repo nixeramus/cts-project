@@ -13,12 +13,12 @@ namespace TD.CTS.Data.Filters
 
         public string TrialCode { get; set; } 
 
-        public int? HospitalId { get; set; }
+        //public int? HospitalId { get; set; }
 
-        public int? Number { get; set; }
+        //public string Number { get; set; }
 
-        public string AnatomistLogin { get; set; }
+        //public string AnatomistLogin { get; set; }
 
-        public string CoordinatorLogin { get; set; }
+        //public string CoordinatorLogin { get; set; }
     }
 }

@@ -53,6 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Builders\ScheduleCommandBuilder.cs" />
+    <Compile Include="Builders\TrialCenterCommandBuilder.cs" />
     <Compile Include="Builders\TrialCommandBuilder.cs" />
     <Compile Include="Builders\ProcedureCommandBuilder.cs" />
     <Compile Include="Builders\PatientCommandBuilder.cs" />
