@@ -17,7 +17,7 @@ namespace TD.CTS.Data.Entities
         public int HospitalId { get; set; }
 
         [Required]
-        public int Number { get; set; }
+        public string Number { get; set; }
 
         public string AnatomistLogin { get; set; }
 

@@ -95,7 +95,7 @@ namespace TD.CTS.WebUI.Controllers
 
             ViewBag.Procedures = DataProvider.GetList(new ProcedureDataFilter());
 
-            ViewBag.Visits = DataProvider.GetList(new TrialVisitDataFilter { TrialCode = code });
+            ViewBag.Visits = DataProvider.GetList(new TrialVisitDataFilter { TrialCode = code }).OrderBy(v => v.Days);
 
             return View(trial);
         }
@@ -248,19 +248,62 @@ namespace TD.CTS.WebUI.Controllers
 
         public ActionResult GetVisitEditor(int? id, string trialCode)
         {
-            var visit = id.HasValue ? DataProvider.GetItem(new TrialVisitDataFilter { Id = id }) : new TrialVisit{ TrialCode = trialCode };
+            TrialVisit visit;
+            if (id.HasValue)
+            {
+                visit = DataProvider.GetItem(new TrialVisitDataFilter { Id = id });
+                if (visit == null)
+                    throw new ApplicationException("Визит не найден");
+                ViewBag.IsNew = false;
+            }
+            else
+            {
+                visit = new TrialVisit { TrialCode = trialCode };
+                ViewBag.IsNew = true;
+            }
 
             return PartialView("EditorTemplates/VisitEditor", visit);
         }
+
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult AddTrailVisit(TrialVisit trialVisit)
+        {
+            if (trialVisit != null && ModelState.IsValid)
+            {
+                DataProvider.Add(trialVisit);
+            }
+
+            return GetProceduresEditor(trialVisit.TrialCode);
+        }
+
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult UpdateTrailVisit(TrialVisit trialVisit)
+        {
+            if (trialVisit != null && ModelState.IsValid)
+            {
+                DataProvider.Update(trialVisit);
+            }
+
+            return GetProceduresEditor(trialVisit.TrialCode);
+        }
+
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult DeleteTrailVisit(TrialVisit trialVisit)
+        {
+            DataProvider.Delete(trialVisit);
+            
+            return GetProceduresEditor(trialVisit.TrialCode);
+        }
+
         public ActionResult GetProceduresEditor(string trialCode)
         {
-            var trial = DataProvider.GetItem(new TrialDataFilter { Code = trialCode });
+            //var trial = DataProvider.GetItem(new TrialDataFilter { Code = trialCode });
 
             ViewBag.Procedures = DataProvider.GetList(new ProcedureDataFilter());
 
-            ViewBag.Visits = DataProvider.GetList(new TrialVisitDataFilter { TrialCode = trialCode });
+            ViewBag.Visits = DataProvider.GetList(new TrialVisitDataFilter { TrialCode = trialCode }).OrderBy(v => v.Days);
 
-            return PartialView("EditorTemplates/ProceduresEditor", trial);
+            return PartialView("EditorTemplates/ProceduresEditor", trialCode);
         }
 
         #endregion

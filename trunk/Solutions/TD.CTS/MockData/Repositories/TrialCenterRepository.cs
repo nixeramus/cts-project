@@ -39,7 +39,7 @@ namespace TD.CTS.MockData.Repositories
                     list.Add(new TrialCenter { 
                         Id = id,
                         TrialCode = trial.Code,
-                        Number = rand.Next(1000, 10000),
+                        Number = rand.Next(1000, 10000).ToString(),
                         HospitalId = hospitals[i].Id,
                         AnatomistLogin = users[rand.Next(0, users.Count)].Login,
                         CoordinatorLogin = users[rand.Next(0, users.Count)].Login
@@ -57,11 +57,11 @@ namespace TD.CTS.MockData.Repositories
 
             return e =>
                 (dataFilter.TrialCode == null || e.TrialCode == dataFilter.TrialCode)
-                && (dataFilter.Id == null || e.Id == dataFilter.Id)
-                && (dataFilter.Number == null || e.Number == dataFilter.Number)
-                && (dataFilter.AnatomistLogin == null || e.AnatomistLogin == dataFilter.AnatomistLogin)
-                && (dataFilter.CoordinatorLogin == null || e.CoordinatorLogin == dataFilter.CoordinatorLogin)
-                && (dataFilter.HospitalId == null || e.HospitalId == dataFilter.HospitalId);
+                && (dataFilter.Id == null || e.Id == dataFilter.Id);
+                //&& (dataFilter.Number == null || dataFilter.Number.Equals(e.Number))
+                //&& (dataFilter.AnatomistLogin == null || e.AnatomistLogin == dataFilter.AnatomistLogin)
+                //&& (dataFilter.CoordinatorLogin == null || e.CoordinatorLogin == dataFilter.CoordinatorLogin)
+                //&& (dataFilter.HospitalId == null || e.HospitalId == dataFilter.HospitalId);
         }
 
         protected override int GetItemIndex(TrialCenter item)

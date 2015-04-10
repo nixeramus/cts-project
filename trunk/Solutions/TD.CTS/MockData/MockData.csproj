@@ -58,7 +58,7 @@
     <Compile Include="Repositories\TrialProcedureRepository.cs" />
     <Compile Include="Repositories\TrialVisitRepository.cs" />
     <Compile Include="Repositories\TrialMaterialRepository.cs" />
-    <Compile Include="Repositories\TrialCenterRepository.cs" />
+    <None Include="Repositories\TrialCenterRepository.cs" />
     <None Include="TD.CTS.MockData.snk" />
     <None Include="ValueCreators\BaseCreator.cs" />
     <None Include="ValueCreators\TrialCenterCreator.cs" />
