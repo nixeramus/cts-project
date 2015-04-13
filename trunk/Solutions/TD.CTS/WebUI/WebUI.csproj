@@ -142,6 +142,8 @@
     <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\ScheduleController.cs" />
+    <Compile Include="Controllers\TrialController_RolesEdit.cs" />
+    <Compile Include="Controllers\TrialController_Edit.cs" />
     <Compile Include="Controllers\TrialController.cs" />
     <Compile Include="Controllers\PatientController.cs" />
     <Compile Include="Controllers\ReferalController.cs" />
@@ -424,6 +426,7 @@
     <Content Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="App_Data\data.mock" />
     <None Include="NLog.xsd" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
@@ -745,9 +748,9 @@
     <Content Include="Views\Shared\EditorTemplates\GridNullableForeignKey.cshtml" />
     <Content Include="Views\Trials\EditorTemplates\VisitMaterialEditor.cshtml" />
     <Content Include="Views\Trials\EditorTemplates\MainEditor.cshtml" />
+    <Content Include="Views\Trials\RolesEdit.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>

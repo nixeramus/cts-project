@@ -16,58 +16,58 @@ namespace TD.CTS.MockData.Repositories
             : base(dataProvider)
         {}
         
-        public override List<TrialProcedure> GenerateData()
-        {
-            var list = new List<TrialProcedure>();
+        //public override List<TrialProcedure> GenerateData()
+        //{
+        //    var list = new List<TrialProcedure>();
 
-            //var trials = dataProvider.GetList(new TrialDataFilter());
+        //    var trials = dataProvider.GetList(new TrialDataFilter());
 
-            //var procedures = dataProvider.GetList(new ProcedureDataFilter()).Where(p => p.Code != "ОВ").ToList();
+        //    var procedures = dataProvider.GetList(new ProcedureDataFilter()).Where(p => p.Code != "ОВ").ToList();
 
-            //if (trials.Count < 1)
-            //    return list;
+        //    if (trials.Count < 1)
+        //        return list;
 
-            //Random rand = new Random();
+        //    Random rand = new Random();
 
-            //int id = 1;
-            //foreach (var trial in trials)
-            //{
-            //    var visits = dataProvider.GetList(new TrialVisitDataFilter { TrialCode = trial.Code });
-            //    HashSet<int> visitIndexes = rand.NextSet(rand.Next(0, visits.Count), 1, visits.Count);
-                
-            //    var procedure = new TrialProcedure
-            //    {
-            //        Id = id++,
-            //        TrialCode = trial.Code,
-            //        ProcedureCode = "ОВ",
-            //        VisitIds = new List<int>()
-            //    };
+        //    int id = 1;
+        //    foreach (var trial in trials)
+        //    {
+        //        var visits = dataProvider.GetList(new TrialVisitDataFilter { TrialCode = trial.Code });
+        //        HashSet<int> visitIndexes = rand.NextSet(rand.Next(0, visits.Count), 1, visits.Count);
 
-            //    procedure.VisitIds.Add(visits.First(v => v.Days == 0).Id);
-            //    procedure.VisitIds.AddRange(visitIndexes.Select(i => visits[i].Id));
+        //        var procedure = new TrialProcedure
+        //        {
+        //            Id = id++,
+        //            TrialCode = trial.Code,
+        //            ProcedureCode = "ОВ",
+        //            VisitIds = new List<int>()
+        //        };
 
-            //    list.Add(procedure);
+        //        procedure.VisitIds.Add(visits.First(v => v.Days == 0).Id);
+        //        procedure.VisitIds.AddRange(visitIndexes.Select(i => visits[i].Id));
 
-            //    HashSet<int> procedureIndexes = rand.NextSet(rand.Next(0, procedures.Count), 0, procedures.Count);
+        //        list.Add(procedure);
 
-            //    foreach (var index in procedureIndexes)
-            //    {
-            //        visitIndexes = rand.NextSet(rand.Next(0, visits.Count), 1, visits.Count);
+        //        HashSet<int> procedureIndexes = rand.NextSet(rand.Next(0, procedures.Count), 0, procedures.Count);
 
-            //        procedure = new TrialProcedure
-            //        {
-            //            Id = id++,
-            //            TrialCode = trial.Code,
-            //            ProcedureCode = procedures[index].Code,
-            //            VisitIds = visitIndexes.Select(i => visits[i].Id).ToList()
-            //        };
+        //        foreach (var index in procedureIndexes)
+        //        {
+        //            visitIndexes = rand.NextSet(rand.Next(0, visits.Count), 1, visits.Count);
 
-            //        list.Add(procedure);
-            //    }
-            //}
+        //            procedure = new TrialProcedure
+        //            {
+        //                Id = id++,
+        //                TrialCode = trial.Code,
+        //                ProcedureCode = procedures[index].Code,
+        //                VisitIds = visitIndexes.Select(i => visits[i].Id).ToList()
+        //            };
 
-            return list;
-        }
+        //            list.Add(procedure);
+        //        }
+        //    }
+
+        //    return list;
+        //}
 
         protected override Func<TrialProcedure, bool> GetFilterFunc(DataFilter<TrialProcedure> filter)
         {

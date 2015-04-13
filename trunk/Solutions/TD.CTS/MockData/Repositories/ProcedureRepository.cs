@@ -17,21 +17,21 @@ namespace TD.CTS.MockData.Repositories
         {            
         }
 
-        public override List<Procedure> GenerateData()
-        {
-            var list = new List<Procedure>();
+        //public override List<Procedure> GenerateData()
+        //{
+        //    var list = new List<Procedure>();
 
-            list.Add(new Procedure { Code = "ОВ", Name = "Обследование врачом" });
-            list.Add(new Procedure { Code = "ЗВ", Name = "Звонок" });
-            list.Add(new Procedure { Code = "ОАК", Name = "Общий анализ крови" });
-            list.Add(new Procedure { Code = "АМ", Name = "Анализ мочи" });
-            list.Add(new Procedure { Code = "АК", Name = "Клинический анализ крови" });
-            list.Add(new Procedure { Code = "ФОГ", Name = "Флюорография" });
-            list.Add(new Procedure { Code = "УЗИ", Name = "Ультразвуковое исследование" });
-            list.Add(new Procedure { Code = "ЭКГ", Name = "Электрокардиография" });
+        //    list.Add(new Procedure { Code = "ОВ", Name = "Обследование врачом" });
+        //    list.Add(new Procedure { Code = "ЗВ", Name = "Звонок" });
+        //    list.Add(new Procedure { Code = "ОАК", Name = "Общий анализ крови" });
+        //    list.Add(new Procedure { Code = "АМ", Name = "Анализ мочи" });
+        //    list.Add(new Procedure { Code = "АК", Name = "Клинический анализ крови" });
+        //    list.Add(new Procedure { Code = "ФОГ", Name = "Флюорография" });
+        //    list.Add(new Procedure { Code = "УЗИ", Name = "Ультразвуковое исследование" });
+        //    list.Add(new Procedure { Code = "ЭКГ", Name = "Электрокардиография" });
 
-            return list;
-        }
+        //    return list;
+        //}
 
         protected override Func<Procedure, bool> GetFilterFunc(DataFilter<Procedure> filter)
         {

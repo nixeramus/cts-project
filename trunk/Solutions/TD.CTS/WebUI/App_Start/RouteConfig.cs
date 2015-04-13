@@ -24,6 +24,8 @@ namespace TD.CTS.WebUI
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
             );
+
+            MockData.MockDataProvider.FileName = System.Web.Hosting.HostingEnvironment.MapPath("~/App_Data/data.mock");
         }
     }
 }

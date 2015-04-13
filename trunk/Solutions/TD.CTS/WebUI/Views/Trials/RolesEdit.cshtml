@@ -1,0 +1,87 @@
+﻿@using TD.Common.Kendo.Mvc5.Grid
+
+@model string
+
+@section head{
+    <link href="@Url.Content("~/Content/td/td.kendo.grid.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/td/td.kendo.tabstrip.css")" rel="stylesheet" type="text/css" />
+
+    <script src="@Url.Content("~/Scripts/td/td.kendo.grid.js")"></script>
+}
+
+@(Html.Kendo().TabStrip()
+    .Name("TabStrip")
+    .Animation(false)
+    .Events(events => events.Show("ShowTab"))
+    .Items(tabs =>
+        {
+            tabs.Add().Text("Роли")
+                .Selected(true)
+                .ContentHtmlAttributes(new { style = "padding:0;" })
+                .Content(@<text>
+                    @(Html.Kendo().Grid<TD.CTS.Data.Entities.TrialProcedure>()
+                        .Init("ProceduresGrid")
+                        .Columns(columns =>
+                        {
+                            columns.ForeignKey(e => e.ProcedureCode, (System.Collections.IEnumerable)ViewBag.Procedures, "Code", "Name")
+                                .Width("100%").Title("Процедура");
+                        })
+                        .DataSource(dataSource => dataSource
+                           .Ajax()
+                           .PageSize(50)
+                           .Model(model =>
+                           {
+                               model.Id(e => e.Id);
+                           })
+                           .Read(read => read.Action("GetTrialProcedures", "Trials", new { TrialCode = Model }))
+                        )
+                    )
+                </text>);
+            tabs.Add().Text("Стоимость визитов")
+                .ContentHtmlAttributes(new { style = "padding:0;" })
+                .Content(@<text>
+                    @(Html.Kendo().Grid<TD.CTS.Data.Entities.TrialVisit>()
+                        .Init("VisitsGrid")
+                        .Columns(columns =>
+                        {
+                            columns.Bound(e => e.Name)
+                                .Width("100%").Title("Визит");
+                        })
+                        .DataSource(dataSource => dataSource
+                           .Ajax()
+                           .PageSize(50)
+                           .Model(model =>
+                           {
+                               model.Id(e => e.Id);
+                           })
+                           .Read(read => read.Action("GetTrialVisits", "Trials", new { TrialCode = Model }))
+                        )
+                    )
+                </text>);
+        }
+    )
+)
+
+<script>
+    $(document).ready(function () {
+        SetContentBlock($("#TabStrip .k-content"));
+
+        kendo_grid_init($("#ProceduresGrid"));
+
+        kendo_grid_init($("#VisitsGrid"));
+
+        $(window).bind("resize", function () {
+            var tabStrip = $("#TabStrip").data("kendoTabStrip");
+            var tab = tabStrip.select();
+            var index = tab.index();
+            var conteiner = tabStrip.contentElements[index];
+            StretchGrid($(conteiner), $(conteiner.firstElementChild));
+        });
+    });
+
+    function ShowTab(e) {
+        StretchGrid($(e.contentElement), $(e.contentElement.firstElementChild));
+    }
+</script>
+
+

@@ -1,0 +1,172 @@
+{
+  "$type": "System.Collections.Generic.Dictionary`2[[System.Type, mscorlib],[System.Object, mscorlib]], mscorlib",
+  "TD.CTS.Data.Entities.Material, TD.CTS.Data, Version=1.0.0.0, Culture=neutral, PublicKeyToken=69f75ccb18254c4e": {
+    "$type": "TD.CTS.MockData.Repositories.MaterialRepository, TD.CTS.MockData",
+    "Data": {
+      "$type": "System.Collections.Generic.List`1[[TD.CTS.Data.Entities.Material, TD.CTS.Data]], mscorlib",
+      "$values": [
+        {
+          "$type": "TD.CTS.Data.Entities.Material, TD.CTS.Data",
+          "Id": 1,
+          "Name": "Комплект1"
+        },
+        {
+          "$type": "TD.CTS.Data.Entities.Material, TD.CTS.Data",
+          "Id": 2,
+          "Name": "Комплект2"
+        },
+        {
+          "$type": "TD.CTS.Data.Entities.Material, TD.CTS.Data",
+          "Id": 3,
+          "Name": "Комплект3"
+        },
+        {
+          "$type": "TD.CTS.Data.Entities.Material, TD.CTS.Data",
+          "Id": 4,
+          "Name": "Комплект4"
+        },
+        {
+          "$type": "TD.CTS.Data.Entities.Material, TD.CTS.Data",
+          "Id": 5,
+          "Name": "Комплект5"
+        },
+        {
+          "$type": "TD.CTS.Data.Entities.Material, TD.CTS.Data",
+          "Id": 6,
+          "Name": "Комплект6"
+        },
+        {
+          "$type": "TD.CTS.Data.Entities.Material, TD.CTS.Data",
+          "Id": 7,
+          "Name": "Комплект7"
+        },
+        {
+          "$type": "TD.CTS.Data.Entities.Material, TD.CTS.Data",
+          "Id": 8,
+          "Name": "Комплект8"
+        },
+        {
+          "$type": "TD.CTS.Data.Entities.Material, TD.CTS.Data",
+          "Id": 9,
+          "Name": "Комплект9"
+        },
+        {
+          "$type": "TD.CTS.Data.Entities.Material, TD.CTS.Data",
+          "Id": 10,
+          "Name": "Комплект10"
+        }
+      ]
+    }
+  },
+  "TD.CTS.Data.Entities.TrialVisitMaterial, TD.CTS.Data, Version=1.0.0.0, Culture=neutral, PublicKeyToken=69f75ccb18254c4e": {
+    "$type": "TD.CTS.MockData.Repositories.TrialVisitMaterialRepository, TD.CTS.MockData",
+    "Data": {
+      "$type": "System.Collections.Generic.List`1[[TD.CTS.Data.Entities.TrialVisitMaterial, TD.CTS.Data]], mscorlib",
+      "$values": [
+        {
+          "$type": "TD.CTS.Data.Entities.TrialVisitMaterial, TD.CTS.Data",
+          "Id": 3,
+          "TrialProcedureId": 2,
+          "TrialVisitId": 1,
+          "TrialMaterialId": 1,
+          "MaterialName": "Комплект3",
+          "Quantity": 1
+        },
+        {
+          "$type": "TD.CTS.Data.Entities.TrialVisitMaterial, TD.CTS.Data",
+          "Id": 4,
+          "TrialProcedureId": 1,
+          "TrialVisitId": 2,
+          "TrialMaterialId": 2,
+          "MaterialName": "Комплект5",
+          "Quantity": 1
+        }
+      ]
+    }
+  },
+  "TD.CTS.Data.Entities.TrialVisit, TD.CTS.Data, Version=1.0.0.0, Culture=neutral, PublicKeyToken=69f75ccb18254c4e": {
+    "$type": "TD.CTS.MockData.Repositories.TrialVisitRepository, TD.CTS.MockData",
+    "Data": {
+      "$type": "System.Collections.Generic.List`1[[TD.CTS.Data.Entities.TrialVisit, TD.CTS.Data]], mscorlib",
+      "$values": [
+        {
+          "$type": "TD.CTS.Data.Entities.TrialVisit, TD.CTS.Data",
+          "Id": 1,
+          "TrialCode": "AB",
+          "Name": "Первичный осмотр",
+          "Days": 0,
+          "Punctuality": 0
+        },
+        {
+          "$type": "TD.CTS.Data.Entities.TrialVisit, TD.CTS.Data",
+          "Id": 2,
+          "TrialCode": "AB",
+          "Name": "Сдача анализов",
+          "Days": 2,
+          "Punctuality": 1
+        },
+        {
+          "$type": "TD.CTS.Data.Entities.TrialVisit, TD.CTS.Data",
+          "Id": 3,
+          "TrialCode": "AB",
+          "Name": "Повторный осмотр",
+          "Days": 5,
+          "Punctuality": 2
+        }
+      ]
+    }
+  },
+  "TD.CTS.Data.Entities.TrialMaterial, TD.CTS.Data, Version=1.0.0.0, Culture=neutral, PublicKeyToken=69f75ccb18254c4e": {
+    "$type": "TD.CTS.MockData.Repositories.TrialMaterialRepository, TD.CTS.MockData",
+    "Data": {
+      "$type": "System.Collections.Generic.List`1[[TD.CTS.Data.Entities.TrialMaterial, TD.CTS.Data]], mscorlib",
+      "$values": [
+        {
+          "$type": "TD.CTS.Data.Entities.TrialMaterial, TD.CTS.Data",
+          "Id": 1,
+          "TrialCode": "AB",
+          "MaterialId": 3
+        },
+        {
+          "$type": "TD.CTS.Data.Entities.TrialMaterial, TD.CTS.Data",
+          "Id": 2,
+          "TrialCode": "AB",
+          "MaterialId": 5
+        }
+      ]
+    }
+  },
+  "TD.CTS.Data.Entities.TrialProcedure, TD.CTS.Data, Version=1.0.0.0, Culture=neutral, PublicKeyToken=69f75ccb18254c4e": {
+    "$type": "TD.CTS.MockData.Repositories.TrialProcedureRepository, TD.CTS.MockData",
+    "Data": {
+      "$type": "System.Collections.Generic.List`1[[TD.CTS.Data.Entities.TrialProcedure, TD.CTS.Data]], mscorlib",
+      "$values": [
+        {
+          "$type": "TD.CTS.Data.Entities.TrialProcedure, TD.CTS.Data",
+          "Id": 1,
+          "TrialCode": "AB",
+          "ProcedureCode": "ОАК",
+          "VisitIds": {
+            "$type": "System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib",
+            "$values": [
+              2
+            ]
+          }
+        },
+        {
+          "$type": "TD.CTS.Data.Entities.TrialProcedure, TD.CTS.Data",
+          "Id": 2,
+          "TrialCode": "AB",
+          "ProcedureCode": "ОВ",
+          "VisitIds": {
+            "$type": "System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib",
+            "$values": [
+              1,
+              3
+            ]
+          }
+        }
+      ]
+    }
+  }
+}
