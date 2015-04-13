@@ -16,53 +16,53 @@ namespace TD.CTS.MockData.Repositories
             : base(dataProvider)
         {}
 
-        public override List<TrialMaterial> GenerateData()
-        {
-            var list = new List<TrialMaterial>();
+        //public override List<TrialMaterial> GenerateData()
+        //{
+        //    var list = new List<TrialMaterial>();
 
-            //var trials = dataProvider.GetList(new TrialDataFilter());
+        //    var trials = dataProvider.GetList(new TrialDataFilter());
 
-            //if (trials.Count < 1)
-            //    return list;
+        //    if (trials.Count < 1)
+        //        return list;
 
-            //var materials = dataProvider.GetList(new MaterialDataFilter());
+        //    var materials = dataProvider.GetList(new MaterialDataFilter());
 
-            //Random rand = new Random();
+        //    Random rand = new Random();
 
-            //int id = 1;
-            //int materialsCount = materials.Count > 10 ? 10 : materials.Count;
-            //foreach (var trial in trials)
-            //{
-            //    HashSet<int> set = rand.NextSet(rand.Next(0, materialsCount + 1), 0, materials.Count);
+        //    int id = 1;
+        //    int materialsCount = materials.Count > 10 ? 10 : materials.Count;
+        //    foreach (var trial in trials)
+        //    {
+        //        HashSet<int> set = rand.NextSet(rand.Next(0, materialsCount + 1), 0, materials.Count);
 
-            //    list.AddRange(set.Select(i => new TrialMaterial
-            //        {
-            //            Id = id++,
-            //            TrialCode = trial.Code,
-            //            MaterialId = materials[i].Id
-            //        }));
+        //        list.AddRange(set.Select(i => new TrialMaterial
+        //            {
+        //                Id = id++,
+        //                TrialCode = trial.Code,
+        //                MaterialId = materials[i].Id
+        //            }));
 
-            //    //int count = rand.Next(0, materialsCount + 1);
-            //    //HashSet<int> set = new HashSet<int>();
-            //    //for (int i = 0; i < count; i++)
-            //    //{
-            //    //    var materialIndex = rand.Next(0, materials.Count);
-            //    //    while (set.Contains(materialIndex))
-            //    //    {
-            //    //        materialIndex = rand.Next(0, materials.Count); ;
-            //    //    }
-            //    //    list.Add(new TrialMaterial
-            //    //    { 
-            //    //        Id = id,
-            //    //        TrialCode = trial.Code,
-            //    //        MaterialId = materials[materialIndex].Id
-            //    //    });
-            //    //    id++;
-            //    //}
-            //}
+        //        //int count = rand.Next(0, materialsCount + 1);
+        //        //HashSet<int> set = new HashSet<int>();
+        //        //for (int i = 0; i < count; i++)
+        //        //{
+        //        //    var materialIndex = rand.Next(0, materials.Count);
+        //        //    while (set.Contains(materialIndex))
+        //        //    {
+        //        //        materialIndex = rand.Next(0, materials.Count); ;
+        //        //    }
+        //        //    list.Add(new TrialMaterial
+        //        //    { 
+        //        //        Id = id,
+        //        //        TrialCode = trial.Code,
+        //        //        MaterialId = materials[materialIndex].Id
+        //        //    });
+        //        //    id++;
+        //        //}
+        //    }
 
-            return list;
-        }
+        //    return list;
+        //}
 
         protected override Func<TrialMaterial, bool> GetFilterFunc(DataFilter<TrialMaterial> filter)
         {

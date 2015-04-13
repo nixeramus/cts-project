@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
 using TD.CTS.Data;
@@ -15,6 +18,8 @@ namespace TD.CTS.MockData
     {
         private static Dictionary<Type, object> repositories;
 
+        public static string FileName { get; set; }
+
         private static void AddRepositories(IDataProvider dataProvider)
         {
             var baseType = typeof(Repository<>);
@@ -25,7 +30,10 @@ namespace TD.CTS.MockData
 
             foreach (var repositoryType in repositoryTypes)
             {
-                repositories.Add(repositoryType.EntityType, Activator.CreateInstance(repositoryType.RepositoryType, new object[] { dataProvider }));
+                if (!repositories.ContainsKey(repositoryType.EntityType))
+                    repositories.Add(repositoryType.EntityType, Activator.CreateInstance(repositoryType.RepositoryType, new object[] { dataProvider }));
+                else
+                    ((Repository)repositories[repositoryType.EntityType]).dataProvider = dataProvider;
             }
         }
 
@@ -36,7 +44,15 @@ namespace TD.CTS.MockData
             this.dataProvider = dataProvider;
             if (repositories == null)
             {
-                repositories = new Dictionary<Type, object>();
+                if (!string.IsNullOrEmpty(FileName) && File.Exists(FileName))
+                {
+                    repositories = SerializeHelper.Deserialize<Dictionary<Type, object>>(FileName); 
+                }
+                else
+                {
+                    repositories = new Dictionary<Type, object>();
+                }
+
                 AddRepositories(this);
             }
         }
@@ -77,6 +93,8 @@ namespace TD.CTS.MockData
                 repository.Add(entity);
             else
                 dataProvider.Add(entity);
+
+            SaveRepositories();
         }
 
         public void Update<TEntity>(TEntity entity) where TEntity : Entity
@@ -86,6 +104,8 @@ namespace TD.CTS.MockData
                 repository.Update(entity);
             else
                 dataProvider.Update(entity);
+
+            SaveRepositories();
         }
 
         public void Delete<TEntity>(TEntity entity) where TEntity : Entity
@@ -95,6 +115,16 @@ namespace TD.CTS.MockData
                 repository.Delete(entity);
             else
                 dataProvider.Delete(entity);
+
+            SaveRepositories();
+        }
+
+        private static void SaveRepositories()
+        {
+            if (string.IsNullOrEmpty(FileName))
+                return;
+
+            SerializeHelper.Serialize(FileName, repositories);
         }
     }
 }

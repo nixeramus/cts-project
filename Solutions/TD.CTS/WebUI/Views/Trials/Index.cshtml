@@ -17,10 +17,11 @@
     {
         //columns.CrudCommands(filterRow).Width(80);
         columns.Template(model => {})
-                .Width(80)
+                .Width(110)
                 .ClientTemplate(
 @"<button class=""k-button k-button-icontext td-grid-button td-grid-edit"" title=""Изменить"" value=""#:Code#""><span class=""k-icon k-edit td-grid-button-image""></span></button>
-<button class=""k-button k-button-icontext k-grid-delete td-grid-button"" title=""Удалить""><span class=""k-icon k-delete td-grid-button-image""></span></button>")
+<button class=""k-button k-button-icontext k-grid-delete td-grid-button"" title=""Удалить""><span class=""k-icon k-delete td-grid-button-image""></span></button>
+<button class=""k-button k-button-icontext td-grid-button td-grid-role"" title=""Роли и стоимость""><span class=""k-icon k-i-custom td-grid-button-image""></span></button>")
                 .HeaderTemplate(
 @"<button class=""k-button k-button-icontext td-grid-button td-grid-add"" title=""Добавить""><span class=""k-icon k-add td-grid-button-image""></span></button>");
         filterRow.AddCell(new TD.Common.Kendo.Mvc5.Grid.Filters.ButtonFilterCell());
@@ -64,6 +65,10 @@
 
         grid.on("click", ".td-grid-edit.td-grid-button", function () {
             $().redirect("@Url.Action("Edit", "Trials")", { code: $(this).val() });
+        });
+
+        grid.on("click", ".td-grid-role.td-grid-button", function () {
+            $().redirect("@Url.Action("RolesEdit", "Trials")", { code: $(this).val() });
         });
     });
 

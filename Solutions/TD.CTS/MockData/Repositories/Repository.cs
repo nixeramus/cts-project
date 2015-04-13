@@ -9,14 +9,19 @@ using TD.CTS.Data.Filters;
 
 namespace TD.CTS.MockData.Repositories
 {
-    public abstract class Repository<T> where T : Entity
+    public abstract class Repository
     {
-        protected IDataProvider dataProvider;
+        internal IDataProvider dataProvider;
 
         public Repository(IDataProvider dataProvider)
         {
             this.dataProvider = dataProvider;
         }
+    }
+    public abstract class Repository<T> : Repository where T : Entity
+    {
+        public Repository(IDataProvider dataProvider) : base(dataProvider)
+        {}
         
         private List<T> data;
 
@@ -62,7 +67,10 @@ namespace TD.CTS.MockData.Repositories
             Data.RemoveAt(index);
         }
 
-        public abstract List<T> GenerateData();
+        public virtual List<T> GenerateData()
+        {
+            return new List<T>();
+        }
 
         protected abstract Func<T, bool> GetFilterFunc(DataFilter<T> filter);
 

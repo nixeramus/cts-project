@@ -15,41 +15,41 @@ namespace TD.CTS.MockData.Repositories
         public TrialCenterRepository(IDataProvider dataProvider) : base(dataProvider)
         {}
 
-        public override List<TrialCenter> GenerateData()
-        {
-            var list = new List<TrialCenter>();
+        //public override List<TrialCenter> GenerateData()
+        //{
+        //    var list = new List<TrialCenter>();
 
-            var trials = dataProvider.GetList(new TrialDataFilter());
+        //    var trials = dataProvider.GetList(new TrialDataFilter());
 
-            if (trials.Count < 1)
-                return list;
+        //    if (trials.Count < 1)
+        //        return list;
 
-            var users = dataProvider.GetList(new UserDataFilter());
+        //    var users = dataProvider.GetList(new UserDataFilter());
 
-            var hospitals = dataProvider.GetList(new HospitalDataFilter());
+        //    var hospitals = dataProvider.GetList(new HospitalDataFilter());
 
-            Random rand = new Random();
+        //    Random rand = new Random();
 
-            int id = 1;
-            foreach (var trial in trials)
-            {
-                int count = rand.Next(0, hospitals.Count + 1);
-                for (int i = 0; i < count; i++)
-                {
-                    list.Add(new TrialCenter { 
-                        Id = id,
-                        TrialCode = trial.Code,
-                        Number = rand.Next(1000, 10000).ToString(),
-                        HospitalId = hospitals[i].Id,
-                        AnatomistLogin = users[rand.Next(0, users.Count)].Login,
-                        CoordinatorLogin = users[rand.Next(0, users.Count)].Login
-                    });
-                    id++;
-                }
-            }
+        //    int id = 1;
+        //    foreach (var trial in trials)
+        //    {
+        //        int count = rand.Next(0, hospitals.Count + 1);
+        //        for (int i = 0; i < count; i++)
+        //        {
+        //            list.Add(new TrialCenter { 
+        //                Id = id,
+        //                TrialCode = trial.Code,
+        //                Number = rand.Next(1000, 10000).ToString(),
+        //                HospitalId = hospitals[i].Id,
+        //                AnatomistLogin = users[rand.Next(0, users.Count)].Login,
+        //                CoordinatorLogin = users[rand.Next(0, users.Count)].Login
+        //            });
+        //            id++;
+        //        }
+        //    }
 
-            return list;
-        }
+        //    return list;
+        //}
 
         protected override Func<TrialCenter, bool> GetFilterFunc(DataFilter<TrialCenter> filter)
         {
