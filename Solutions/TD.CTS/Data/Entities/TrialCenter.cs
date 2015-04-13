@@ -13,12 +13,13 @@ namespace TD.CTS.Data.Entities
 
         public string TrialCode { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Мед. учериждение не выбрано")]
         public int HospitalId { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Номер центра не задан")]
         public string Number { get; set; }
 
+        [Required(ErrorMessage = "Главный исследователь не выбран")]
         public string AnatomistLogin { get; set; }
 
         public string CoordinatorLogin { get; set; }

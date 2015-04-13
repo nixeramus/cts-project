@@ -103,7 +103,7 @@ namespace TD.CTS.WebUI.Controllers
         #region TrialCenters
         public ActionResult GetTrialCenters([DataSourceRequest]DataSourceRequest request, string trialCode)
         {
-            var response = DataProvider.GetList(new TrialCenterDataFilter { TrialCode = trialCode });
+            var response = string.IsNullOrEmpty(trialCode) ? new List<TrialCenter>() : DataProvider.GetList(new TrialCenterDataFilter { TrialCode = trialCode });
 
             return Json(response.ToDataSourceResult(request));
         }
@@ -304,6 +304,59 @@ namespace TD.CTS.WebUI.Controllers
             ViewBag.Visits = DataProvider.GetList(new TrialVisitDataFilter { TrialCode = trialCode }).OrderBy(v => v.Days);
 
             return PartialView("EditorTemplates/ProceduresEditor", trialCode);
+        }
+
+        #endregion
+
+        #region TrialVisitMaterials
+
+        public ActionResult GetTrialVisitMaterials([DataSourceRequest]DataSourceRequest request, int trialProcedureId, int trialVisitId)
+        {
+            var list = DataProvider.GetList(new TrialVisitMaterialDataFilter { TrialProcedureId = trialProcedureId, TrialVisitId = trialVisitId });
+
+            return Json(list.ToDataSourceResult(request));
+        }
+
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult AddTrialVisitMaterial([DataSourceRequest] DataSourceRequest request, TrialVisitMaterial trialVisitMaterial)
+        {
+            if (trialVisitMaterial != null && ModelState.IsValid)
+            {
+                DataProvider.Add(trialVisitMaterial);
+            }
+
+            return Json(new[] { trialVisitMaterial }.ToDataSourceResult(request, ModelState));
+        }
+
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult UpdateTrialVisitMaterial([DataSourceRequest] DataSourceRequest request, TrialVisitMaterial trialVisitMaterial)
+        {
+            if (trialVisitMaterial != null && ModelState.IsValid)
+            {
+                DataProvider.Update(trialVisitMaterial);
+            }
+
+            return Json(new[] { trialVisitMaterial }.ToDataSourceResult(request, ModelState));
+        }
+
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult DeleteTrialVisitMaterial([DataSourceRequest] DataSourceRequest request, TrialVisitMaterial trialVisitMaterial)
+        {
+            if (trialVisitMaterial != null)
+            {
+                DataProvider.Delete(trialVisitMaterial);
+            }
+
+            return Json(new[] { trialVisitMaterial }.ToDataSourceResult(request, ModelState));
+        }
+
+        public ActionResult GetTrialMaterialsDict(string trialCode)
+        {
+            var trialMaterials = DataProvider.GetList(new TrialMaterialDataFilter { TrialCode = trialCode });
+            var materials = DataProvider.GetList(new MaterialDataFilter());
+            var dict = trialMaterials.Join(materials, tm => tm.MaterialId, m => m.Id, (tm, m) => new { tm.Id, m.Name });
+
+            return Json(dict);
         }
 
         #endregion

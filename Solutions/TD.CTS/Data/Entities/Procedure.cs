@@ -9,10 +9,10 @@ namespace TD.CTS.Data.Entities
 {
     public class Procedure : Entity
     {
-        [Required]
+        [Required(ErrorMessage = "Код не задан")]
         public string Code { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Наименование не задано")]
         public string Name { get; set; }
     }
 }

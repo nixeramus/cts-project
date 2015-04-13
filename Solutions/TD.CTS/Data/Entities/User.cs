@@ -14,13 +14,13 @@ namespace TD.CTS.Data.Entities
             Roles = new List<Role>();
         }
 
-        [Required]
+        [Required(ErrorMessage = "Логин не задан")]
         public string Login { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Мед. учреждение не выбрано")]
         public int HospitalId { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Имя не задано")]
         public string FullName { get; set; }
 
         public string Email { get; set; }

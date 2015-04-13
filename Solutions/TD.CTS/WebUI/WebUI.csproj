@@ -743,6 +743,8 @@
     <Content Include="Views\Schedules\Edit.cshtml" />
     <Content Include="Views\Schedules\Index.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\GridNullableForeignKey.cshtml" />
+    <Content Include="Views\Trials\EditorTemplates\VisitMaterialEditor.cshtml" />
+    <Content Include="Views\Trials\EditorTemplates\MainEditor.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -11,7 +11,7 @@ namespace TD.CTS.Data.Entities
     {
         public int Id { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Наименование не задано")]
         public string Name { get; set; }
     }
 }

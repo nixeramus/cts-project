@@ -13,10 +13,10 @@ namespace TD.CTS.Data.Entities
 
         public string TrialCode { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Наименование не задано")]
         public string Name { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Смещение не задано")]
         public int Days { get; set; }
 
         public int Punctuality { get; set; }

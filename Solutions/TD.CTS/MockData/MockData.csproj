@@ -56,6 +56,7 @@
     <Compile Include="Repositories\Repository.cs" />
     <Compile Include="Repositories\MaterialRepository.cs" />
     <Compile Include="Repositories\TrialProcedureRepository.cs" />
+    <Compile Include="Repositories\TrialVisitMaterialRepository.cs" />
     <Compile Include="Repositories\TrialVisitRepository.cs" />
     <Compile Include="Repositories\TrialMaterialRepository.cs" />
     <None Include="Repositories\TrialCenterRepository.cs" />

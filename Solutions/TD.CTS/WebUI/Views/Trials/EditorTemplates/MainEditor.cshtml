@@ -1,0 +1,106 @@
+﻿@using TD.Common.Kendo.Mvc5.Grid
+
+@model TD.CTS.Data.Entities.Trial
+
+@{
+    var isNew = ViewBag.IsNew;
+}
+
+<table id="trialForm" class="td-formTable" style="width:auto;">
+    <tr>
+        <td style="width:120px;">
+            @(Html.Kendo().Button()
+                .Name("BackButton")
+                .SpriteCssClass("k-icon k-i-arrow-w")
+                .Tag("a")
+                .Content("Назад")
+                .HtmlAttributes(new { style = "width:100%;", href = Url.Action("Index", "Trials") })
+            )
+        </td>
+        <td style="width:40px;"></td>
+        <td>
+            @(Html.Kendo().Button()
+                .Name("SaveButton")
+                .SpriteCssClass("k-icon k-update")
+                .Content("Сохранить")
+                .HtmlAttributes(new { style = "width:230px;" })
+                .Events(e => e.Click("SaveTrial"))
+        )
+    </td>
+</tr>
+<tr>
+    <td class="td-formTable-caption" colspan="2" style="width:250px;">Код исследования</td>
+    <td>
+        @Html.EditorFor(model => model.Code)
+    </td>
+</tr>
+<tr>
+    <td class="td-formTable-caption" colspan="2">Наименование исследования</td>
+    <td>
+        @Html.EditorFor(model => model.Name)
+    </td>
+</tr>
+<tr>
+    <td class="td-formTable-caption" colspan="2">Администратор исследования</td>
+    <td>
+        @Html.EditorFor(model => model.AdministratorLogin, "GridForeignKey")
+    </td>
+</tr>
+<tr>
+    <td class="td-formTable-caption" style="width:100px;">Заказ такси</td>
+    <td colspan="2">
+        @Html.EditorFor(model => model.TaxiBooking)
+    </td>
+</tr>
+<tr>
+    <td class="td-formTable-caption">Службы такси</td>
+    <td colspan="2">
+        @Html.EditorFor(model => model.TaxiService, "Text")
+    </td>
+</tr>
+<tr>
+    <td class="td-formTable-caption">Утверждено</td>
+    <td colspan="2">
+        @Html.EditorFor(model => model.Approved)
+    </td>
+</tr>
+<tr>
+    <td class="td-formTable-caption"></td>
+    <td colspan="3"></td>
+</tr>
+</table>
+
+@(Html.Kendo().Notification()
+    .Name("SaveNotification")
+    .Position(p => p.Pinned(true).Top(115).Right(30))
+    .Width(150)
+)
+
+@(Html.Kendo().Grid<TD.CTS.Data.Entities.TrialCenter>()
+    .Init("CentersGrid")
+    .Editable()
+    .HtmlAttributes(new { style = "display:" + (isNew ? "none" : "block") })
+    .Columns(columns =>
+    {
+        columns.CrudCommands().Width(80);
+        columns.ForeignKey(e => e.HospitalId, (System.Collections.IEnumerable)ViewBag.Hospitals, "Id", "Name").Width(200).Title("Мед. учреждение");
+        columns.Bound(e => e.Number).Width(200).Title("№ иссл. центра");
+        columns.ForeignKey(e => e.AnatomistLogin, (System.Collections.IEnumerable)ViewBag.Users, "Login", "FullName").Width(200).Title("ФИО главного исслед.");
+        columns.ForeignKey(e => e.CoordinatorLogin, (System.Collections.IEnumerable)ViewBag.Users, "Login", "FullName").Width("100%").Title("ФИО координатора").EditorTemplateName("GridNullableForeignKey");
+    })
+        .DataSource(dataSource => dataSource
+            .Ajax()
+            .PageSize(20)
+            .Model(model =>
+            {
+                model.Id(e => e.Id);
+            })
+            .Read(read => read.Action("GetTrialCenters", "Trials", new { TrialCode = Model.Code }))
+            .Create(create => create.Action("AddTrialCenter", "Trials"))
+            .Update(update => update.Action("UpdateTrialCenter", "Trials"))
+            .Destroy(destroy => destroy.Action("DeleteTrialCenter", "Trials"))
+            .Events(events => events.Error("kendo_grid_error_handler"))
+         )
+         .Events(events => events.Edit("OnCenterEdit").Save("OnCenterSave"))
+)
+
