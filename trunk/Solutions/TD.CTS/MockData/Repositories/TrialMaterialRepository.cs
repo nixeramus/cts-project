@@ -20,46 +20,46 @@ namespace TD.CTS.MockData.Repositories
         {
             var list = new List<TrialMaterial>();
 
-            var trials = dataProvider.GetList(new TrialDataFilter());
+            //var trials = dataProvider.GetList(new TrialDataFilter());
 
-            if (trials.Count < 1)
-                return list;
+            //if (trials.Count < 1)
+            //    return list;
 
-            var materials = dataProvider.GetList(new MaterialDataFilter());
+            //var materials = dataProvider.GetList(new MaterialDataFilter());
 
-            Random rand = new Random();
+            //Random rand = new Random();
 
-            int id = 1;
-            int materialsCount = materials.Count > 10 ? 10 : materials.Count;
-            foreach (var trial in trials)
-            {
-                HashSet<int> set = rand.NextSet(rand.Next(0, materialsCount + 1), 0, materials.Count);
+            //int id = 1;
+            //int materialsCount = materials.Count > 10 ? 10 : materials.Count;
+            //foreach (var trial in trials)
+            //{
+            //    HashSet<int> set = rand.NextSet(rand.Next(0, materialsCount + 1), 0, materials.Count);
 
-                list.AddRange(set.Select(i => new TrialMaterial
-                    {
-                        Id = id++,
-                        TrialCode = trial.Code,
-                        MaterialId = materials[i].Id
-                    }));
+            //    list.AddRange(set.Select(i => new TrialMaterial
+            //        {
+            //            Id = id++,
+            //            TrialCode = trial.Code,
+            //            MaterialId = materials[i].Id
+            //        }));
 
-                //int count = rand.Next(0, materialsCount + 1);
-                //HashSet<int> set = new HashSet<int>();
-                //for (int i = 0; i < count; i++)
-                //{
-                //    var materialIndex = rand.Next(0, materials.Count);
-                //    while (set.Contains(materialIndex))
-                //    {
-                //        materialIndex = rand.Next(0, materials.Count); ;
-                //    }
-                //    list.Add(new TrialMaterial
-                //    { 
-                //        Id = id,
-                //        TrialCode = trial.Code,
-                //        MaterialId = materials[materialIndex].Id
-                //    });
-                //    id++;
-                //}
-            }
+            //    //int count = rand.Next(0, materialsCount + 1);
+            //    //HashSet<int> set = new HashSet<int>();
+            //    //for (int i = 0; i < count; i++)
+            //    //{
+            //    //    var materialIndex = rand.Next(0, materials.Count);
+            //    //    while (set.Contains(materialIndex))
+            //    //    {
+            //    //        materialIndex = rand.Next(0, materials.Count); ;
+            //    //    }
+            //    //    list.Add(new TrialMaterial
+            //    //    { 
+            //    //        Id = id,
+            //    //        TrialCode = trial.Code,
+            //    //        MaterialId = materials[materialIndex].Id
+            //    //    });
+            //    //    id++;
+            //    //}
+            //}
 
             return list;
         }
@@ -81,7 +81,7 @@ namespace TD.CTS.MockData.Repositories
 
         protected override void SetNewValues(TrialMaterial item)
         {
-            item.Id = Data.Max(e => e.Id) + 1;
+            item.Id = Data.Count > 0 ? Data.Max(e => e.Id) + 1 : 1;
         }
     }
 }

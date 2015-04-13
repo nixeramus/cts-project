@@ -9,12 +9,12 @@ namespace TD.CTS.Data.Entities
 {
     public class Trial : Entity
     {
-        [Required]
+        [Required(ErrorMessage = "Код не задан")]
         public string Code { get; set; }
 
         public int Version { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Наименование не задано")]
         public string Name { get; set; }
 
         public string Status { get; set; }

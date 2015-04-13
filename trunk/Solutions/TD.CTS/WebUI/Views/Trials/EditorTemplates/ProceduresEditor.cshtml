@@ -8,9 +8,7 @@
     .Editable()
     .Columns(columns =>
     {
-        //columns.Bound(e => e.ProcedureCode);
-        columns.CrudCommands()
-            .Width(80)
+        columns.CrudCommands().Width(80)
             .HeaderHtmlAttributes(new { style = "min-width:60px;vertical-align:bottom;text-align:right;" })
             .HtmlAttributes(new { @class = "k-group-cell" });
         columns.ForeignKey(e => e.ProcedureCode, (System.Collections.IEnumerable)ViewBag.Procedures, "Code", "Name")
@@ -30,12 +28,9 @@
                 .HtmlAttributes(new { style = "text-align:center;" })
                 .Width(100);
 
-            //buttonsRow.Append(@"<th style='text-align:center; style='text-align:right;><a class='k-button k-button-icontext k-grid-edit td-grid-button' href='\#' title='Изменить визит'><span class='k-icon k-edit td-grid-button-image'></span></a>");
-            //buttonsRow.Append(@"<a class='k-button k-button-icontext k-grid-delete td-grid-button' href='\#' title='Удалить визит'><span class='k-icon k-delete td-grid-button-image'></span></a></th>");
         }
         columns.Template(e => { }).ClientTemplate(" ").Width("100%").HtmlAttributes(new { @class = "k-group-cell" });
 
-        //buttonsRow.Append("<th/></tr>");
     })
     .DataSource(dataSource => dataSource
        .Ajax()
@@ -60,17 +55,61 @@
         .Cancel("OnProcedureCancel"))
 )
 
+<div id="VisitMaterials" style="display:none;">
+    <h4>Материалы</h4>
+    @(Html.Kendo().Grid<TD.CTS.Data.Entities.TrialVisitMaterial>()
+        .Name("VisitMaterialsGrid")
+        .Editable()
+        .AutoBind(false)
+        .Scrollable()
+        .Columns(columns =>
+        {
+            columns.CrudCommands().Width(80).HeaderHtmlAttributes(new { style = "text-align:right;" });
+            columns.Bound(e => e.TrialMaterialId)
+                .ClientTemplate("#= MaterialName #")
+                .EditorTemplateName("VisitMaterialEditor")
+                .Width(250).Title("Наименование материала");
+
+            columns.Bound(e => e.Quantity).Width(120).Title("Количество");
+            columns.Template(e => { }).ClientTemplate(" ").Width("100%");
+        })
+        .DataSource(dataSource => dataSource
+           .Ajax()
+           .Model(model =>
+           {
+               model.Id(e => e.Id);
+               model.Field(e => e.Quantity).DefaultValue(1);
+           })
+           .Read(read => read.Action("GetTrialVisitMaterials", "Trials").Data("VisitMaterialsData"))
+           .Create(create => create.Action("AddTrialVisitMaterial", "Trials"))
+           .Update(update => update.Action("UpdateTrialVisitMaterial", "Trials"))
+           .Destroy(destroy => destroy.Action("DeleteTrialVisitMaterial", "Trials"))
+           .Events(events => events.Error("kendo_grid_error_handler"))
+        )
+        .Events(events => events.Edit("kendo_grid_onrowedit").Save("OnVisitMaterialsSave"))
+    )
+</div>
+
+@(Html.Kendo().Window()
+    .Name("VisitEdit")
+    .Modal(true)
+    .Draggable(true)
+    .Title("Визит")
+    .HtmlAttributes(new { @class = "k-popup-edit-form" })
+    .Visible(false)
+    .Events(events => events.Refresh("OpenVisitEdit"))
+)
+
 <script>
     kendo_grid_init($("#ProceduresGrid"));
     var procGrid = $("#ProceduresGrid");
-    //$("#ProceduresGrid .k-grid-add.td-grid-button").click(function () {
+
     procGrid.on("click", ".k-grid-add.td-grid-button", function () {
         ClearSelection();
         kendo_grid_createrow(procGrid);
         isProcedureEdit = true;
     });
 
-    //$("#ProceduresGrid .k-grid-addcolumn.td-grid-button").click(function () {
     procGrid.on("click", ".k-grid-addcolumn.td-grid-button", function () {
         ClearSelection();
         LoadVisitEdit();
@@ -87,4 +126,19 @@
         var id = $(this).parent().find("input").val();
         DeleteVisit(id);
     });
+
+    kendo_grid_init($("#VisitMaterialsGrid"));
+    var materialsGrid = $("#VisitMaterialsGrid");
+    $("#VisitMaterialsGrid .k-grid-add.td-grid-button").click(function () {
+        kendo_grid_createrow(materialsGrid);
+    });
+
+    procGrid.on("change", ".td-visit-checkbox", function () {
+        if ($(this).is(":checked")) {
+            $("#VisitMaterials").show();
+        } else {
+            $("#VisitMaterials").hide();
+        }
+    });
+
 </script>

@@ -11,10 +11,10 @@ namespace TD.CTS.Data.Entities
     {
         public int Id { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Имя не задано")]
         public string FullName { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Мед. учреждение не выбран")]
         public int HospitalId { get; set; }
 
         public int? CityId { get; set; }

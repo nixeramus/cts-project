@@ -1,0 +1,15 @@
+﻿@model int
+           
+@(
+ Html.Kendo().DropDownListFor(m => m)        
+    .DataSource(source =>
+    {
+        source.Read(read =>
+        {
+            read.Action("GetTrialMaterialsDict", "Trials").Type(HttpVerbs.Post).Data("TrialMaterialsData");
+        }).ServerFiltering(false);
+    })
+    .DataValueField("Id")
+    .DataTextField("Name")
+    .OptionLabel("Не выбрано")
+)

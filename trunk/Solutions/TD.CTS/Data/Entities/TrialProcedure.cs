@@ -13,7 +13,7 @@ namespace TD.CTS.Data.Entities
 
         public string TrialCode { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Процедура не выбрана")]
         public string ProcedureCode { get; set; }
 
         public List<int> VisitIds { get; set; }

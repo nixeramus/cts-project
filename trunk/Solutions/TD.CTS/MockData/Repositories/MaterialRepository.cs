@@ -47,7 +47,7 @@ namespace TD.CTS.MockData.Repositories
 
         protected override void SetNewValues(Material item)
         {
-            item.Id = Data.Max(e => e.Id) + 1;
+            item.Id = Data.Count > 0 ? Data.Max(e => e.Id) + 1 : 1;
         }
     }
 }

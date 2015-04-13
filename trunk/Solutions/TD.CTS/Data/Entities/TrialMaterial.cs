@@ -13,7 +13,7 @@ namespace TD.CTS.Data.Entities
 
         public string TrialCode { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Материал не выбран")]
         public int MaterialId { get; set; }
     }
 }
