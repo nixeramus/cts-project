@@ -25,6 +25,11 @@
         //filterRow.AddCell(new TD.Common.Kendo.Mvc5.Grid.Filters.DateRangeFilterCell("BeginDate"));
         columns.Bound(e => e.BeginDate).Width(200).Title("Дата начала исследования").Format("{0:dd.MM.yyyy}");
         filterRow.AddCell(new TD.Common.Kendo.Mvc5.Grid.Filters.DateRangeFilterCell("BeginDate"));
+
+        columns.Bound(e => e.ScheduleStatus).Width(200).Title("Статус");
+        filterRow.AddCell(new TD.Common.Kendo.Mvc5.Grid.Filters.EmptyFilterCell());
+        //filterRow.AddCell(new TD.Common.Kendo.Mvc5.Grid.Filters.DropDownFilterCell("ScheduleStatus", ViewBag.ScheduleStatuses, "Name", "Name"));
+        
         columns.ForeignKey(e => e.AuthorLogin, (System.Collections.IEnumerable)ViewBag.Users, "Login", "FullName").Width(200).Title("Автор");
         filterRow.AddCell(new TD.Common.Kendo.Mvc5.Grid.Filters.CheckBoxFilterCell("OwnSchedulesOnly", "Только свои"));
         columns.Bound(e => e.CreateDate).Width(200).Title("Дата создания").Format("{0:dd.MM.yyyy}");
