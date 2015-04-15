@@ -38,6 +38,7 @@
                                   <td>
                                       @(Html.Kendo().Button().Name("SaveButton").SpriteCssClass("k-icon k-update").Content("Сохранить").HtmlAttributes(new { style = "width:230px;" }).Events(e => e.Click("SaveSchedule")))
                                   </td>
+                                  <td></td>
                               </tr>
                               <tr>
                                   <td class="td-formTable-caption" colspan="2" style="width:250px;">Дата начала исследования</td>
@@ -45,6 +46,8 @@
                                       @Html.HiddenFor(model=>model.Id)
                                       @Html.EditorFor(model => model.BeginDate, "Date")
                                   </td>
+                                  <td class ="td-formTable-caption" rowspan="3">Примечание</td>
+                                  <td rowspan="3">@Html.EditorFor(model => model.Comment, "Text")</td>
                               </tr>
                               <tr>
                                   <td class="td-formTable-caption" colspan="2">Пациент</td>
@@ -58,71 +61,11 @@
                                       @Html.EditorFor(model => model.TrialCenterID, "GridForeignKey")
                                   </td>
                               </tr>
-                              <tr>
-                                  <td class="td-formTable-caption">Примечание</td>
-                                  <td colspan="2">
-                                      @Html.EditorFor(model => model.Comment, "Text")
-                                  </td>
-                              </tr>
-                              <tr>
-                                  <td class="td-formTable-caption"></td>
-                                  <td colspan="3"></td>
-                              </tr>
+                            
                           </table>
 
 
-
-@(Html.Kendo().Grid<TD.CTS.Data.Entities.ScheduleVisit>()
-    .Init("VisitsGrid")
-    .Editable()
-    .HtmlAttributes(new { style = "display:" + (isNew ? "none" : "block") })
-    .Columns(columns =>
-    {
-        columns.Command(command => command.Edit()).Width(172);
-        columns.Bound(e => e.TrialVisitName).Width(200).Title("Наименование");
-        columns.Bound(e => e.BaseDay).Width(100).Title("Смещение");
-        columns.Bound(e => e.ScheduleDate).Width(200).EditorTemplateName("Date").Format("{0:dd.MM.yyyy}").Title("Назначенная дата");
-    })
-        .DataSource(dataSource => dataSource
-            .Ajax()
-            .PageSize(20)
-            .Model(model =>
-            {
-                model.Id(e=>e.ScheduleID);  //(e => e.Id);
-                model.Field(e => e.TrialCode).DefaultValue(Model.TrialCode);
-                model.Field(e => e.TrialCenterID).DefaultValue(Model.TrialCenterID);
-                model.Field(e => e.BaseDay).Editable(false);
-                model.Field(e => e.TrialVisitName).Editable(false);
-            })
-               .Read(read => read.Action("GetScheduleVisits", "Schedules", new { ScheduleID = Model.Id }))
-            //.Create(create => create.Action("AddTrialCenter", "Trials"))
-                    .Update(update => update.Action("UpdateScheduleVisit", "Schedules"))
-            //.Destroy(destroy => destroy.Action("DeleteTrialCenter", "Trials"))
-            .Events(events => events.Error("kendo_grid_error_handler"))
-         )
-         //.Events(events => events.Edit("kendo_grid_onrowedit"))
-)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                        @RenderFooter(isNew)
                       </text>
 );
     }
@@ -131,6 +74,66 @@
 )
 
 @(Html.Kendo().Notification().Name("SaveNotification").Position(p => p.Pinned(true).Top(115).Right(30)).Width(150))
+@*@Html.RenderPartial(@Html.Partial("EditorTemplates/ScheduleDetailEditor", Model))*@
+@(Html.Kendo().Window().Name("ProcedureEmployeeWindow").Width(630).Height(600).Draggable().Resizable().Title("Сотрудники").Content(@<text>@Html.Partial("EditorTemplates/ProcedureEmployeeEditor", Model)</text>).Visible(false).Modal(true).HtmlAttributes(new { @class = "k-popup-edit-form" }))
+
+@helper RenderFooter(bool isNew)
+{
+    @(Html.Kendo().TabStrip()
+    .Name("VisitsTab")
+    .Animation(false)
+    .Items(visittabs =>
+    {
+        visittabs.Add()
+            .Text("Краткая информация")
+            .Selected(true)
+            .Content(@<text>
+                          @(Html.Kendo().Grid<TD.CTS.Data.Entities.ScheduleVisit>()
+                                      .Init("VisitsGrid")
+                                      .Editable()
+                                      .HtmlAttributes(new {style = "display:" + (isNew ? "none" : "block")})
+                                      .Columns(columns =>
+                                      {
+                                          columns.Command(command => command.Edit()).Width(60);
+                                          columns.Bound(e => e.TrialVisitName).Width(200).Title("Наименование");
+                                          columns.Bound(e => e.BaseDay).Width(100).Title("Смещение").ClientTemplate("#=BaseDay#&nbsp;&plusmn;&nbsp;#=Limit#");
+                                          columns.Bound(e => e.ScheduleDate).Width(200).EditorTemplateName("Date").Format("{0:dd.MM.yyyy}").Title("Назначенная дата");
+                                      })
+                                      .DataSource(dataSource => dataSource
+                                          .Ajax()
+                                          .PageSize(20)
+                                          .Model(model =>
+                                          {
+                                              model.Id(e => e.ScheduleID); //(e => e.Id);
+                                              model.Field(e => e.TrialCode).DefaultValue(Model.TrialCode);
+                                              model.Field(e => e.TrialCenterID).DefaultValue(Model.TrialCenterID);
+                                              model.Field(e => e.BaseDay).Editable(false);
+                                              model.Field(e => e.TrialVisitName).Editable(false);
+                                          })
+                                          .Read(read => read.Action("GetScheduleVisits", "Schedules", new {ScheduleID = Model.Id}))
+                                          //.Create(create => create.Action("AddTrialCenter", "Trials"))
+                                          .Update(update => update.Action("UpdateScheduleVisit", "Schedules"))
+                                          //.Destroy(destroy => destroy.Action("DeleteTrialCenter", "Trials"))
+                                          .Events(events => events.Error("kendo_grid_error_handler"))
+                                      )
+                                      .Events(events => events.Edit("kendo_grid_onrowedit"))
+                                      )
+                      </text>);
+        visittabs.Add()
+            .Text("Подробная информация")
+            .Enabled(!isNew)
+            .Selected(false)
+            .ContentHtmlAttributes(new { style = "padding:0;" })
+            .Content(@<text>@Html.Partial("EditorTemplates/ScheduleDetailEditor", Model)</text>);
+
+
+
+    })
+)
+}
+
+
+
 <script>
     var validator = $("#scheduleForm").kendoValidator().data("kendoValidator");
     
@@ -150,7 +153,7 @@
                 },
             success: function (result) {
                 if(isNew) {
-                    //$("#CentersGrid").css("display", "block");
+                    $("#VisitsGrid").css("display", "block");
                     //var tabStrip = $("#TabStrip").data("kendoTabStrip");
                     //var tabs = tabStrip.tabGroup.children();
                     //tabStrip.enable(tabs.eq(1), true);
@@ -167,5 +170,12 @@
         });
     }
     }
-
+    function OpenProceduereEmployeeWindow() {
+        var window = $("#ProcedureEmployeeWindow").data("kendoWindow");
+        window.center().open();
+        
+        var tabgrid = $('#ProcedureEmployeesEditorGrid').data("kendoGrid");
+        tabgrid.dataSource.read();
+        tabgrid.refresh();
+    }
 </script>
