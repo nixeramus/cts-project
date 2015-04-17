@@ -749,6 +749,8 @@
     <Content Include="Views\Trials\EditorTemplates\VisitMaterialEditor.cshtml" />
     <Content Include="Views\Trials\EditorTemplates\MainEditor.cshtml" />
     <Content Include="Views\Trials\RolesEdit.cshtml" />
+    <Content Include="Views\Schedules\EditorTemplates\ProcedureEmployeeEditor.cshtml" />
+    <Content Include="Views\Schedules\EditorTemplates\ScheduleDetailEditor.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\" />
