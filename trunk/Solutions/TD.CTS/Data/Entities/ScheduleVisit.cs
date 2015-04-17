@@ -9,8 +9,8 @@ namespace TD.CTS.Data.Entities
         public int TrialCenterID { get; set; }
         public string TrialCode { get; set; }
         public int TrialVersionNo { get; set; }
-        public DateTime ScheduleDate { get; set; }
-        public DateTime ActualDate { get; set; }
+        public DateTime? ScheduleDate { get; set; }
+        public DateTime? ActualDate { get; set; }
         public string TrialVisitName { get; set; }
         public int VisitNo { get; set; }
         public int BaseDay { get; set; }
