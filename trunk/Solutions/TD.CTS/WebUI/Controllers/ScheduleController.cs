@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Linq;
 using System.Web.Mvc;
 using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI;
 using TD.CTS.Data.Entities;
 using TD.CTS.Data.Filters;
+using TD.CTS.WebUI.Models;
 
 namespace TD.CTS.WebUI.Controllers
 {
@@ -63,10 +65,15 @@ namespace TD.CTS.WebUI.Controllers
             //var trials = DataProvider.GetList(new TrialDataFilter());
             //Получаем список исследовательских центров
             var trialCenters = DataProvider.GetList(new TrialCenterDataFilter());
-
+            var systemRoles = DataProvider.GetList(new RoleDataFilter());
             ViewBag.Users = users;
             ViewBag.PatientCode_Data = new SelectList(patients, "Id", "FullName");
             ViewBag.TrialCenterID_Data = new SelectList(trialCenters, "Id", "Number");
+
+            ViewBag.SystemRoles = systemRoles;
+
+           // ViewBag.ScheduleStatuses = systemRoles;
+
             //ViewBag.TrialCode_Data = new SelectList(trials, "Code", "Name");
             //ViewBag.Hospitals = DataProvider.GetList(new HospitalDataFilter());
 
@@ -75,7 +82,28 @@ namespace TD.CTS.WebUI.Controllers
             //ViewBag.Procedures = DataProvider.GetList(new ProcedureDataFilter());
 
             //ViewBag.Visits = DataProvider.GetList(new TrialVisitDataFilter { TrialCode = code });
+           // if (Id.HasValue)
+            {
 
+                /*var results = from p in persons
+              group p.car by p.PersonId into g
+              select new { PersonID = g.Key, Cars = g.ToList() };
+                 procedureVisit.Select(p => new ScheduleProcedure {ProcedureCode = p.ProcedureCode, ScheduleId = p.ScheduleID, TrialCenterId = p.TrialCenterID, TrialCode = p.TrialCode, TrialVersionNo = p.TrialVersionNo}).ToList();
+                 
+                 */
+
+                //foreach (var p in procedureVisit)
+                //{
+                  
+                //    //var vis = procedureVisit.Where(r => r.ProcedureCode == p.ProcedureCode && r.ScheduleID=p.ScheduleID);
+                //    var item = new ScheduleProcedure {ProcedureCode =p.ProcedureCode,ScheduleId = p.ScheduleID,TrialCenterId = p.TrialCenterID,TrialCode =p.TrialCode,TrialVersionNo = p.TrialVersionNo, VisitIds = new List<int>()};
+                //    list.Add(item);
+                //}
+
+                
+                ViewBag.Procedures = DataProvider.GetList(new ProcedureDataFilter());
+                ViewBag.Visits = DataProvider.GetList(new ScheduleVisitDataFilter {ScheduleID = Id});
+            }
             return View(schedule);
         }
 
@@ -121,5 +149,68 @@ namespace TD.CTS.WebUI.Controllers
             return Json(new[] { scheduleVisit }.ToDataSourceResult(request, ModelState));
         }
         #endregion
+
+
+        #region ScheduleProcedures
+
+        public ActionResult GetScheduleProcedures([DataSourceRequest]DataSourceRequest request, int ScheduleId)
+        {
+            var procedureVisit = DataProvider.GetList(new ScheduleVisitProcedureDataFilter { ScheduleID = ScheduleId });
+
+
+         
+                //var list = new List<ScheduleProcedure>();
+            var result =
+                from proc in procedureVisit
+                select
+                    new ScheduleProcedure()
+                    {
+                        ProcedureCode = proc.ProcedureCode,
+                        TrialCenterId = proc.TrialCenterID,
+                        ScheduleID = proc.ScheduleID,
+                        TrialCode = proc.TrialCode,
+                        TrialVersionNo = proc.TrialVersionNo,
+                        VisitIds = procedureVisit.Select(e => e.TrialVisitID).ToList()
+                    };
+
+                //var groupedCustomerList = procedureVisit.GroupBy(c => new { c.ProcedureCode, c.ScheduleID, c.TrialCenterID, c.TrialCode, c.TrialVersionNo,}).
+                //    .ToList();
+
+
+            var response = result.ToList();
+
+            return Json(response.ToDataSourceResult(request));
+        }
+        #endregion ScheduleProcedures
+
+
+
+        #region ScheduleEmployees
+        public ActionResult GetScheduleEmployees([DataSourceRequest]DataSourceRequest request, ScheduleEmployeeDataFilter dataFilter)
+        {
+            var response = DataProvider.GetList(dataFilter ?? new ScheduleEmployeeDataFilter());
+            return Json(response.ToDataSourceResult(request));
+        }
+
+        public ActionResult UpdateScheduleEmployee([DataSourceRequest] DataSourceRequest request, ScheduleEmployee scheduleEmployee)
+        {
+            if (scheduleEmployee != null && ModelState.IsValid)
+            {
+                DataProvider.Update(scheduleEmployee);
+            }
+
+            return Json(new[] { scheduleEmployee }.ToDataSourceResult(request, ModelState));
+        }
+        #endregion
+
+        #region ProcedureEmployees
+        public ActionResult GetProcedureEmployees([DataSourceRequest]DataSourceRequest request, ProcedureEmployeeDataFilter dataFilter)
+        {
+            var response = DataProvider.GetList(dataFilter ?? new ProcedureEmployeeDataFilter());
+            return Json(response.ToDataSourceResult(request));
+        }
+        
+
+       #endregion ScheduleProcedures
     }
 }
