@@ -38,7 +38,7 @@ namespace TD.CTS.MsSqlData.Builders
 
         public override SqlCommand CreateUpdateCommand(SqlConnection connection, ScheduleVisit entity)
         {
-            var command = new SqlCommand("ScheduleUpd", connection)
+            var command = new SqlCommand("ScheduleVisitUpd", connection)
             {
                 CommandType = System.Data.CommandType.StoredProcedure,
                 CommandTimeout = Settings.CommandTimeout
@@ -48,8 +48,11 @@ namespace TD.CTS.MsSqlData.Builders
             command.Parameters.AddWithValue("@TrialVisitID", entity.TrialVisitID);
             //command.Parameters.AddWithValue("@TrialCenterID", entity.TrialCenterID);
             //command.Parameters.AddWithValue("@TrialCode", entity.TrialCode);
-            //command.Parameters.AddWithValue("@BeginDate", entity.BeginDate);
-            //command.Parameters.AddWithValue("@Comment", entity.Comment);
+            //command.Parameters.AddWithValue("@TrialVersionNo", entity.TrialCode);
+
+            command.Parameters.AddWithValue("@ScheduleDate", entity.ScheduleDate.GetNullableParameterValue());
+            command.Parameters.AddWithValue("@ActualDate", entity.ActualDate.GetNullableParameterValue());
+            
 
             return command;
         }
@@ -67,8 +70,8 @@ namespace TD.CTS.MsSqlData.Builders
             entity.TrialCenterID = reader.GetValue<int>("TrialCenterID");
             entity.TrialCode = reader.GetString("TrialCode");
             entity.TrialVersionNo = reader.GetValue<int>("TrialVersionNo");
-            entity.ScheduleDate = reader.GetValue<DateTime>("ScheduleDate");
-            entity.ActualDate = reader.GetValue<DateTime>("ActualDate");
+            entity.ScheduleDate = reader.GetNullableValue<DateTime>("ScheduleDate");
+            entity.ActualDate = reader.GetNullableValue<DateTime>("ActualDate");
             entity.TrialVisitName = reader.GetString("TrialVisitName");
             entity.VisitNo = reader.GetValue<int>("VisitNo");
             entity.BaseDay = reader.GetValue<int>("BaseDay");
