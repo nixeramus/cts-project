@@ -19,6 +19,8 @@ namespace TD.CTS.Data.Filters
 
         public string PatientFullName { get; set; }
 
+        public string ScheduleStatus { get; set; }
+
         public bool OwnSchedulesOnly { get; set; }
     }
 }
