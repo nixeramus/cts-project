@@ -94,6 +94,7 @@ namespace TD.CTS.MsSqlData.Builders
             entity.ModificatorLogin = reader.GetString("ModificatorLogin");
             entity.ModificationDate = reader.GetValue<DateTime>("ModificationDate");
             entity.Comment = reader.GetNullableString("Comment");
+            entity.ScheduleStatus = reader.GetString("ScheduleStatus");
         }
 
         public override void LoadNewEntityAttributes(SqlDataReader reader, Schedule entity)
