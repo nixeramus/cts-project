@@ -20,5 +20,7 @@ namespace TD.CTS.Data.Entities
         public DateTime ModificationDate { get; set; }
         public string Comment { get; set; }
 
+        public string ScheduleStatus { get; set; }
+
     }
 }
