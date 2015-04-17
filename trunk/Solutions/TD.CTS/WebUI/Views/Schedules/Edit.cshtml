@@ -120,6 +120,42 @@
                                       )
                       </text>);
         visittabs.Add()
+            .Text("Сотрудники")
+            .Selected(false)
+            .Content(@<text>
+                @(Html.Kendo().Grid<TD.CTS.Data.Entities.ScheduleEmployee>()
+                             .Init("ScheduleEmployeeGrid")
+                                      .Editable()
+                                      .HtmlAttributes(new { style = "display:" + (isNew ? "none" : "block") })
+                                      .Columns(columns =>
+                                      {
+                                          columns.Command(command => command.Edit()).Width(100);
+                                          columns.CrudCommands().Width(80);
+                                          columns.Bound(e => e.ScheduleID).ClientTemplate(@"<a class=""k-button k-button-icontext k-grid-edit td-grid-button"" href=""\#"" title=""Изменить""><span class=""k-icon k-edit td-grid-button-image""></span></a>");
+                                          columns.Bound(e => e.SystemRoleCode).Width(100).Title("Роль");
+                                          columns.ForeignKey(e => e.SystemLogin, (System.Collections.IEnumerable)ViewBag.Users, "Login", "FullName").Width("100%").Title("Сотрудник");
+                                          //columns.Bound(e => e.SystemLogin).Width(100).Title("Сотрудник");
+                                      })
+                                      .DataSource(dataSource => dataSource
+                                          .Ajax()
+                                          .PageSize(20)
+                                          .Model(model =>
+                                          {
+                                              model.Id(e => e.ScheduleID); //(e => e.Id);
+                                              model.Id(e => e.SystemRoleCode);
+                                              model.Field(e => e.SystemRoleCode).Editable(false);
+
+                                          })
+                                          .Read(read => read.Action("GetScheduleEmployees", "Schedules", new { ScheduleID = Model.Id }))
+                                          //.Create(create => create.Action("AddTrialCenter", "Trials"))
+                                           .Update(update => update.Action("UpdateScheduleEmployee", "Schedules"))
+                                          //.Destroy(destroy => destroy.Action("DeleteTrialCenter", "Trials"))
+                                          .Events(events => events.Error("kendo_grid_error_handler"))
+                                      )
+                                      .Events(events => events.Edit("kendo_grid_onrowedit"))
+                )
+            </text>);
+        visittabs.Add()
             .Text("Подробная информация")
             .Enabled(!isNew)
             .Selected(false)
