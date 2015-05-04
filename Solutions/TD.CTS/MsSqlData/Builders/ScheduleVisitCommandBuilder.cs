@@ -46,9 +46,9 @@ namespace TD.CTS.MsSqlData.Builders
 
             command.Parameters.AddWithValue("@ScheduleID", entity.ScheduleID);
             command.Parameters.AddWithValue("@TrialVisitID", entity.TrialVisitID);
-            //command.Parameters.AddWithValue("@TrialCenterID", entity.TrialCenterID);
-            //command.Parameters.AddWithValue("@TrialCode", entity.TrialCode);
-            //command.Parameters.AddWithValue("@TrialVersionNo", entity.TrialCode);
+            command.Parameters.AddWithValue("@TrialCenterID", entity.TrialCenterID);
+            command.Parameters.AddWithValue("@TrialCode", entity.TrialCode);
+            command.Parameters.AddWithValue("@TrialVersionNo", entity.TrialVersionNo);
 
             command.Parameters.AddWithValue("@ScheduleDate", entity.ScheduleDate.GetNullableParameterValue());
             command.Parameters.AddWithValue("@ActualDate", entity.ActualDate.GetNullableParameterValue());
