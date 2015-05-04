@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace TD.CTS.Data.Entities
 {
@@ -9,6 +10,7 @@ namespace TD.CTS.Data.Entities
         public int TrialCenterID { get; set; }
         public string TrialCode { get; set; }
         public int TrialVersionNo { get; set; }
+        [Required(ErrorMessage = "Дата не задана")]
         public DateTime? ScheduleDate { get; set; }
         public DateTime? ActualDate { get; set; }
         public string TrialVisitName { get; set; }
