@@ -58,6 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Grid\BuilderExtensions.cs" />
+    <Compile Include="Grid\GridCommandColumnBuilder.cs" />
     <Compile Include="Grid\Filters\ButtonFilterCell.cs" />
     <Compile Include="Grid\Filters\CheckBoxFilterCell.cs" />
     <Compile Include="Grid\Filters\DropDownFilterCell.cs" />
@@ -66,6 +67,7 @@
     <Compile Include="Grid\Filters\FilterCell.cs" />
     <Compile Include="Grid\Filters\DateRangeFilterCell.cs" />
     <Compile Include="Grid\Filters\TextFilterCell.cs" />
+    <Compile Include="Grid\HtmlTemplates.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

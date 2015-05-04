@@ -20,28 +20,12 @@ namespace TD.Common.Kendo.Mvc5.Grid
                 .Reorderable(r => r.Columns(true));
         }
 
-        public static GridTemplateColumnBuilder<T> CrudCommands<T>(this GridColumnFactory<T> factory) where T : class
+        public static GridCrudCommandsColumnBuilder<T> CrudCommands<T>(this GridColumnFactory<T> factory, FilterRow filterRow = null) where T : class
         {
-            return factory.Template(model => {})
-                .Width(80)
-                .ClientTemplate(
-@"<a class=""k-button k-button-icontext k-grid-edit td-grid-button"" href=""\#"" title=""Изменить""><span class=""k-icon k-edit td-grid-button-image""></span></a>
-<a class=""k-button k-button-icontext k-grid-delete td-grid-button"" href=""\#"" title=""Удалить""><span class=""k-icon k-delete td-grid-button-image""></span></a>")
-                .HeaderTemplate(
-@"<a class=""k-button k-button-icontext k-grid-add td-grid-button"" title=""Добавить"" href=""javascript: void(0)""><span class=""k-icon k-add td-grid-button-image""></span></a>");
-        }
-        public static GridTemplateColumnBuilder<T> EditCommand<T>(this GridColumnFactory<T> factory) where T : class
-        {
-            return factory.Template(model => { })
-                .Width(80)
-                .ClientTemplate(
-                    @"<a class=""k-button k-button-icontext k-grid-edit td-grid-button"" href=""\#"" title=""Изменить""><span class=""k-icon k-edit td-grid-button-image""></span></a>");
-            //.HeaderTemplate(@"<a class=""k-button k-button-icontext k-grid-add td-grid-button"" title=""Добавить"" href=""javascript: void(0)""><span class=""k-icon k-add td-grid-button-image""></span></a>");
-        }
-        public static GridTemplateColumnBuilder<T> CrudCommands<T>(this GridColumnFactory<T> factory, FilterRow filterRow) where T : class
-        {
-            filterRow.AddCell(new ButtonFilterCell());
-            return factory.CrudCommands();
+            if (filterRow != null)
+                filterRow.AddCell(new ButtonFilterCell());
+            var templateColumnBuilder = factory.Template(model => { });
+            return new GridCrudCommandsColumnBuilder<T>(templateColumnBuilder);
         }
 
         public static GridBoundColumnBuilder<TModel> Bound<TModel, TValue>(this GridColumnFactory<TModel> factory, 
