@@ -22,5 +22,7 @@ namespace TD.CTS.Data.Entities
 
         public string ScheduleStatus { get; set; }
 
+        public int TrialVersionNo { get; set; }
+
     }
 }
