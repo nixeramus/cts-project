@@ -15,7 +15,7 @@
     .Init("Grid")
     .Columns(columns =>
     {
-        columns.CrudCommands(filterRow).Width(80);
+        columns.CrudCommands(filterRow).All();
         columns.Bound(e => e.Name, filterRow).Width(200).Title("Наименование");
         columns.ForeignKey(e => e.CityId, cities, "Id", "Name", filterRow).Width("100%").Title("Город");
     })

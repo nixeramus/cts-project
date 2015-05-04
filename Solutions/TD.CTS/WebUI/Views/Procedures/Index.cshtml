@@ -15,7 +15,7 @@
     .Editable()
     .Columns(columns =>
     {
-        columns.CrudCommands(filterRow).Width(80);
+        columns.CrudCommands(filterRow).All();
         columns.Bound(e => e.Code, filterRow).Width(100).Title("Код");
         columns.Bound(e => e.Name, filterRow).Width("100%").Title("Наименование");
     })
