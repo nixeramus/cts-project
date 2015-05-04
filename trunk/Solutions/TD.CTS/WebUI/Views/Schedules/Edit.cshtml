@@ -130,7 +130,7 @@
                                       .Columns(columns =>
                                       {
                                           columns.Command(command => command.Edit()).Width(100);
-                                          columns.CrudCommands().Width(80);
+                                          columns.CrudCommands().All();
                                           columns.Bound(e => e.ScheduleID).ClientTemplate(@"<a class=""k-button k-button-icontext k-grid-edit td-grid-button"" href=""\#"" title=""Изменить""><span class=""k-icon k-edit td-grid-button-image""></span></a>");
                                           columns.Bound(e => e.SystemRoleCode).Width(100).Title("Роль");
                                           columns.ForeignKey(e => e.SystemLogin, (System.Collections.IEnumerable)ViewBag.Users, "Login", "FullName").Width("100%").Title("Сотрудник");

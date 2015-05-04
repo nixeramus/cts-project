@@ -15,15 +15,12 @@
     .Editable()
     .Columns(columns =>
     {
-        //columns.CrudCommands(filterRow).Width(80);
+        //columns.CrudCommands(filterRow).All();
         columns.Template(model => {})
                 .Width(110)
-                .ClientTemplate(
-@"<button class=""k-button k-button-icontext td-grid-button td-grid-edit"" title=""Изменить"" value=""#:Code#""><span class=""k-icon k-edit td-grid-button-image""></span></button>
-<button class=""k-button k-button-icontext k-grid-delete td-grid-button"" title=""Удалить""><span class=""k-icon k-delete td-grid-button-image""></span></button>
-<button class=""k-button k-button-icontext td-grid-button td-grid-role"" title=""Роли и стоимость""><span class=""k-icon k-i-custom td-grid-button-image""></span></button>")
-                .HeaderTemplate(
-@"<button class=""k-button k-button-icontext td-grid-button td-grid-add"" title=""Добавить""><span class=""k-icon k-add td-grid-button-image""></span></button>");
+                .ClientTemplate(TD.Common.Kendo.Mvc5.HtmlTemplates.AllRowCommandsTemplate +
+@"<button class=""k-button k-button-icontext td-grid-button td-grid-role"" title=""Роли и стоимость""><span class=""k-icon k-i-custom td-grid-button-image""></span></button>")
+                .HeaderTemplate(TD.Common.Kendo.Mvc5.HtmlTemplates.AddCommandTemplate);
         filterRow.AddCell(new TD.Common.Kendo.Mvc5.Grid.Filters.ButtonFilterCell());
         columns.Bound(e => e.Name, filterRow).Width(200).Title("Наименование");
         columns.Bound(e => e.Status).Width(100).Title("Статус");

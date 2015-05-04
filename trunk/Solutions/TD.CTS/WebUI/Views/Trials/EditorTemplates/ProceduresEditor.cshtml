@@ -8,7 +8,7 @@
     .Editable()
     .Columns(columns =>
     {
-        columns.CrudCommands().Width(80)
+        columns.CrudCommands().All()
             .HeaderHtmlAttributes(new { style = "min-width:60px;vertical-align:bottom;text-align:right;" })
             .HtmlAttributes(new { @class = "k-group-cell" });
         columns.ForeignKey(e => e.ProcedureCode, (System.Collections.IEnumerable)ViewBag.Procedures, "Code", "Name")
@@ -64,7 +64,7 @@
         .Scrollable()
         .Columns(columns =>
         {
-            columns.CrudCommands().Width(80).HeaderHtmlAttributes(new { style = "text-align:right;" });
+            columns.CrudCommands().All().HeaderHtmlAttributes(new { style = "text-align:right;" });
             columns.Bound(e => e.TrialMaterialId)
                 .ClientTemplate("#= MaterialName #")
                 .EditorTemplateName("VisitMaterialEditor")
