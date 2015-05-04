@@ -19,10 +19,12 @@ namespace TD.CTS.MsSqlData.Builders
 
             command.Parameters.AddWithValue("@ScheduleID", entityFilter.ScheduleID.GetNullableParameterValue());
             command.Parameters.AddWithValue("@TrialVisitID", entityFilter.TrialVisitID.GetNullableParameterValue());
-            command.Parameters.AddWithValue("@TrialCenterID", entityFilter.TrialVisitID.GetNullableParameterValue());
-            command.Parameters.AddWithValue("@TrialVersionNo", entityFilter.TrialVisitID.GetNullableParameterValue());
             command.Parameters.AddWithValue("@ProcedureCode", entityFilter.ProcedureCode.GetNullableParameterValue());
-            command.Parameters.AddWithValue("@SystemRoleCode", entityFilter.ProcedureCode.GetNullableParameterValue());
+
+            command.Parameters.AddWithValue("@TrialCenterID", entityFilter.TrialCenterID.GetNullableParameterValue());
+            command.Parameters.AddWithValue("@TrialVersionNo", entityFilter.TrialVersionNo.GetNullableParameterValue());
+           
+            command.Parameters.AddWithValue("@SystemRoleCode", entityFilter.SystemRoleCode.GetNullableParameterValue());
 
             return command;
         }
@@ -42,10 +44,10 @@ namespace TD.CTS.MsSqlData.Builders
 
             command.Parameters.AddWithValue("@ScheduleID", entity.ScheduleID);
             command.Parameters.AddWithValue("@TrialVisitID", entity.TrialVisitID);
-            command.Parameters.AddWithValue("@ProcedureCode", entity.ProcedureCode);
-            command.Parameters.AddWithValue("@TrialVersionNo", entity.TrialVersionNo);
-            command.Parameters.AddWithValue("@SystemRoleCode", entity.SystemRoleCode);
             command.Parameters.AddWithValue("@TrialCenterID", entity.TrialCenterID);
+            command.Parameters.AddWithValue("@TrialVersionNo", entity.TrialVersionNo);
+            command.Parameters.AddWithValue("@ProcedureCode", entity.ProcedureCode);
+            command.Parameters.AddWithValue("@SystemRoleCode", entity.SystemRoleCode);
             command.Parameters.AddWithValue("@ExecutorLogin", entity.ExecutorLogin);
             return command;
         }
