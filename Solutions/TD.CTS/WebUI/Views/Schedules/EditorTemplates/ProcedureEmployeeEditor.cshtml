@@ -1,98 +1,50 @@
-﻿@using TD.CTS.Data.Entities
+﻿@using TD.Common.Kendo.Mvc5.Grid
+@using TD.CTS.Data.Entities
 
 @model Schedule
-
-@(Html.Kendo().Grid<ProcedureEmployee>()
-    .Name("ProcedureEmployeesEditorGrid").AutoBind(false)
-    //.Selectable(select => select.Type(GridSelectionType.Cell))
-    //.Editable()
-    .Columns(columns =>
+@(Html.Kendo().TabStrip()
+        .Name("ProcedureEmployeesEditorStrip")
+    //.Events(events => events.Show("ShowTab"))
+    .Animation(false)
+    .Items(visittabs =>
     {
-        columns.Bound(e => e.ProcedureCode);
-        //columns.Command(e => e.Edit());
-        //columns.CrudCommands().All()
-        //    .Width(80)
-        //    .HeaderHtmlAttributes(new { style = "min-width:60px;vertical-align:bottom;text-align:right;" })
-        //    .HtmlAttributes(new { @class = "k-group-cell" });
-        //columns.ForeignKey(e => e.SystemRoleCode, (System.Collections.IEnumerable)ViewBag.SystemRoles, "Code", "Name")
-        //    .Width(400)
-        //    .Filterable(false)
-        //    .HeaderTemplate(@"<div style=""text-align:right;width:200px;""></div><div style=""text-align:right;width:200px;"">Роли</div><div>Исполнители</div>")
-        //    .HtmlAttributes(new { @class = "k-group-cell" });
-        //columns.ForeignKey(e => e.ExecutorLogin, (System.Collections.IEnumerable)ViewBag.Users, "Login", "FullName")
-        //    .Width(400)
-        //    .Filterable(false)
-        //    .HeaderTemplate(@"<div style=""text-align:right;width:200px;""></div><div style=""text-align:right;width:200px;"">Роли</div><div>Исполнители</div>")
-        //    .HtmlAttributes(new { @class = "k-group-cell" });
-        columns.Template(e => { }).ClientTemplate(" ").Width("100%").HtmlAttributes(new { @class = "k-group-cell" });
+        visittabs.Add()
+            //.Text("Краткая информация")
+            .Selected(true)
+            .Content(@<text>
+                          @(Html.Kendo().Grid<ProcedureEmployee>().Init("ProcedureEmployeesEditorGrid")
+                                .Columns(columns =>
+                                {
+                                    //columns.Template(e => { }).ClientTemplate(@"<a class=""k-button k-button-icon k-grid-edit"" href=""\#"" title=""Изменить""><span class=""k-icon k-edit""></span></a>");
+                                    columns.Command(e => e.Edit()).Width(100);
+                                    //columns.Bound(e => e.ProcedureCode).Title("Код процедуры");
+                                    columns.ForeignKey(e => e.SystemRoleCode, (System.Collections.IEnumerable)ViewBag.SystemRoles, "Code", "Name").Width(100).Title("Роль");
+                                    columns.ForeignKey(e => e.ExecutorLogin, (System.Collections.IEnumerable) ViewBag.Users, "Login", "FullName").Width(100).Title("Исполнитель");
 
-        //buttonsRow.Append("<th/></tr>");
-    })
-    .DataSource(dataSource => dataSource
-       .Ajax()
-       .Model(model =>
-       {
-           model.Id(e => e.ScheduleID);
-           model.Field(e => e.ProcedureCode).Editable(false);
-           model.Field(e => e.ScheduleID).DefaultValue(Model.Id);
-           model.Field(e => e.TrialCenterID).DefaultValue(Model.TrialCode);
-           model.Field(e => e.SystemRoleCode).Editable(false);
-       })
-       .Read(read => read.Action("GetProcedureEmployees", "Schedules", new { ScheduleID = Model.Id }))
-       //.Create(create => create.Action("AddTrialProcedure", "Trials"))
-       .Update(update => update.Action("UpdateTrialProcedure", "Trials"))
-       //.Destroy(destroy => destroy.Action("DeleteTrialProcedure", "Trials"))
-       .Events(events => events
-           .Error("kendo_grid_error_handler").RequestEnd("RequestEnd"))
+                                })
+                                .DataSource(dataSource => dataSource
+                                    .Ajax()
+                                    .Model(model =>
+                                    {
+                                       model.Id(e => e.ScheduleID);
+                                       model.Field(e => e.SystemRoleCode).Editable(false);
+                                       model.Field(e => e.ExecutorLogin).Editable(true);
+                                    })
+                                    .Read(read => read.Action("GetProcedureEmployees", "Schedules", new {ScheduleID = Model.Id, TrialCenterID = Model.TrialCenterID, TrialVersionNo = Model.TrialVersionNo}))
+                                    .Update(update => update.Action("UpdateProcedureEmployee", "Schedules", new {ScheduleID = Model.Id, TrialCenterID = Model.TrialCenterID, TrialVersionNo = Model.TrialVersionNo}))
+                                    .Events(events => events.Error("kendo_grid_error_handler") /*.RequestEnd("RequestEnd")*/)
+                                    )
+   
+                                )
+                      </text>);
+    }
     )
-    //.Events(events => events
-        //.Edit("OnProcedureEdit")
-        //.Change("OnChange")
-        //.Save("OnProcedureSave")
-        //.Cancel("OnProcedureCancel")
-   //     )
-)
-
+    )
 <script>
-    //var isProcedureEdit = false;
-    //function RequestEnd(e) {
-    //    if (e.type === "update" || e.type === "create") {
-    //        isProcedureEdit = false;
-    //    }
-    //}
-    
-    //function SelectedVisit(visitId, data) {
-    //    if ($.inArray(visitId, data.VisitIds) !== -1) {
-    //        return "<span style='color:green;'>V</span>"; //"<input type=\"checkbox\" value=\"" + visitId + "\" checked style=\"display:none;margin:0;\" /><span class=\"k-icon k-i-tick\"></span>";
-    //    }
-    //    return "";
-    //    //return "<span style='color:red;'>!</span>";//<input type=\"checkbox\" value=\"" + visitId + "\" style=\"display:none;margin:0;\" />
-    //}
 
 
 
-    kendo_grid_init($("#ProcedureEmployeesEditorGrid"));
-    //var procGrid = $("#ProceduresGrid");
-    //$("#ProceduresGrid .k-grid-add.td-grid-button").click(function () {
-    //procGrid.on("click", ".k-grid-add.td-grid-button", function () {
-    //    ClearSelection();
-    //    kendo_grid_createrow(procGrid);
-    //    isProcedureEdit = true;
-    //});
-
-    //$("#ProceduresGrid .k-grid-addcolumn.td-grid-button").click(function () {
-    //procGrid.on("click", ".k-grid-addcolumn.td-grid-button", function () {
-    //    ClearSelection();
-    //    LoadVisitEdit();
-    //    //AddColumn(15);
-    //});
-
-    //procGrid.on("click", ".td-grid-editcolumn.td-grid-button", function () {
-    //    ClearSelection();
-    //    var id = $(this).find("input").val();
-    //    LoadVisitEdit(id);
-    //    //AddColumn(15);
-    //});
+    //kendo_grid_init($("#ProcedureEmployeesEditorGrid"));
 
     
 

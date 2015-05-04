@@ -10,7 +10,7 @@
     //.Editable()
     .Columns(columns =>
     {
-        columns.Bound(e => e.ProcedureCode);
+        columns.Bound(e => e.ProcedureCode).Title("Код");
         //columns.CrudCommands().All()
         //    .Width(80)
         //    .HeaderHtmlAttributes(new { style = "min-width:60px;vertical-align:bottom;text-align:right;" })
@@ -27,7 +27,7 @@
             columns.Template(e => { })
                 .ClientTemplate(/*"<span style='color:red;'>!</span>"*/"#= SelectedVisit(" + visit.TrialVisitID + ", data) #")
                 .HeaderTemplate(string.Format(@"<div style='text-align:center;'></span><input type='hidden' value='{2}'/></div>
-<div style=""text-align:center;"">{0}</div><div style=""text-align:center;"">{1}</div>", visit.TrialVisitName, visit.ScheduleDate.HasValue ? visit.ScheduleDate.Value.Date.ToString("dd.mm.yyyy"):"", visit.TrialVisitID))
+<div style=""text-align:center;"">{0}</div><div style=""text-align:center;"">{1}</div>", visit.TrialVisitName, visit.ScheduleDate.HasValue ? visit.ScheduleDate.Value.Date.ToString("dd.MM.yyyy"):"", visit.TrialVisitID))
                 .HtmlAttributes(new { style = "text-align:center;" })
                 .Width(100);
 
@@ -73,11 +73,17 @@
     }
     
     function SelectedVisit(visitId, data) {
+        var btn = String.format("<button onclick=\"OpenProceduereEmployeeWindow(\'" + visitId + "','" + data.ProcedureCode+"')\" style=\"color:{0}; border:none; background-color:transparent;\" >{1}</button>", 'green', 'v');
         if ($.inArray(visitId, data.VisitIds) !== -1) {
-            return "<span style='color:green;'>V</span>"; //"<input type=\"checkbox\" value=\"" + visitId + "\" checked style=\"display:none;margin:0;\" /><span class=\"k-icon k-i-tick\"></span>";
+          
+            return btn;
+            //return "<span style='color:green;'>V</span>"; //"<input type=\"checkbox\" value=\"" + visitId + "\" checked style=\"display:none;margin:0;\" /><span class=\"k-icon k-i-tick\"></span>";
         }
-        return "<button onclick='OpenProceduereEmployeeWindow()'></button>";
+        return "";
+        //return "<button onclick='OpenProceduereEmployeeWindow()' style='color:red; border:none; background-color:transperent;' >!</button>";
         //return "<span style='color:red;'>!</span>";//<input type=\"checkbox\" value=\"" + visitId + "\" style=\"display:none;margin:0;\" />
+        // return "<input class=\"td-visit-checkbox\" type=\"checkbox\" value=\"" + visitId + "\" checked style=\"display:none;margin:0;\" /><span class=\"k-icon k-i-tick\"></span>";
+
     }
 
 
