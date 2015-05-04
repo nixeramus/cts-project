@@ -11,7 +11,7 @@
     <style type="text/css">
         .td-textarea-edit {
             width: 300px !important;
-            height: 100px !important;
+            height: 60px !important;
         }
     </style>
 }
@@ -28,42 +28,50 @@
             .Text("Основное")
             .Selected(true)
             .Content(@<text>
-                          <table id="scheduleForm" class="td-formTable" style="width:auto;">
-                              @*margin-top: 0 k-content*@
-                              <tr>
-                                  <td style="width:120px;">
-                                      @(Html.Kendo().Button().Name("BackButton").SpriteCssClass("k-icon k-i-arrow-w").Tag("a").Content("Назад").HtmlAttributes(new { style = "width:100%;", href = Url.Action("Index", "Schedules") })/*.Events(e => e.Click("Back"))*/)
-                                  </td>
-                                  <td style="width:40px;"></td>
-                                  <td>
-                                      @(Html.Kendo().Button().Name("SaveButton").SpriteCssClass("k-icon k-update").Content("Сохранить").HtmlAttributes(new { style = "width:230px;" }).Events(e => e.Click("SaveSchedule")))
-                                  </td>
-                                  <td></td>
-                              </tr>
-                              <tr>
-                                  <td class="td-formTable-caption" colspan="2" style="width:250px;">Дата начала исследования</td>
-                                  <td>
-                                      @Html.HiddenFor(model=>model.Id)
-                                      @Html.EditorFor(model => model.BeginDate, "Date")
-                                  </td>
-                                  <td class ="td-formTable-caption" rowspan="3">Примечание</td>
-                                  <td rowspan="3">@Html.EditorFor(model => model.Comment, "Text")</td>
-                              </tr>
-                              <tr>
-                                  <td class="td-formTable-caption" colspan="2">Пациент</td>
-                                  <td>
-                                      @Html.EditorFor(model => model.PatientCode, "GridForeignKey")
-                                  </td>
-                              </tr>
-                              <tr>
-                                  <td class="td-formTable-caption" colspan="2">Центр</td>
-                                  <td>
-                                      @Html.EditorFor(model => model.TrialCenterID, "GridForeignKey")
-                                  </td>
-                              </tr>
-                            
-                          </table>
+                        
+<table id="scheduleForm" class="td-formTable" style="width:auto;">
+    @*margin-top: 0 k-content*@
+    <tr>
+        <td style="width:120px;">
+            @(Html.Kendo().Button().Name("BackButton").SpriteCssClass("k-icon k-i-arrow-w").Tag("a").Content("Назад").HtmlAttributes(new { style = "width:100%;", href = Url.Action("Index", "Schedules") })/*.Events(e => e.Click("Back"))*/)
+        </td>
+        <td style="width:40px;"></td>
+        <td>
+            @(Html.Kendo().Button().Name("SaveButton").SpriteCssClass("k-icon k-update").Content("Сохранить").HtmlAttributes(new { style = "width:230px;" }).Events(e => e.Click("SaveSchedule")))
+        </td>
+        <td></td>
+    </tr>
+    <tr>
+        <td class="td-formTable-caption" colspan="2" style="width:250px;">Дата начала исследования</td>
+        <td>
+            @Html.HiddenFor(model => model.Id)
+            @Html.EditorFor(model => model.BeginDate, "Date")
+        </td>
+        <td class="td-formTable-caption" rowspan="1">Примечание</td>
+        <td rowspan="2">@Html.EditorFor(model => model.Comment, "Text")</td>
+    </tr>
+    <tr>
+        <td class="td-formTable-caption" colspan="2">Пациент</td>
+        <td>
+            @Html.EditorFor(model => model.PatientCode, "GridForeignKey")
+        </td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td class="td-formTable-caption" colspan="2">Центр</td>
+        <td>
+            @Html.EditorFor(model => model.TrialCenterID, "GridForeignKey")
+        </td>
+        
+        <td class="td-formTable-caption">Статус</td>
+        <td>
+            @*@Html.EditorFor(model => model.ScheduleStatus)*@
+            @Html.Kendo().DropDownListFor(m => m.ScheduleStatus).BindTo(ViewBag.ScheduleStatuses).DataTextField("ScheduleStatusName").DataValueField("ScheduleStatusName")
+        </td>
+    </tr>
 
+</table>
 
                         @RenderFooter(isNew)
                       </text>
@@ -75,12 +83,13 @@
 
 @(Html.Kendo().Notification().Name("SaveNotification").Position(p => p.Pinned(true).Top(115).Right(30)).Width(150))
 @*@Html.RenderPartial(@Html.Partial("EditorTemplates/ScheduleDetailEditor", Model))*@
-@(Html.Kendo().Window().Name("ProcedureEmployeeWindow").Width(630).Height(600).Draggable().Resizable().Title("Сотрудники").Content(@<text>@Html.Partial("EditorTemplates/ProcedureEmployeeEditor", Model)</text>).Visible(false).Modal(true).HtmlAttributes(new { @class = "k-popup-edit-form" }))
+@(Html.Kendo().Window().Name("ProcedureEmployeeWindow").Width(700).Height(350).Draggable().Resizable().Title("Сотрудники").Content(@<text>@Html.Partial("EditorTemplates/ProcedureEmployeeEditor", Model)</text>).Visible(false).Modal(false)/*.HtmlAttributes(new { @class = "k-popup-edit-form" })*/)
 
 @helper RenderFooter(bool isNew)
 {
     @(Html.Kendo().TabStrip()
-    .Name("VisitsTab")
+    .Name("VisitsStrip")
+    .Events(events => events.Show("ShowTab"))
     .Animation(false)
     .Items(visittabs =>
     {
@@ -94,10 +103,12 @@
                                       .HtmlAttributes(new {style = "display:" + (isNew ? "none" : "block")})
                                       .Columns(columns =>
                                       {
-                                          columns.Command(command => command.Edit()).Width(60);
+                                          //columns.Command(command => command.Edit()).Width(60);
+                                          columns.EditCommand().Width(60);
                                           columns.Bound(e => e.TrialVisitName).Width(200).Title("Наименование");
-                                          columns.Bound(e => e.BaseDay).Width(100).Title("Смещение").ClientTemplate("#=BaseDay#&nbsp;&plusmn;&nbsp;#=Limit#");
+                                          columns.Bound(e => e.BaseDay).Width(150).Title("Смещение").ClientTemplate("#=BaseDay#&nbsp;&plusmn;&nbsp;#=Limit#");
                                           columns.Bound(e => e.ScheduleDate).Width(200).EditorTemplateName("Date").Format("{0:dd.MM.yyyy}").Title("Назначенная дата");
+                                          columns.Template(e => { }).ClientTemplate(" ").Width("100%").HtmlAttributes(new { @class = "k-group-cell" });
                                       })
                                       .DataSource(dataSource => dataSource
                                           .Ajax()
@@ -105,6 +116,7 @@
                                           .Model(model =>
                                           {
                                               model.Id(e => e.ScheduleID); //(e => e.Id);
+                                              model.Id(e => e.TrialVisitID); 
                                               model.Field(e => e.TrialCode).DefaultValue(Model.TrialCode);
                                               model.Field(e => e.TrialCenterID).DefaultValue(Model.TrialCenterID);
                                               model.Field(e => e.BaseDay).Editable(false);
@@ -129,12 +141,16 @@
                                       .HtmlAttributes(new { style = "display:" + (isNew ? "none" : "block") })
                                       .Columns(columns =>
                                       {
-                                          columns.Command(command => command.Edit()).Width(100);
-                                          columns.CrudCommands().All();
-                                          columns.Bound(e => e.ScheduleID).ClientTemplate(@"<a class=""k-button k-button-icontext k-grid-edit td-grid-button"" href=""\#"" title=""Изменить""><span class=""k-icon k-edit td-grid-button-image""></span></a>");
-                                          columns.Bound(e => e.SystemRoleCode).Width(100).Title("Роль");
-                                          columns.ForeignKey(e => e.SystemLogin, (System.Collections.IEnumerable)ViewBag.Users, "Login", "FullName").Width("100%").Title("Сотрудник");
+                                          //columns.Command(command => command.Edit()).Width(100);
+                                          //columns.CrudCommands().Width(80);
+                                          columns.EditCommand().Width(60);
+                                          //columns.Bound(e => { }).ClientTemplate(@"<a class=""k-button k-button-icontext k-grid-edit td-grid-button"" href=""\#"" title=""Изменить""><span class=""k-icon k-edit td-grid-button-image""></span></a>");
+                                          //columns.Bound(e => e.SystemRoleCode).Width(100).Title("Роль");
+                                          columns.Bound(e => e.SystemRoleCode).Width(100).Title("Код роли");
+                                          columns.ForeignKey(e => e.SystemRoleCode, (System.Collections.IEnumerable)ViewBag.SystemRoles, "Code", "Name").Width(300).Title("Роль");
+                                          columns.ForeignKey(e => e.SystemLogin, (System.Collections.IEnumerable)ViewBag.Users, "Login", "FullName").Width(200).Title("Сотрудник").EditorTemplateName("GridNullableForeignKey");
                                           //columns.Bound(e => e.SystemLogin).Width(100).Title("Сотрудник");
+                                          columns.Template(e => { }).ClientTemplate(" ").Width("100%").HtmlAttributes(new { @class = "k-group-cell" });
                                       })
                                       .DataSource(dataSource => dataSource
                                           .Ajax()
@@ -184,6 +200,7 @@
                     "BeginDate": $("#BeginDate").val(),
                     "PatientCode": $("#PatientCode").val(),
                     "TrialCenterID": $("#TrialCenterID").val(),
+                    "ScheduleStatus": $("#ScheduleStatus").val(),
                     //"TrialCode": $("#TrialCode").val(),
                     "Comment": $("#Comment").val()
                 },
@@ -206,12 +223,71 @@
         });
     }
     }
-    function OpenProceduereEmployeeWindow() {
+    function OpenProceduereEmployeeWindow(trialvisitid,procedurecode) {
         var window = $("#ProcedureEmployeeWindow").data("kendoWindow");
         window.center().open();
+       // var grid = $("#VisitsGrid").data("kendoGrid");
         
+        //var row = $(caler).closest("tr");
+        //var item = grid.dataItem(row);
+        var filter = {        
+            //ScheduleID :17,
+            TrialVisitID:trialvisitid/*1*/,
+            ProcedureCode:procedurecode/*'ОВ'*///,
+            //TrialVersionNo :1//,
+            //SystemRoleCode:'DO',
+            //TrialCenterID :2
+        };
+
         var tabgrid = $('#ProcedureEmployeesEditorGrid').data("kendoGrid");
-        tabgrid.dataSource.read();
+        tabgrid.dataSource.read(filter);
         tabgrid.refresh();
     }
+    
+
+
+
+
+
+
+
+
+
+    $(document).ready(function () {
+        SetContentBlock($("#VisitsStrip .k-content"));
+
+        //kendo_grid_init($("#ScheduleEmployeeGrid"));
+
+        kendo_grid_init($("#VisitsGrid"));
+
+        $(window).bind("resize", function () {
+            var tabStrip = $("#VisitsStrip").data("kendoTabStrip");
+            var tab = tabStrip.select();
+            var index = tab.index();
+            var conteiner = tabStrip.contentElements[index];
+            StretchGrid($(conteiner), $(conteiner.firstElementChild));
+        });
+    });
+
+    function ShowTab(e) {
+        StretchGrid($(e.contentElement), $(e.contentElement.firstElementChild));
+    }
+
+
+    String.format = function() {
+        // The string containing the format items (e.g. "{0}")
+        // will and always has to be the first argument.
+        var theString = arguments[0];
+
+        // start with the second argument (i = 1)
+        for (var i = 1; i < arguments.length; i++) {
+            // "gm" = RegEx options for Global search (more than one instance)
+            // and for Multiline search
+            var regEx = new RegExp("\\{" + (i - 1) + "\\}", "gm");
+            theString = theString.replace(regEx, arguments[i]);
+        }
+
+        return theString;
+    };
+
 </script>
