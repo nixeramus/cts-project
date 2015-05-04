@@ -60,6 +60,7 @@
     <Compile Include="Entities\Role.cs" />
     <Compile Include="Entities\Schedule.cs" />
     <Compile Include="Entities\ProcedureEmployee.cs" />
+    <Compile Include="Entities\ScheduleStatus.cs" />
     <Compile Include="Entities\ScheduleVisitProcedure.cs" />
     <Compile Include="Entities\Trial.cs" />
     <Compile Include="Entities\ScheduleVisit.cs" />
