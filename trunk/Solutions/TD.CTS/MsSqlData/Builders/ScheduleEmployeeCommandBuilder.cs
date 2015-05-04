@@ -53,7 +53,7 @@ namespace TD.CTS.MsSqlData.Builders
         {
             entity.ScheduleID = reader.GetValue<int>("ScheduleID");
             entity.SystemRoleCode = reader.GetString("SystemRoleCode").Trim();
-            entity.SystemLogin = reader.GetString("SystemLogin");
+            entity.SystemLogin = reader.GetNullableString("SystemLogin");
         }
 
         public override void LoadNewEntityAttributes(SqlDataReader reader, ScheduleEmployee entity)
