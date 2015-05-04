@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using Kendo.Mvc.Extensions;
@@ -71,6 +72,16 @@ namespace TD.CTS.WebUI.Controllers
             ViewBag.TrialCenterID_Data = new SelectList(trialCenters, "Id", "Number");
 
             ViewBag.SystemRoles = systemRoles;
+
+            //var statuses = new List<string>()
+            //{
+            //    "Новое",
+            //    "В работе",
+            //    "Завершено",
+            //    "Прервано"
+            //};
+
+            ViewBag.ScheduleStatuses = ScheduleStatus.GetScheduleStatuses();
 
            // ViewBag.ScheduleStatuses = systemRoles;
 
@@ -209,7 +220,19 @@ namespace TD.CTS.WebUI.Controllers
             var response = DataProvider.GetList(dataFilter ?? new ProcedureEmployeeDataFilter());
             return Json(response.ToDataSourceResult(request));
         }
-        
+
+
+
+
+        public ActionResult UpdateProcedureEmployee([DataSourceRequest] DataSourceRequest request, ProcedureEmployee procedureEmployee)
+        {
+            if (procedureEmployee != null && ModelState.IsValid)
+            {
+                DataProvider.Update(procedureEmployee);
+            }
+
+            return Json(new[] { procedureEmployee }.ToDataSourceResult(request, ModelState));
+        }
 
        #endregion ScheduleProcedures
     }
