@@ -44,6 +44,24 @@ namespace TD.Common.Kendo.Mvc5.Common
                 .ImageCssClass("k-delete");
         }
 
+        public static ImageButtonBuilder GridFilter()
+        {
+            return new ImageButtonBuilder()
+                .Tag(ButtonTag.a)
+                .AddCssClass("td-grid-filter")
+                .Title("Применить фильтр")
+                .ImageCssClass("k-filter");
+        }
+
+        public static ImageButtonBuilder GridClearFilter()
+        {
+            return new ImageButtonBuilder()
+                .Tag(ButtonTag.a)
+                .AddCssClass("td-grid-clearfilter")
+                .Title("Снять фильтр")
+                .ImageCssClass("k-clear-filter");
+        }
+
         private ImageButton component;
 
         internal ImageButtonBuilder()
