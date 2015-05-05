@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TD.Common.Kendo.Mvc5.Common;
 
 namespace TD.Common.Kendo.Mvc5.Grid
 {
@@ -22,8 +23,11 @@ namespace TD.Common.Kendo.Mvc5.Grid
 
         public GridCrudCommandsColumnBuilder<T> All()
         {
-            templateColumnBuilder.HeaderTemplate(HtmlTemplates.AddCommandTemplate);
-            templateColumnBuilder.ClientTemplate(HtmlTemplates.AllRowCommandsTemplate);
+            templateColumnBuilder.HeaderTemplate(ImageButtonBuilder.GridAdd().ToHtmlString());
+            templateColumnBuilder.ClientTemplate(ImageButtonSetBuilder.NewSet()
+                .Add(ImageButtonBuilder.GridEdit())
+                .Add(ImageButtonBuilder.GridDelete())
+                .ToHtmlString());
             rowCommandType = RowCommandType.All;
 
             return this;
@@ -31,7 +35,7 @@ namespace TD.Common.Kendo.Mvc5.Grid
 
         public GridCrudCommandsColumnBuilder<T> Add()
         {
-            templateColumnBuilder.HeaderTemplate(HtmlTemplates.AddCommandTemplate);
+            templateColumnBuilder.HeaderTemplate(ImageButtonBuilder.GridAdd().ToHtmlString());
 
             return this;
         }
@@ -40,14 +44,17 @@ namespace TD.Common.Kendo.Mvc5.Grid
         {
             if (rowCommandType == null)
             {
-                templateColumnBuilder.ClientTemplate(HtmlTemplates.EditCommandTemplate);
+                templateColumnBuilder.ClientTemplate(ImageButtonBuilder.GridEdit().ToHtmlString());
                 rowCommandType = RowCommandType.Edit;
                 return this;
             }
 
             if (rowCommandType == RowCommandType.Delete)
             {
-                templateColumnBuilder.ClientTemplate(HtmlTemplates.AllRowCommandsTemplate);
+                templateColumnBuilder.ClientTemplate(ImageButtonSetBuilder.NewSet()
+                .Add(ImageButtonBuilder.GridEdit())
+                .Add(ImageButtonBuilder.GridDelete())
+                .ToHtmlString());
                 rowCommandType = RowCommandType.All;
             }
 
@@ -58,14 +65,17 @@ namespace TD.Common.Kendo.Mvc5.Grid
         {
             if (rowCommandType == null)
             {
-                templateColumnBuilder.ClientTemplate(HtmlTemplates.DeleteCommandTemplate);
+                templateColumnBuilder.ClientTemplate(ImageButtonBuilder.GridDelete().ToHtmlString());
                 rowCommandType = RowCommandType.Delete;
                 return this;
             }
 
             if (rowCommandType == RowCommandType.Edit)
             {
-                templateColumnBuilder.ClientTemplate(HtmlTemplates.AllRowCommandsTemplate);
+                templateColumnBuilder.ClientTemplate(ImageButtonSetBuilder.NewSet()
+                    .Add(ImageButtonBuilder.GridEdit())
+                    .Add(ImageButtonBuilder.GridDelete())
+                    .ToHtmlString());
                 rowCommandType = RowCommandType.All;
             }
 

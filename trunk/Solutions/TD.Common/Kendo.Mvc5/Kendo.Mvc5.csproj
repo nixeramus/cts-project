@@ -57,6 +57,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\BuilderExtensions.cs" />
+    <Compile Include="Common\ImageButton.cs" />
+    <Compile Include="Common\ImageButtonSetBuilder.cs" />
+    <Compile Include="Common\ImageButtonBuilder.cs" />
     <Compile Include="Grid\BuilderExtensions.cs" />
     <Compile Include="Grid\GridCommandColumnBuilder.cs" />
     <Compile Include="Grid\Filters\ButtonFilterCell.cs" />
@@ -67,13 +71,18 @@
     <Compile Include="Grid\Filters\FilterCell.cs" />
     <Compile Include="Grid\Filters\DateRangeFilterCell.cs" />
     <Compile Include="Grid\Filters\TextFilterCell.cs" />
-    <Compile Include="Grid\HtmlTemplates.cs" />
+    <None Include="Grid\HtmlTemplates.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TD.Common.snk" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Web.Mvc\Web.Mvc.csproj">
+      <Project>{c6cbfb33-635a-4a2d-8ca9-cb00c6e3050b}</Project>
+      <Name>Web.Mvc</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Bin\NETFX 4.0 Tools\gacutil.exe" /if "$(TargetPath)"</PostBuildEvent>
