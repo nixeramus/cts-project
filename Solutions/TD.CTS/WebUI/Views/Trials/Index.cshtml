@@ -1,4 +1,5 @@
 ﻿@using TD.Common.Kendo.Mvc5.Grid
+@using TD.Common.Kendo.Mvc5.Common
 
 @section head{
     <link href="@Url.Content("~/Content/td/td.kendo.grid.css")" rel="stylesheet" type="text/css" />
@@ -16,11 +17,14 @@
     .Columns(columns =>
     {
         //columns.CrudCommands(filterRow).All();
-        columns.Template(model => {})
+        columns.Template(model => { })
                 .Width(110)
-                .ClientTemplate(TD.Common.Kendo.Mvc5.HtmlTemplates.AllRowCommandsTemplate +
-@"<button class=""k-button k-button-icontext td-grid-button td-grid-role"" title=""Роли и стоимость""><span class=""k-icon k-i-custom td-grid-button-image""></span></button>")
-                .HeaderTemplate(TD.Common.Kendo.Mvc5.HtmlTemplates.AddCommandTemplate);
+                .ClientTemplate(ImageButtonSetBuilder.NewSet()
+                    .Add(ImageButtonBuilder.Custom().AddCssClass("td-grid-edit").Title("Изменить").ImageCssClass("k-edit").HtmlAttributes(new { value = "#:Code#" }))
+                    .Add(ImageButtonBuilder.Custom().AddCssClass("k-grid-delete").Title("Удалить").ImageCssClass("k-delete"))
+                    .Add(ImageButtonBuilder.Custom().AddCssClass("td-grid-role").Title("Роли и стоимость").ImageCssClass("k-i-custom"))
+                .ToHtmlString())
+                .HeaderTemplate(ImageButtonBuilder.Custom().AddCssClass("td-grid-add").Title("Добавить").ImageCssClass("k-add").ToHtmlString());
         filterRow.AddCell(new TD.Common.Kendo.Mvc5.Grid.Filters.ButtonFilterCell());
         columns.Bound(e => e.Name, filterRow).Width(200).Title("Наименование");
         columns.Bound(e => e.Status).Width(100).Title("Статус");
