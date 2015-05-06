@@ -27,53 +27,8 @@
         tabs.Add()
             .Text("Основное")
             .Selected(true)
-            .Content(@<text>
-                        
-<table id="scheduleForm" class="td-formTable" style="width:auto;">
-    @*margin-top: 0 k-content*@
-    <tr>
-        <td style="width:120px;">
-            @(Html.Kendo().Button().Name("BackButton").SpriteCssClass("k-icon k-i-arrow-w").Tag("a").Content("Назад").HtmlAttributes(new { style = "width:100%;", href = Url.Action("Index", "Schedules") })/*.Events(e => e.Click("Back"))*/)
-        </td>
-        <td style="width:40px;"></td>
-        <td>
-            @(Html.Kendo().Button().Name("SaveButton").SpriteCssClass("k-icon k-update").Content("Сохранить").HtmlAttributes(new { style = "width:230px;" }).Events(e => e.Click("SaveSchedule")))
-        </td>
-        <td></td>
-    </tr>
-    <tr>
-        <td class="td-formTable-caption" colspan="2" style="width:250px;">Дата начала исследования</td>
-        <td>
-            @Html.HiddenFor(model => model.Id)
-            @Html.EditorFor(model => model.BeginDate, "Date")
-        </td>
-        <td class="td-formTable-caption" rowspan="1">Примечание</td>
-        <td rowspan="2">@Html.EditorFor(model => model.Comment, "Text")</td>
-    </tr>
-    <tr>
-        <td class="td-formTable-caption" colspan="2">Пациент</td>
-        <td>
-            @Html.EditorFor(model => model.PatientCode, "GridForeignKey")
-        </td>
-        <td></td>
-        <td></td>
-    </tr>
-    <tr>
-        <td class="td-formTable-caption" colspan="2">Центр</td>
-        <td>
-            @Html.EditorFor(model => model.TrialCenterID, "GridForeignKey")
-        </td>
-        
-        <td class="td-formTable-caption">Статус</td>
-        <td>
-            @*@Html.EditorFor(model => model.ScheduleStatus)*@
-            @Html.Kendo().DropDownListFor(m => m.ScheduleStatus).BindTo(ViewBag.ScheduleStatuses).DataTextField("ScheduleStatusName").DataValueField("ScheduleStatusName")
-        </td>
-    </tr>
-
-</table>
-
-                        @RenderFooter(isNew)
+            .Content(@<text>@Html.Partial("EditorTemplates/MainEditor")
+                        @RenderFooter(isNew);
                       </text>
 );
     }
@@ -81,7 +36,7 @@
       )
 )
 
-@(Html.Kendo().Notification().Name("SaveNotification").Position(p => p.Pinned(true).Top(115).Right(30)).Width(150))
+
 @*@Html.RenderPartial(@Html.Partial("EditorTemplates/ScheduleDetailEditor", Model))*@
 @(Html.Kendo().Window().Name("ProcedureEmployeeWindow").Width(700).Height(350).Draggable().Resizable().Title("Сотрудники").Content(@<text>@Html.Partial("EditorTemplates/ProcedureEmployeeEditor", Model)</text>).Visible(false).Modal(false)/*.HtmlAttributes(new { @class = "k-popup-edit-form" })*/)
 
@@ -103,7 +58,7 @@
                                       .HtmlAttributes(new {style = "display:" + (isNew ? "none" : "block")})
                                       .Columns(columns =>
                                       {
-                                          columns.Buttons(buttons => buttons.Edit()).Width(60);
+                                          columns.Buttons(buttons => buttons.Edit()).Width(80);
                                           columns.Bound(e => e.TrialVisitName).Width(200).Title("Наименование");
                                           columns.Bound(e => e.BaseDay).Width(150).Title("Смещение").ClientTemplate("#=BaseDay#&nbsp;&plusmn;&nbsp;#=Limit#");
                                           columns.Bound(e => e.ScheduleDate).Width(200).EditorTemplateName("Date").Format("{0:dd.MM.yyyy}").Title("Назначенная дата");
@@ -121,12 +76,12 @@
                                               model.Field(e => e.BaseDay).Editable(false);
                                               model.Field(e => e.TrialVisitName).Editable(false);
                                           })
-                                          .Read(read => read.Action("GetScheduleVisits", "Schedules", new {ScheduleID = Model.Id}))
+                                          .Read(read => read.Action("GetScheduleVisits", "Schedules"/*, new {ScheduleID = Model.Id}*/).Data("VisitsGetDataRead"))
                                           .Update(update => update.Action("UpdateScheduleVisit", "Schedules"))
                                           .Destroy(destroy => destroy.Action("DeleteScheduleVisit", "Schedules"))
                                           .Events(events => events.Error("kendo_grid_error_handler").RequestEnd("VisitsRequestEnd"))
                                       )
-                                      .Events(events => events.Edit("kendo_grid_onrowedit"))
+                                      .Events(events => events.Edit("kendo_grid_onrowedit")/*.DataBinding("VisitsOnDataBinding")*/)
                                       )
                       </text>);
         visittabs.Add()
@@ -134,14 +89,12 @@
             .Selected(false)
             .Content(@<text>
                 @(Html.Kendo().Grid<TD.CTS.Data.Entities.ScheduleEmployee>()
-                             .Init("ScheduleEmployeeGrid")
+                             .Init("EmployeeGrid")
                                       .Editable()
                                       .HtmlAttributes(new { style = "display:" + (isNew ? "none" : "block") })
                                       .Columns(columns =>
                                       {
-                                          columns.Buttons(buttons => buttons.Edit()).Width(60);
-                                          //columns.Bound(e => { }).ClientTemplate(@"<a class=""k-button k-button-icontext k-grid-edit td-grid-button"" href=""\#"" title=""Изменить""><span class=""k-icon k-edit td-grid-button-image""></span></a>");
-                                          //columns.Bound(e => e.SystemRoleCode).Width(100).Title("Роль");
+                                          columns.Buttons(buttons => buttons.Edit()).Width(80);
                                           columns.Bound(e => e.SystemRoleCode).Width(100).Title("Код роли");
                                           columns.ForeignKey(e => e.SystemRoleCode, (System.Collections.IEnumerable)ViewBag.SystemRoles, "Code", "Name").Width(300).Title("Роль");
                                           columns.ForeignKey(e => e.SystemLogin, (System.Collections.IEnumerable)ViewBag.Users, "Login", "FullName").Width(200).Title("Сотрудник").EditorTemplateName("GridNullableForeignKey");
@@ -158,7 +111,7 @@
                                               model.Field(e => e.SystemRoleCode).Editable(false);
 
                                           })
-                                          .Read(read => read.Action("GetScheduleEmployees", "Schedules", new { ScheduleID = Model.Id }))
+                                                          .Read(read => read.Action("GetScheduleEmployees", "Schedules"/*, new { ScheduleID = Model.Id }*/).Data("EmployeesGetDataRead"))
                                           //.Create(create => create.Action("AddTrialCenter", "Trials"))
                                            .Update(update => update.Action("UpdateScheduleEmployee", "Schedules"))
                                           //.Destroy(destroy => destroy.Action("DeleteTrialCenter", "Trials"))
@@ -202,16 +155,20 @@
                 },
             success: function (result) {
                 if(isNew) {
+                    //Если создание - то проставляем кодрасписания
+                    $("#Id").val(result.Data[0].Id);
                     $("#VisitsGrid").css("display", "block");
-                    $("#ScheduleEmployeeGrid").css("display", "block");
+                    $("#EmployeeGrid").css("display", "block");
                     $("#ProceduresGrid").css("display", "block");
                     
                     //var tabStrip = $("#TabStrip").data("kendoTabStrip");
                     //var tabs = tabStrip.tabGroup.children();
                     //tabStrip.enable(tabs.eq(1), true);
                     //tabStrip.enable(tabs.eq(2), true);
-                    
-                    $("#VisitsGrid").data("kendoGrid").refresh();
+
+                    kendo_grid_reload($("#VisitsGrid"));
+                    kendo_grid_reload($("#EmployeeGrid"));
+
                     isNew = false;
                 }
 
@@ -224,6 +181,37 @@
         });
     }
     }
+    
+
+
+
+
+    //function VisitsOnDataBinding(e) {
+    //    var schedid = $("#Id").val();
+    //    e.data = $.extend(e.data, { ScheduleID: schedid }); 
+    //}
+    function VisitsGetDataRead() {
+        var schedid = $("#Id").val();
+        return {ScheduleID: schedid};
+    }
+    function EmployeesGetDataRead() {
+        var schedid = $("#Id").val();
+        return {ScheduleID: schedid};
+    }
+    function ProceduresGetDataRead() {
+        var schedid = $("#Id").val();
+        return {ScheduleID: schedid};
+    }
+
+
+
+
+
+
+
+
+
+
     function OpenProceduereEmployeeWindow(trialvisitid,procedurecode) {
         var window = $("#ProcedureEmployeeWindow").data("kendoWindow");
         window.center().open();
@@ -248,9 +236,7 @@
     function VisitsRequestEnd(e) {
             if(e.type === "update" || e.type === "delete")
             {
-                var procgrid = $("#ProceduresGrid").data("kendoGrid");
-                procgrid.dataSource.read();
-                procgrid.refresh();
+                kendo_grid_reload($("#ProceduresGrid"));
             }
      }
 
