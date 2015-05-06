@@ -1,0 +1,48 @@
+﻿@model TD.CTS.Data.Entities.Schedule
+@*@{
+    var isNew = ViewBag.IsNew;
+}*@
+<table id="scheduleForm" class="td-formTable" style="width:auto;">
+    @*margin-top: 0 k-content*@
+    <tr>
+        <td style="width:120px;">
+            @(Html.Kendo().Button().Name("BackButton").SpriteCssClass("k-icon k-i-arrow-w").Tag("a").Content("Назад").HtmlAttributes(new { style = "width:100%;", href = Url.Action("Index", "Schedules") })/*.Events(e => e.Click("Back"))*/)
+        </td>
+        <td style="width:40px;"></td>
+        <td>
+            @(Html.Kendo().Button().Name("SaveButton").SpriteCssClass("k-icon k-update").Content("Сохранить").HtmlAttributes(new { style = "width:230px;" }).Events(e => e.Click("SaveSchedule")))
+        </td>
+        <td></td>
+    </tr>
+    <tr>
+        <td class="td-formTable-caption" colspan="2" style="width:250px;">Дата начала исследования</td>
+        <td>
+            @Html.HiddenFor(model => model.Id)
+            @Html.EditorFor(model => model.BeginDate, "Date")
+        </td>
+        <td class="td-formTable-caption" rowspan="1">Примечание</td>
+        <td rowspan="2">@Html.EditorFor(model => model.Comment, "Text")</td>
+    </tr>
+    <tr>
+        <td class="td-formTable-caption" colspan="2">Пациент</td>
+        <td>
+            @Html.EditorFor(model => model.PatientCode, "GridForeignKey")
+        </td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td class="td-formTable-caption" colspan="2">Центр</td>
+        <td>
+            @Html.EditorFor(model => model.TrialCenterID, "GridForeignKey")
+        </td>
+
+        <td class="td-formTable-caption">Статус</td>
+        <td>
+            @*@Html.EditorFor(model => model.ScheduleStatus)*@
+            @Html.Kendo().DropDownListFor(m => m.ScheduleStatus).BindTo(ViewBag.ScheduleStatuses).DataTextField("ScheduleStatusName").DataValueField("ScheduleStatusName")
+        </td>
+    </tr>
+
+</table>
+@(Html.Kendo().Notification().Name("SaveNotification").Position(p => p.Pinned(true).Top(115).Right(30)).Width(150))
