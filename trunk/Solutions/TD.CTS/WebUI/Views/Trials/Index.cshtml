@@ -1,5 +1,6 @@
 ﻿@using TD.Common.Kendo.Mvc5.Grid
 @using TD.Common.Kendo.Mvc5.Common
+@using TD.Common.Kendo.Mvc5.Grid.Filters
 
 @section head{
     <link href="@Url.Content("~/Content/td/td.kendo.grid.css")" rel="stylesheet" type="text/css" />
@@ -8,7 +9,7 @@
 }
 
 @{
-    var filterRow = new TD.Common.Kendo.Mvc5.Grid.Filters.FilterRow(Html);
+    var filterRow = new FilterRow(Html);
 }
 
 @(Html.Kendo().Grid<TD.CTS.Data.Entities.Trial>()
@@ -16,27 +17,24 @@
     .Editable()
     .Columns(columns =>
     {
-        //columns.CrudCommands(filterRow).All();
-        columns.Template(model => { })
-                .Width(110)
-                .ClientTemplate(ImageButtonSetBuilder.NewSet()
-                    .Add(ImageButtonBuilder.Custom().AddCssClass("td-grid-edit").Title("Изменить").ImageCssClass("k-edit").HtmlAttributes(new { value = "#:Code#" }))
-                    .Add(ImageButtonBuilder.Custom().AddCssClass("k-grid-delete").Title("Удалить").ImageCssClass("k-delete"))
-                    .Add(ImageButtonBuilder.Custom().AddCssClass("td-grid-role").Title("Роли и стоимость").ImageCssClass("k-i-custom"))
-                .ToHtmlString())
-                .HeaderTemplate(ImageButtonBuilder.Custom().AddCssClass("td-grid-add").Title("Добавить").ImageCssClass("k-add").ToHtmlString());
-        filterRow.AddCell(new TD.Common.Kendo.Mvc5.Grid.Filters.ButtonFilterCell());
+        columns.Buttons(buttons =>
+        {
+            buttons.HeaderCustom().Tag(ButtonTag.a).Url(Url.Action("Edit", "Trials")).Title("Добавить").ImageCssClass("k-add");
+            buttons.Custom().Tag(ButtonTag.a).Url(Url.Action("Edit", "Trials") + "/#:Code#").Title("Изменить").ImageCssClass("k-edit");
+            buttons.Delete();
+            buttons.Custom().Tag(ButtonTag.a).Url(Url.Action("RolesEdit", "Trials") + "/#:Code#").Title("Роли и стоимость").ImageCssClass("k-i-custom");
+        }, filterRow).Width(110);
         columns.Bound(e => e.Name, filterRow).Width(200).Title("Наименование");
         columns.Bound(e => e.Status).Width(100).Title("Статус");
-        filterRow.AddCell(new TD.Common.Kendo.Mvc5.Grid.Filters.EmptyFilterCell());
+        filterRow.AddCell(new EmptyFilterCell());
         columns.Bound(e => e.CreateDate).Width(265).Title("Дата создания").Format("{0:dd.MM.yyyy HH:mm}");
-        filterRow.AddCell(new TD.Common.Kendo.Mvc5.Grid.Filters.DateRangeFilterCell("CreateDate"));
+        filterRow.AddCell(new DateRangeFilterCell("CreateDate"));
         columns.ForeignKey(e => e.AdministratorLogin, (System.Collections.IEnumerable)ViewBag.Users, "Login", "FullName").Width(200).Title("Администратор");
-        filterRow.AddCell(new TD.Common.Kendo.Mvc5.Grid.Filters.CheckBoxFilterCell("OwnTrialsOnly", "Только свои"));
+        filterRow.AddCell(new CheckBoxFilterCell("OwnTrialsOnly", "Только свои"));
         columns.Bound(e => e.VersionDate).Width(180).Title("Дата модификации").Format("{0:dd.MM.yyyy HH:mm}");
-        filterRow.AddCell(new TD.Common.Kendo.Mvc5.Grid.Filters.EmptyFilterCell());
+        filterRow.AddCell(new EmptyFilterCell());
         columns.ForeignKey(e => e.AuthorLogin, (System.Collections.IEnumerable)ViewBag.Users, "Login", "FullName").Width("100%").Title("Автор модификации");
-        filterRow.AddCell(new TD.Common.Kendo.Mvc5.Grid.Filters.EmptyFilterCell());
+        filterRow.AddCell(new EmptyFilterCell());
     })
     .DataSource(dataSource => dataSource
         .Ajax()
@@ -46,12 +44,9 @@
             model.Id(e => e.Code);
         })
         .Read(read => read.Action("GetTrials", "Trials").Data("kendo_grid_getfilters"))
-        //.Create(create => create.Action("AddTrial", "Trials"))
-        //.Update(update => update.Action("UpdateTrial", "Trials"))
         .Destroy(destroy => destroy.Action("DeleteTrial", "Trials"))
         .Events(events => events.Error("kendo_grid_error_handler"))
      )
-     //.Events(events => events.Edit("kendo_grid_onrowedit"))
 
 )
 
@@ -59,18 +54,6 @@
     $(document).ready(function () {
         var grid = $("#Grid");
         kendo_grid_init(grid, true, '@Html.Raw(filterRow.HtmlFilterRow())');
-
-        grid.find(".td-grid-add.td-grid-button").click(function () {
-            $().redirect("@Url.Action("Edit", "Trials")");
-        });
-
-        grid.on("click", ".td-grid-edit.td-grid-button", function () {
-            $().redirect("@Url.Action("Edit", "Trials")", { code: $(this).val() });
-        });
-
-        grid.on("click", ".td-grid-role.td-grid-button", function () {
-            $().redirect("@Url.Action("RolesEdit", "Trials")", { code: $(this).val() });
-        });
     });
 
 </script>
