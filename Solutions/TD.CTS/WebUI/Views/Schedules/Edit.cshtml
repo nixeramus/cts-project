@@ -103,8 +103,7 @@
                                       .HtmlAttributes(new {style = "display:" + (isNew ? "none" : "block")})
                                       .Columns(columns =>
                                       {
-                                          //columns.Command(command => command.Edit()).Width(60);
-                                          columns.Buttons(buttons => { buttons.Edit(); }).Width(60);
+                                          columns.Buttons(buttons => buttons.Edit()).Width(60);
                                           columns.Bound(e => e.TrialVisitName).Width(200).Title("Наименование");
                                           columns.Bound(e => e.BaseDay).Width(150).Title("Смещение").ClientTemplate("#=BaseDay#&nbsp;&plusmn;&nbsp;#=Limit#");
                                           columns.Bound(e => e.ScheduleDate).Width(200).EditorTemplateName("Date").Format("{0:dd.MM.yyyy}").Title("Назначенная дата");
@@ -123,10 +122,9 @@
                                               model.Field(e => e.TrialVisitName).Editable(false);
                                           })
                                           .Read(read => read.Action("GetScheduleVisits", "Schedules", new {ScheduleID = Model.Id}))
-                                          //.Create(create => create.Action("AddTrialCenter", "Trials"))
                                           .Update(update => update.Action("UpdateScheduleVisit", "Schedules"))
-                                          //.Destroy(destroy => destroy.Action("DeleteTrialCenter", "Trials"))
-                                          .Events(events => events.Error("kendo_grid_error_handler"))
+                                          .Destroy(destroy => destroy.Action("DeleteScheduleVisit", "Schedules"))
+                                          .Events(events => events.Error("kendo_grid_error_handler").RequestEnd("VisitsRequestEnd"))
                                       )
                                       .Events(events => events.Edit("kendo_grid_onrowedit"))
                                       )
@@ -141,9 +139,7 @@
                                       .HtmlAttributes(new { style = "display:" + (isNew ? "none" : "block") })
                                       .Columns(columns =>
                                       {
-                                          //columns.Command(command => command.Edit()).Width(100);
-                                          //columns.ButtonsCrud();
-                                          columns.Buttons(buttons => { buttons.Edit(); }).Width(60);
+                                          columns.Buttons(buttons => buttons.Edit()).Width(60);
                                           //columns.Bound(e => { }).ClientTemplate(@"<a class=""k-button k-button-icontext k-grid-edit td-grid-button"" href=""\#"" title=""Изменить""><span class=""k-icon k-edit td-grid-button-image""></span></a>");
                                           //columns.Bound(e => e.SystemRoleCode).Width(100).Title("Роль");
                                           columns.Bound(e => e.SystemRoleCode).Width(100).Title("Код роли");
@@ -173,7 +169,7 @@
             </text>);
         visittabs.Add()
             .Text("Подробная информация")
-            .Enabled(!isNew)
+            //.Enabled(!isNew)
             .Selected(false)
             .ContentHtmlAttributes(new { style = "padding:0;" })
             .Content(@<text>@Html.Partial("EditorTemplates/ScheduleDetailEditor", Model)</text>);
@@ -207,10 +203,15 @@
             success: function (result) {
                 if(isNew) {
                     $("#VisitsGrid").css("display", "block");
+                    $("#ScheduleEmployeeGrid").css("display", "block");
+                    $("#ProceduresGrid").css("display", "block");
+                    
                     //var tabStrip = $("#TabStrip").data("kendoTabStrip");
                     //var tabs = tabStrip.tabGroup.children();
                     //tabStrip.enable(tabs.eq(1), true);
                     //tabStrip.enable(tabs.eq(2), true);
+                    
+                    $("#VisitsGrid").data("kendoGrid").refresh();
                     isNew = false;
                 }
 
@@ -244,7 +245,19 @@
         tabgrid.refresh();
     }
     
+    function VisitsRequestEnd(e) {
+            if(e.type === "update" || e.type === "delete")
+            {
+                var procgrid = $("#ProceduresGrid").data("kendoGrid");
+                procgrid.dataSource.read();
+                procgrid.refresh();
+            }
+     }
 
+
+
+       
+    
 
 
 
