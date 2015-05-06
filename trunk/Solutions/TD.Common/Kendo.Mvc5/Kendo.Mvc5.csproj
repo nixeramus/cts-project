@@ -62,7 +62,11 @@
     <Compile Include="Common\ImageButtonSetBuilder.cs" />
     <Compile Include="Common\ImageButtonBuilder.cs" />
     <Compile Include="Grid\BuilderExtensions.cs" />
-    <Compile Include="Grid\GridCommandColumnBuilder.cs" />
+    <Compile Include="Grid\Columns\GridButtonsColumn.cs" />
+    <Compile Include="Grid\Columns\IGridButtonsColumn.cs" />
+    <Compile Include="Grid\Fluent\GridButtonsColumnBuilder.cs" />
+    <Compile Include="Grid\Fluent\GridButtonsColumnFactory.cs" />
+    <None Include="Grid\GridCommandColumnBuilder.cs" />
     <Compile Include="Grid\Filters\ButtonFilterCell.cs" />
     <Compile Include="Grid\Filters\CheckBoxFilterCell.cs" />
     <Compile Include="Grid\Filters\DropDownFilterCell.cs" />

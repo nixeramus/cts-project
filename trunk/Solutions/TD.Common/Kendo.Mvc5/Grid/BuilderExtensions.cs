@@ -2,7 +2,10 @@
 using System;
 using System.Collections;
 using System.Linq.Expressions;
+using TD.Common.Kendo.Mvc5.Common;
+using TD.Common.Kendo.Mvc5.Grid.Columns;
 using TD.Common.Kendo.Mvc5.Grid.Filters;
+using TD.Common.Kendo.Mvc5.Grid.Fluent;
 //using TD.Common.Web.Mvc.UserSettings.Grid;
 
 namespace TD.Common.Kendo.Mvc5.Grid
@@ -20,13 +23,13 @@ namespace TD.Common.Kendo.Mvc5.Grid
                 .Reorderable(r => r.Columns(true));
         }
 
-        public static GridCrudCommandsColumnBuilder<T> CrudCommands<T>(this GridColumnFactory<T> factory, FilterRow filterRow = null) where T : class
-        {
-            if (filterRow != null)
-                filterRow.AddCell(new ButtonFilterCell());
-            var templateColumnBuilder = factory.Template(model => { });
-            return new GridCrudCommandsColumnBuilder<T>(templateColumnBuilder);
-        }
+        //public static GridCrudCommandsColumnBuilder<T> CrudCommands<T>(this GridColumnFactory<T> factory, FilterRow filterRow = null) where T : class
+        //{
+        //    if (filterRow != null)
+        //        filterRow.AddCell(new ButtonFilterCell());
+        //    var templateColumnBuilder = factory.Template(model => { });
+        //    return new GridCrudCommandsColumnBuilder<T>(templateColumnBuilder);
+        //}
 
         public static GridBoundColumnBuilder<TModel> Bound<TModel, TValue>(this GridColumnFactory<TModel> factory, 
             Expression<Func<TModel, TValue>> expression, 
@@ -51,6 +54,32 @@ namespace TD.Common.Kendo.Mvc5.Grid
             filterRow.AddCell(new DropDownFilterCell(builder.Column.Member, data, dataFieldValue, dataFieldText));
 
             return builder;
+        }
+
+        public static GridButtonsColumnBuilder Buttons<TModel>(this GridColumnFactory<TModel> factory, Action<GridButtonsColumnFactory<TModel>> buttonAction, FilterRow filterRow = null)
+             where TModel : class
+        {
+            if (filterRow != null)
+                filterRow.AddCell(new ButtonFilterCell());
+
+            GridButtonsColumn<TModel> column = new GridButtonsColumn<TModel>(factory.Container);
+
+            buttonAction(new GridButtonsColumnFactory<TModel>(column));
+
+            factory.Container.Columns.Add(column);
+
+            return new GridButtonsColumnBuilder(column);
+        }
+
+        public static GridButtonsColumnBuilder ButtonsCrud<TModel>(this GridColumnFactory<TModel> factory, FilterRow filterRow = null)
+             where TModel : class
+        {
+            return factory.Buttons(buttons =>
+            {
+                buttons.Add();
+                buttons.Edit();
+                buttons.Delete();
+            }, filterRow);
         }
 
         /*
