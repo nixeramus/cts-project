@@ -14,7 +14,7 @@
     .Editable()
     .Columns(columns =>
     {
-        //columns.CrudCommands(filterRow).All();
+        //columns.ButtonsCrud(filterRow);
         columns.Template(model => { }).Width(80).ClientTemplate(@"<button class=""k-button k-button-icontext td-grid-button td-grid-edit"" title=""Изменить"" value=""#:Id#""><span class=""k-icon k-edit td-grid-button-image""></span></button><button class=""k-button k-button-icontext k-grid-delete td-grid-button"" title=""Удалить""><span class=""k-icon k-delete td-grid-button-image""></span></button>")
             .HeaderTemplate(@"<button class=""k-button k-button-icontext td-grid-button td-grid-add"" title=""Добавить""><span class=""k-icon k-add td-grid-button-image""></span></button>");
         filterRow.AddCell(new TD.Common.Kendo.Mvc5.Grid.Filters.ButtonFilterCell());

@@ -13,21 +13,21 @@ namespace TD.CTS.WebUI.Controllers
 {
     public partial class TrialsController
     {
-        public ActionResult Edit(string code)
+        public ActionResult Edit(string id)
         {
             ViewBag.Title = "Описание исследования";
 
             Trial trial;
-            if (string.IsNullOrEmpty(code))
+            if (string.IsNullOrEmpty(id))
             {
                 ViewBag.IsNew = true;
                 trial = new Trial();
             }
             else
             {
-                trial = DataProvider.GetItem(new TrialDataFilter { Code = code });
+                trial = DataProvider.GetItem(new TrialDataFilter { Code = id });
                 if (trial == null)
-                    throw new ApplicationException("Исследование с кодом '" + code + "' не найдено");
+                    throw new ApplicationException("Исследование с кодом '" + id + "' не найдено");
                 ViewBag.IsNew = false;
             }
 
@@ -42,7 +42,7 @@ namespace TD.CTS.WebUI.Controllers
 
             ViewBag.Procedures = DataProvider.GetList(new ProcedureDataFilter());
 
-            ViewBag.Visits = DataProvider.GetList(new TrialVisitDataFilter { TrialCode = code }).OrderBy(v => v.Days);
+            ViewBag.Visits = DataProvider.GetList(new TrialVisitDataFilter { TrialCode = id }).OrderBy(v => v.Days);
 
             return View(trial);
         }

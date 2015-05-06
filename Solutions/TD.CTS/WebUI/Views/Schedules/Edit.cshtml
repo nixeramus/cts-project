@@ -104,7 +104,7 @@
                                       .Columns(columns =>
                                       {
                                           //columns.Command(command => command.Edit()).Width(60);
-                                          columns.EditCommand().Width(60);
+                                          columns.Buttons(buttons => { buttons.Edit(); }).Width(60);
                                           columns.Bound(e => e.TrialVisitName).Width(200).Title("Наименование");
                                           columns.Bound(e => e.BaseDay).Width(150).Title("Смещение").ClientTemplate("#=BaseDay#&nbsp;&plusmn;&nbsp;#=Limit#");
                                           columns.Bound(e => e.ScheduleDate).Width(200).EditorTemplateName("Date").Format("{0:dd.MM.yyyy}").Title("Назначенная дата");
@@ -142,8 +142,8 @@
                                       .Columns(columns =>
                                       {
                                           //columns.Command(command => command.Edit()).Width(100);
-                                          //columns.CrudCommands().Width(80);
-                                          columns.EditCommand().Width(60);
+                                          //columns.ButtonsCrud();
+                                          columns.Buttons(buttons => { buttons.Edit(); }).Width(60);
                                           //columns.Bound(e => { }).ClientTemplate(@"<a class=""k-button k-button-icontext k-grid-edit td-grid-button"" href=""\#"" title=""Изменить""><span class=""k-icon k-edit td-grid-button-image""></span></a>");
                                           //columns.Bound(e => e.SystemRoleCode).Width(100).Title("Роль");
                                           columns.Bound(e => e.SystemRoleCode).Width(100).Title("Код роли");

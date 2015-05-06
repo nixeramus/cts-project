@@ -17,7 +17,7 @@
     .Editable()
     .Columns(columns =>
     {
-        columns.CrudCommands(filterRow).All();
+        columns.ButtonsCrud(filterRow);
         columns.ForeignKey(e => e.HospitalId, hospitals, "Id", "Name", filterRow).Width(200).Title("Мед. учреждение");
         columns.Bound(e => e.FullName, filterRow).Width(300).Title("ФИО");
         columns.Bound(e => e.Email, filterRow).Width(200).Title("E-mail");

@@ -82,7 +82,7 @@
     .HtmlAttributes(new { style = "display:" + (isNew ? "none" : "block") })
     .Columns(columns =>
     {
-        columns.CrudCommands().All();
+        columns.ButtonsCrud();
         columns.ForeignKey(e => e.HospitalId, (System.Collections.IEnumerable)ViewBag.Hospitals, "Id", "Name").Width(200).Title("Мед. учреждение");
         columns.Bound(e => e.Number).Width(200).Title("№ иссл. центра");
         columns.ForeignKey(e => e.AnatomistLogin, (System.Collections.IEnumerable)ViewBag.Users, "Login", "FullName").Width(200).Title("ФИО главного исслед.");

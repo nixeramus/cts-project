@@ -13,13 +13,13 @@ namespace TD.CTS.WebUI.Controllers
 {
     public partial class TrialsController
     {
-        public ActionResult RolesEdit(string code)
+        public ActionResult RolesEdit(string id)
         {
             ViewBag.Title = "Роли исследования";
 
             ViewBag.Procedures = DataProvider.GetList(new ProcedureDataFilter());
 
-            return View(code);
+            return View((object)id);
         }
     }
 }

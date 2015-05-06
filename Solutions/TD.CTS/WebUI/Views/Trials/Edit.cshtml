@@ -37,7 +37,7 @@
     .Editable()
     .Columns(columns =>
     {
-        columns.CrudCommands().All();
+        columns.ButtonsCrud();
         columns.ForeignKey(e => e.MaterialId, (System.Collections.IEnumerable)ViewBag.Materials, "Id", "Name").Width("100%").Title("Наименование материала");
     })
         .DataSource(dataSource => dataSource
