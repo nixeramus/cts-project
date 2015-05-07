@@ -1,0 +1,55 @@
+﻿@using TD.Common.Kendo.Mvc5.Grid
+
+@model string
+
+@(Html.Kendo().Grid<TD.CTS.Data.Entities.TrialProcedure>()
+    .Init("ProcedureRolesGrid")
+    .Columns(columns =>
+    {
+        columns.ForeignKey(e => e.ProcedureCode, (System.Collections.IEnumerable)ViewBag.Procedures, "Code", "Name")
+            .Width("100%").Title("Процедура");
+    })
+    .DataSource(dataSource => dataSource
+       .Ajax()
+       .PageSize(50)
+       .Model(model =>
+       {
+           model.Id(e => e.Id);
+       })
+       .Read(read => read.Action("GetTrialProcedures", "Trials", new { TrialCode = Model }))
+    )
+    .Events(events => events.DataBound("ProcedureRolesGridBound"))
+    .ClientDetailTemplateId("RolesTemplate")
+)
+
+<script id="RolesTemplate" type="text/kendo-tmpl">
+    @(Html.Kendo().Grid<TD.CTS.Data.Entities.TrialCenterProcedureRole>()
+        .Name("RolesGrid_#=Id#")
+        .Columns(columns =>
+        {
+            columns.ButtonsCrud();
+            columns.ForeignKey(e => e.TrialCenterId, (System.Collections.IEnumerable)ViewBag.TrialCenters, "Id", "Number")
+                .Width(200).Title("Исл. центр");
+            columns.ForeignKey(e => e.RoleCode, (System.Collections.IEnumerable)ViewBag.Roles, "Code", "Name")
+                .Width("100%").Title("Роль");
+        })
+        .DataSource(dataSource => dataSource
+            .Ajax()
+            .PageSize(20)
+            .Model(model =>
+            {
+                model.Id(e => e.Id);
+            })
+            .Read(read => read.Action("GetTrialCenterProcedureRoles", "Trials", new { TrialProcedureId = "#=Id#" }))
+            .Create(create => create.Action("AddTrialCenterProcedureRole", "Trials", new { ProcedureId = "#=Id#" }))
+            .Update(update => update.Action("UpdateTrialCenterProcedureRole", "Trials"))
+            .Destroy(update => update.Action("DeleteTrialCenterProcedureRole", "Trials"))
+            .Events(events => events.Error("kendo_grid_error_handler"))
+        )
+        .Events(events => events.Edit("kendo_grid_onrowedit"))
+        .Scrollable(scroll => scroll.Height("auto"))
+        .Editable()
+        .ToClientTemplate()
+    )
+    @Html.Raw(@"<script>kendo_grid_init($(""\\\\#RolesGrid_#=Id#""));<\/script>")
+</script>

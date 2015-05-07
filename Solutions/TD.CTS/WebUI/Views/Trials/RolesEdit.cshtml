@@ -1,4 +1,6 @@
 ﻿@using TD.Common.Kendo.Mvc5.Grid
+@using TD.Common.Kendo.Mvc5.Common
+@using TD.Common.Web.Mvc
 
 @model string
 
@@ -18,46 +20,13 @@
             tabs.Add().Text("Роли")
                 .Selected(true)
                 .ContentHtmlAttributes(new { style = "padding:0;" })
-                .Content(@<text>
-                    @(Html.Kendo().Grid<TD.CTS.Data.Entities.TrialProcedure>()
-                        .Init("ProceduresGrid")
-                        .Columns(columns =>
-                        {
-                            columns.ForeignKey(e => e.ProcedureCode, (System.Collections.IEnumerable)ViewBag.Procedures, "Code", "Name")
-                                .Width("100%").Title("Процедура");
-                        })
-                        .DataSource(dataSource => dataSource
-                           .Ajax()
-                           .PageSize(50)
-                           .Model(model =>
-                           {
-                               model.Id(e => e.Id);
-                           })
-                           .Read(read => read.Action("GetTrialProcedures", "Trials", new { TrialCode = Model }))
-                        )
-                    )
-                </text>);
+                .Content(@<text>@Html.Partial("EditorTemplates/RolesEditor", Model)</text>);
             tabs.Add().Text("Стоимость визитов")
                 .ContentHtmlAttributes(new { style = "padding:0;" })
-                .Content(@<text>
-                    @(Html.Kendo().Grid<TD.CTS.Data.Entities.TrialVisit>()
-                        .Init("VisitsGrid")
-                        .Columns(columns =>
-                        {
-                            columns.Bound(e => e.Name)
-                                .Width("100%").Title("Визит");
-                        })
-                        .DataSource(dataSource => dataSource
-                           .Ajax()
-                           .PageSize(50)
-                           .Model(model =>
-                           {
-                               model.Id(e => e.Id);
-                           })
-                           .Read(read => read.Action("GetTrialVisits", "Trials", new { TrialCode = Model }))
-                        )
-                    )
-                </text>);
+                .Content(@<text>@Html.Partial("EditorTemplates/VisitCostsEditor", Model)</text>);
+            tabs.Add().Text("Статьи доходов")
+                .ContentHtmlAttributes(new { style = "padding:0;" })
+                .Content(@<text>@Html.Partial("EditorTemplates/IncomeArticlesEditor", Model)</text>);
         }
     )
 )
@@ -66,9 +35,11 @@
     $(document).ready(function () {
         SetContentBlock($("#TabStrip .k-content"));
 
-        kendo_grid_init($("#ProceduresGrid"));
+        kendo_grid_init($("#ProcedureRolesGrid"));
 
         kendo_grid_init($("#VisitsGrid"));
+
+        kendo_grid_init($("#IncomeArticlesGrid"));
 
         $(window).bind("resize", function () {
             var tabStrip = $("#TabStrip").data("kendoTabStrip");
@@ -81,6 +52,10 @@
 
     function ShowTab(e) {
         StretchGrid($(e.contentElement), $(e.contentElement.firstElementChild));
+    }
+
+    function ProcedureRolesGridBound(e) {
+        this.expandRow(this.tbody.find("tr.k-master-row"));
     }
 </script>
 

@@ -1,0 +1,29 @@
+﻿@using TD.Common.Kendo.Mvc5.Grid
+
+@model string
+
+@(Html.Kendo().Grid<TD.CTS.Data.Entities.TrialIncomeArticle>()
+    .Init("IncomeArticlesGrid")
+    .Columns(columns =>
+    {
+        columns.ButtonsCrud();
+        columns.Bound(e => e.Name).Width(200).Title("Статья");
+        columns.Bound(e => e.Share).Width("100%").Title("Доля");
+    })
+    .DataSource(dataSource => dataSource
+        .Ajax()
+        .PageSize(50)
+        .Model(model =>
+        {
+            model.Id(e => e.Id);
+            model.Field(e => e.TrialCode).DefaultValue(Model);
+        })
+        .Read(read => read.Action("GetTrialIncomeArticles", "Trials", new { TrialCode = Model }))
+        .Create(create => create.Action("AddTrialIncomeArticle", "Trials"))
+        .Update(update => update.Action("UpdateTrialIncomeArticle", "Trials"))
+        .Destroy(update => update.Action("DeleteTrialIncomeArticle", "Trials"))
+        .Events(events => events.Error("kendo_grid_error_handler"))
+    )
+    .Editable()
+    .Events(events => events.Edit("kendo_grid_onrowedit"))
+)

@@ -1,0 +1,27 @@
+﻿@using TD.Common.Kendo.Mvc5.Grid
+
+@model string
+
+@(Html.Kendo().Grid<TD.CTS.Data.Entities.TrialVisit>()
+    .Init("VisitsGrid")
+    .Columns(columns =>
+    {
+        columns.Bound(e => e.Name).Width(200).Title("Визит");
+        columns.Bound(e => e.Cost).Width(110).Title("Стоимость");
+        columns.Buttons(buttons => { buttons.Edit(); }).Width("100%");
+    })
+    .DataSource(dataSource => dataSource
+        .Ajax()
+        .PageSize(50)
+        .Model(model =>
+        {
+            model.Id(e => e.Id);
+            model.Field(e => e.Name).Editable(false);
+        })
+        .Read(read => read.Action("GetTrialVisits", "Trials", new { TrialCode = Model }))
+        .Update(update => update.Action("UpdateTrailVisit", "Trials"))
+        .Events(events => events.Error("kendo_grid_error_handler"))
+    )
+    .Editable()
+    .Events(events => events.Edit("kendo_grid_onrowedit"))
+)

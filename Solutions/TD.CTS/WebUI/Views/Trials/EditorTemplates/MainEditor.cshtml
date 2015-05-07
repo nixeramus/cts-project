@@ -6,18 +6,42 @@
     var isNew = ViewBag.IsNew;
 }
 
-<table id="trialForm" class="td-formTable" style="width:auto;">
+<table id="trialForm" class="td-formTable" style="width:auto;margin-bottom:20px;">
     <tr>
-        <td style="width:120px;">
-            @(Html.Kendo().Button()
-                .Name("BackButton")
-                .SpriteCssClass("k-icon k-i-arrow-w")
-                .Tag("a")
-                .Content("Назад")
-                .HtmlAttributes(new { style = "width:100%;", href = Url.Action("Index", "Trials") })
-            )
+        <td class="td-formTable-caption" colspan="2" style="width:250px;">Код исследования</td>
+        <td>
+            @Html.EditorFor(model => model.Code)
         </td>
-        <td style="width:40px;"></td>
+    </tr>
+    <tr>
+        <td class="td-formTable-caption" colspan="2">Наименование исследования</td>
+        <td>
+            @Html.EditorFor(model => model.Name)
+        </td>
+    </tr>
+    <tr>
+        <td class="td-formTable-caption" colspan="2">Администратор исследования</td>
+        <td>
+            @Html.EditorFor(model => model.AdministratorLogin, "GridForeignKey")
+        </td>
+    </tr>
+    <tr>
+        <td class="td-formTable-caption" style="width:100px;">Заказ такси</td>
+        <td colspan="2">
+            @Html.EditorFor(model => model.TaxiBooking)
+        </td>
+    </tr>
+    <tr>
+        <td class="td-formTable-caption">Службы такси</td>
+        <td colspan="2">
+            @Html.EditorFor(model => model.TaxiService, "Text")
+        </td>
+    </tr>
+    <tr>
+        <td class="td-formTable-caption">Утверждено</td>
+        <td>
+            @Html.EditorFor(model => model.Approved)
+        </td>
         <td>
             @(Html.Kendo().Button()
                 .Name("SaveButton")
@@ -25,49 +49,13 @@
                 .Content("Сохранить")
                 .HtmlAttributes(new { style = "width:230px;" })
                 .Events(e => e.Click("SaveTrial"))
-        )
-    </td>
-</tr>
-<tr>
-    <td class="td-formTable-caption" colspan="2" style="width:250px;">Код исследования</td>
-    <td>
-        @Html.EditorFor(model => model.Code)
-    </td>
-</tr>
-<tr>
-    <td class="td-formTable-caption" colspan="2">Наименование исследования</td>
-    <td>
-        @Html.EditorFor(model => model.Name)
-    </td>
-</tr>
-<tr>
-    <td class="td-formTable-caption" colspan="2">Администратор исследования</td>
-    <td>
-        @Html.EditorFor(model => model.AdministratorLogin, "GridForeignKey")
-    </td>
-</tr>
-<tr>
-    <td class="td-formTable-caption" style="width:100px;">Заказ такси</td>
-    <td colspan="2">
-        @Html.EditorFor(model => model.TaxiBooking)
-    </td>
-</tr>
-<tr>
-    <td class="td-formTable-caption">Службы такси</td>
-    <td colspan="2">
-        @Html.EditorFor(model => model.TaxiService, "Text")
-    </td>
-</tr>
-<tr>
-    <td class="td-formTable-caption">Утверждено</td>
-    <td colspan="2">
-        @Html.EditorFor(model => model.Approved)
-    </td>
-</tr>
-<tr>
-    <td class="td-formTable-caption"></td>
-    <td colspan="3"></td>
-</tr>
+            )
+        </td>
+    </tr>
+    <tr>
+        <td class="td-formTable-caption"></td>
+        <td colspan="3"></td>
+    </tr>
 </table>
 
 @(Html.Kendo().Notification()

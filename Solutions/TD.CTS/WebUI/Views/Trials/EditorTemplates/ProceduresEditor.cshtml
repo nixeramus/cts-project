@@ -100,6 +100,23 @@
     .Events(events => events.Refresh("OpenVisitEdit"))
 )
 
+<script id="procedureTemplate" type="text/x-kendo-template">
+    @(Html.Kendo().DropDownList()
+        .Name("ProcedureCode")
+        .DataTextField("Name")
+        .DataValueField("Code")
+        .DataSource(source =>
+        {
+            source.Read(read =>
+            {
+                read.Action("GetProcedures", "Trials", new { TrialCode = Model }).Data("GetTrialProcedureId");
+            });
+        })
+        .Value("#: value #")
+        .ToClientTemplate()
+    )
+</script>
+
 <script>
     kendo_grid_init($("#ProceduresGrid"));
     var procGrid = $("#ProceduresGrid");

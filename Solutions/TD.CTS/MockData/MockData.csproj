@@ -54,6 +54,8 @@
     <Compile Include="DataGenerator.cs" />
     <Compile Include="MockDataProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\TrialCenterProcedureRoleRepository.cs" />
+    <Compile Include="Repositories\TrialIncomeArticleRepository.cs" />
     <Compile Include="SerializeHelper.cs" />
     <None Include="Repositories\ProcedureRepository.cs" />
     <Compile Include="Repositories\Repository.cs" />

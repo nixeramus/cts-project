@@ -752,6 +752,10 @@
     <Content Include="Views\Trials\RolesEdit.cshtml" />
     <Content Include="Views\Schedules\EditorTemplates\ProcedureEmployeeEditor.cshtml" />
     <Content Include="Views\Schedules\EditorTemplates\ScheduleDetailEditor.cshtml" />
+    <Content Include="Views\Trials\EditorTemplates\MaterialsEditor.cshtml" />
+    <Content Include="Views\Trials\EditorTemplates\RolesEditor.cshtml" />
+    <Content Include="Views\Trials\EditorTemplates\VisitCostsEditor.cshtml" />
+    <Content Include="Views\Trials\EditorTemplates\IncomeArticlesEditor.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

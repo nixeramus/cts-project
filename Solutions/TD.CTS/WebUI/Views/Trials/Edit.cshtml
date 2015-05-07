@@ -26,63 +26,35 @@
     .Events(events => events.Show("ShowTab"))
     .Items(tabs =>
                 {
+                    var trialCode = Model.Code ?? "";
+                    //tabs.Add().Text("Назад").Action("Index", "Trials");
                     tabs.Add().Text("Основное")
                         .Selected(true)
                         .Content(@<text>@Html.Partial("EditorTemplates/MainEditor")</text>);
                     tabs.Add().Text("Материалы")
                         .ContentHtmlAttributes(new { style = "padding:0;" })
-                        .Content(@<text>
-@(Html.Kendo().Grid<TD.CTS.Data.Entities.TrialMaterial>()
-    .Init("MaterialsGrid")
-    .Editable()
-    .Columns(columns =>
-    {
-        columns.ButtonsCrud();
-        columns.ForeignKey(e => e.MaterialId, (System.Collections.IEnumerable)ViewBag.Materials, "Id", "Name").Width("100%").Title("Наименование материала");
-    })
-        .DataSource(dataSource => dataSource
-            .Ajax()
-            .PageSize(20)
-            .Model(model =>
-            {
-                model.Id(e => e.Id);
-                model.Field(e => e.TrialCode).DefaultValue(Model.Code);
-            })
-            .Read(read => read.Action("GetTrialMaterials", "Trials", new { TrialCode = Model.Code }))
-            .Create(create => create.Action("AddTrialMaterial", "Trials"))
-            .Update(update => update.Action("UpdateTrialMaterial", "Trials"))
-            .Destroy(destroy => destroy.Action("DeleteTrialMaterial", "Trials"))
-            .Events(events => events.Error("kendo_grid_error_handler"))
-         )
-         .Events(events => events.Edit("kendo_grid_onrowedit"))
-)
-                        </text>)
+                        .Content(@<text>@Html.Partial("EditorTemplates/MaterialsEditor", trialCode)</text>)
                         .Enabled(!isNew);
                     tabs.Add().Text("Визиты")
                         .ContentHtmlAttributes(new { style = "padding:0;" })
-                        .Content(@<text>@Html.Partial("EditorTemplates/ProceduresEditor", Model.Code ?? "")</text>)
+                        .Content(@<text>@Html.Partial("EditorTemplates/ProceduresEditor", trialCode)</text>)
                         .Enabled(!isNew);
+                    @*tabs.Add().Text("Роли")
+                        .ContentHtmlAttributes(new { style = "padding:0;" })
+                        .Content(@<text>@Html.Partial("EditorTemplates/RolesEditor", trialCode)</text>)
+                        .Enabled(!isNew);
+                    tabs.Add().Text("Стоимость визитов")
+                        .ContentHtmlAttributes(new { style = "padding:0;" })
+                        .Content(@<text>@Html.Partial("EditorTemplates/VisitCostsEditor", trialCode)</text>)
+                        .Enabled(!isNew);
+                    tabs.Add().Text("Статьи доходов")
+                        .ContentHtmlAttributes(new { style = "padding:0;" })
+                        .Content(@<text>@Html.Partial("EditorTemplates/IncomeArticlesEditor", trialCode)</text>)
+                        .Enabled(!isNew);*@
                 }
     )
 )
 
-
-
-<script id="procedureTemplate" type="text/x-kendo-template">
-    @(Html.Kendo().DropDownList()
-        .Name("ProcedureCode")
-        .DataTextField("Name")
-        .DataValueField("Code")
-        .DataSource(source => {
-            source.Read(read =>
-            {
-                read.Action("GetProcedures", "Trials", new { TrialCode = Model.Code }).Data("GetTrialProcedureId");
-            }); 
-        })
-        .Value("#: value #")
-        .ToClientTemplate()
-    )
-</script>
 
 @* Main *@
 <script>
@@ -96,11 +68,17 @@
 
         kendo_grid_init($("#MaterialsGrid"));
 
+        //kendo_grid_init($("#ProcedureRolesGrid"));
+
+        //kendo_grid_init($("#VisitsGrid"));
+
+        //kendo_grid_init($("#IncomeArticlesGrid"));
+
         $(window).bind("resize", function () {
             var tabStrip = $("#TabStrip").data("kendoTabStrip");
             var tab = tabStrip.select();
             var index = tab.index();
-            if (index === 1 || index === 2) {
+            if (index !== 0 && index !== 2) {
                 var conteiner = tabStrip.contentElements[index];
                 StretchGrid($(conteiner), $(conteiner.firstElementChild));
             }
@@ -131,6 +109,9 @@
                         var tabs = tabStrip.tabGroup.children();
                         tabStrip.enable(tabs.eq(1), true);
                         tabStrip.enable(tabs.eq(2), true);
+                        //tabStrip.enable(tabs.eq(3), true);
+                        //tabStrip.enable(tabs.eq(4), true);
+                        //tabStrip.enable(tabs.eq(5), true);
                         $("#Code").attr("readonly", true);
                         isNew = false;
                     }
@@ -149,8 +130,7 @@
     function ShowTab(e){
         var index = $(e.item).index();
 
-        if (index === 1){
-            StretchGrid($(e.contentElement), $(e.contentElement.firstElementChild));
+        if (index === 0){
             return;
         }
 
@@ -158,9 +138,10 @@
             if(visitLoad){
                 visitLoad = false;
             }
-
-            //StretchGrid($(e.contentElement), $(e.contentElement.firstElementChild));
+            return;
         }
+
+        StretchGrid($(e.contentElement), $(e.contentElement.firstElementChild));
     }
 </script>
 
@@ -380,7 +361,7 @@
 <script>
     var visitMaterialsData = null;
     function UpdateVisitMaterials(){
-        var div = $("#VisitMaterials");        
+        var div = $("#VisitMaterials");
         if(selectedCell == null) {
             div.hide();
             visitMaterialsData = null;
@@ -389,7 +370,7 @@
 
         var input = selectedCell.find("input");
         var checked = input.is(':checked');
-        
+
         var visitId = parseInt(input.val());
 
         var row = selectedCell.closest("tr");
@@ -419,6 +400,13 @@
         e.model.TrialProcedureId = visitMaterialsData.TrialProcedureId;
         e.model.TrialVisitId = visitMaterialsData.TrialVisitId;
     }
+
+    @* ProcedureRoles *@
+    @*
+    function ProcedureRolesGridBound(e) {
+        this.expandRow(this.tbody.find("tr.k-master-row"));
+    } 
+    *@
 </script>
 
 
