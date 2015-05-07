@@ -64,9 +64,11 @@
     <Compile Include="Entities\ScheduleVisitProcedure.cs" />
     <Compile Include="Entities\Trial.cs" />
     <Compile Include="Entities\ScheduleVisit.cs" />
+    <Compile Include="Entities\TrialCenterProcedureRole.cs" />
     <Compile Include="Entities\TrialMaterial.cs" />
     <Compile Include="Entities\TrialCenter.cs" />
     <Compile Include="Entities\TrialProcedure.cs" />
+    <Compile Include="Entities\TrialIncomeArticle.cs" />
     <Compile Include="Entities\TrialVisitMaterial.cs" />
     <Compile Include="Entities\User.cs" />
     <Compile Include="Entities\TrialVisit.cs" />
@@ -83,6 +85,8 @@
     <Compile Include="Filters\ScheduleVisitDataFilter.cs" />
     <Compile Include="Filters\ScheduleDataFilter.cs" />
     <Compile Include="Filters\TrialProcedureDataFilter.cs" />
+    <Compile Include="Filters\TrialCenterProcedureRoleDataFilter.cs" />
+    <Compile Include="Filters\TrialIncomeArticleDataFilter.cs" />
     <Compile Include="Filters\TrialVisitMaterialDataFilter.cs" />
     <Compile Include="Filters\TrialVisitDataFilter.cs" />
     <Compile Include="Filters\TrialMaterialDataFilter.cs" />

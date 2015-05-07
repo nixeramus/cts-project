@@ -56,7 +56,7 @@ namespace TD.CTS.MockData.Repositories
                 }
             }
 
-            throw new ApplicationException("Матереиал не найден");
+            throw new ApplicationException("Материал не найден");
         }
     }
 }

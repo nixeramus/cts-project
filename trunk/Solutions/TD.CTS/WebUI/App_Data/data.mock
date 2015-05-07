@@ -95,7 +95,8 @@
           "TrialCode": "AB",
           "Name": "Первичный осмотр",
           "Days": 0,
-          "Punctuality": 0
+          "Punctuality": 0,
+          "Cost": 10.0
         },
         {
           "$type": "TD.CTS.Data.Entities.TrialVisit, TD.CTS.Data",
@@ -103,7 +104,8 @@
           "TrialCode": "AB",
           "Name": "Сдача анализов",
           "Days": 2,
-          "Punctuality": 1
+          "Punctuality": 1,
+          "Cost": 20.0
         },
         {
           "$type": "TD.CTS.Data.Entities.TrialVisit, TD.CTS.Data",
@@ -111,7 +113,8 @@
           "TrialCode": "AB",
           "Name": "Повторный осмотр",
           "Days": 5,
-          "Punctuality": 2
+          "Punctuality": 2,
+          "Cost": 0.0
         }
       ]
     }
@@ -165,6 +168,71 @@
               3
             ]
           }
+        }
+      ]
+    }
+  },
+  "TD.CTS.Data.Entities.TrialCenterProcedureRole, TD.CTS.Data, Version=1.0.0.0, Culture=neutral, PublicKeyToken=69f75ccb18254c4e": {
+    "$type": "TD.CTS.MockData.Repositories.TrialCenterProcedureRoleRepository, TD.CTS.MockData",
+    "Data": {
+      "$type": "System.Collections.Generic.List`1[[TD.CTS.Data.Entities.TrialCenterProcedureRole, TD.CTS.Data]], mscorlib",
+      "$values": [
+        {
+          "$type": "TD.CTS.Data.Entities.TrialCenterProcedureRole, TD.CTS.Data",
+          "Id": 1,
+          "TrialCenterId": 5,
+          "TrialProcedureId": 0,
+          "RoleCode": "DO"
+        },
+        {
+          "$type": "TD.CTS.Data.Entities.TrialCenterProcedureRole, TD.CTS.Data",
+          "Id": 2,
+          "TrialCenterId": 5,
+          "TrialProcedureId": 0,
+          "RoleCode": "HA"
+        },
+        {
+          "$type": "TD.CTS.Data.Entities.TrialCenterProcedureRole, TD.CTS.Data",
+          "Id": 3,
+          "TrialCenterId": 5,
+          "TrialProcedureId": 1,
+          "RoleCode": "NR"
+        },
+        {
+          "$type": "TD.CTS.Data.Entities.TrialCenterProcedureRole, TD.CTS.Data",
+          "Id": 4,
+          "TrialCenterId": 5,
+          "TrialProcedureId": 2,
+          "RoleCode": "DO"
+        }
+      ]
+    }
+  },
+  "TD.CTS.Data.Entities.TrialIncomeArticle, TD.CTS.Data, Version=1.0.0.0, Culture=neutral, PublicKeyToken=69f75ccb18254c4e": {
+    "$type": "TD.CTS.MockData.Repositories.TrialIncomeArticleRepository, TD.CTS.MockData",
+    "Data": {
+      "$type": "System.Collections.Generic.List`1[[TD.CTS.Data.Entities.TrialIncomeArticle, TD.CTS.Data]], mscorlib",
+      "$values": [
+        {
+          "$type": "TD.CTS.Data.Entities.TrialIncomeArticle, TD.CTS.Data",
+          "Id": 1,
+          "TrialCode": "AB",
+          "Name": "статья 1",
+          "Share": 10
+        },
+        {
+          "$type": "TD.CTS.Data.Entities.TrialIncomeArticle, TD.CTS.Data",
+          "Id": 2,
+          "TrialCode": "AB",
+          "Name": "статья 2",
+          "Share": 50
+        },
+        {
+          "$type": "TD.CTS.Data.Entities.TrialIncomeArticle, TD.CTS.Data",
+          "Id": 3,
+          "TrialCode": "AB",
+          "Name": "статья 3",
+          "Share": 40
         }
       ]
     }

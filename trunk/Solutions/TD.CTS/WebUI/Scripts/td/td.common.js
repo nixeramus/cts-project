@@ -66,7 +66,7 @@ function StretchGrid(conteiner, grid) {
 
     var delta = conteinerHeight - gridHeight;
 
-    var gridContent = grid.find(".k-grid-content");
+    var gridContent = grid.find(">.k-grid-content");
     var contentHeight = gridContent.height();
 
     gridContent.height(contentHeight + delta - 2);

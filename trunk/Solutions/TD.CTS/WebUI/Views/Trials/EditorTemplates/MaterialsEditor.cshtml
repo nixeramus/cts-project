@@ -1,0 +1,28 @@
+﻿@using TD.Common.Kendo.Mvc5.Grid
+
+@model string
+
+@(Html.Kendo().Grid<TD.CTS.Data.Entities.TrialMaterial>()
+    .Init("MaterialsGrid")
+    .Editable()
+    .Columns(columns =>
+    {
+        columns.ButtonsCrud();
+        columns.ForeignKey(e => e.MaterialId, (System.Collections.IEnumerable)ViewBag.Materials, "Id", "Name").Width("100%").Title("Наименование материала");
+    })
+    .DataSource(dataSource => dataSource
+       .Ajax()
+       .PageSize(20)
+       .Model(model =>
+       {
+           model.Id(e => e.Id);
+           model.Field(e => e.TrialCode).DefaultValue(Model);
+       })
+       .Read(read => read.Action("GetTrialMaterials", "Trials", new { TrialCode = Model }))
+       .Create(create => create.Action("AddTrialMaterial", "Trials"))
+       .Update(update => update.Action("UpdateTrialMaterial", "Trials"))
+       .Destroy(destroy => destroy.Action("DeleteTrialMaterial", "Trials"))
+       .Events(events => events.Error("kendo_grid_error_handler"))
+    )
+    .Events(events => events.Edit("kendo_grid_onrowedit"))
+)
