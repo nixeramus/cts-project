@@ -28,7 +28,7 @@ namespace TD.Common.Kendo.Mvc5.Common
         {
             return new ImageButtonBuilder()
                 .Tag(ButtonTag.a)
-                .Url("\\#")
+                .Url(@"\\\\#")
                 .AddCssClass("k-grid-edit")
                 .Title("Изменить")
                 .ImageCssClass("k-edit");
@@ -38,7 +38,7 @@ namespace TD.Common.Kendo.Mvc5.Common
         {
             return new ImageButtonBuilder()
                 .Tag(ButtonTag.a)
-                .Url("\\#")
+                .Url(@"\\\\#")
                 .AddCssClass("k-grid-delete")
                 .Title("Удалить")
                 .ImageCssClass("k-delete");

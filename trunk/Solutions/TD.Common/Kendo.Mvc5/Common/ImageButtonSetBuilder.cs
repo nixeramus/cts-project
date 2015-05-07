@@ -30,7 +30,7 @@ namespace TD.Common.Kendo.Mvc5.Common
         {
             StringBuilder sb = new StringBuilder();
             foreach (var button in buttons)
-                sb.AppendLine(button.ToHtmlString());
+                sb.Append(button.ToHtmlString());
 
             return sb.ToString();
         }
