@@ -20,20 +20,9 @@
     //var buttonsRow = new System.Text.StringBuilder(@"<tr class='k-filter-row'><th/><th style='text-align:right;'><a class='k-button k-button-icontext k-grid-add td-grid-button' title='Добавить визит' href='javascript: void(0)'><span class='k-icon k-add td-grid-button-image'></span></a></th>");
 }
 @(Html.Kendo().TabStrip()
-    .Name("TabStrip")
+    .Name("HeaderTabStrip")
     .Animation(false)
-    .Items(tabs =>
-    {
-        tabs.Add()
-            .Text("Основное")
-            .Selected(true)
-            .Content(@<text>@Html.Partial("EditorTemplates/MainEditor")
-                        @RenderFooter(isNew);
-                      </text>
-);
-    }
-
-      )
+    .Items(tabs =>{tabs.Add().Text("Основное").Selected(true).Content(@<text>@Html.Partial("EditorTemplates/MainEditor")@RenderFooter(isNew)</text>);})
 )
 
 
@@ -76,7 +65,7 @@
                                               model.Field(e => e.BaseDay).Editable(false);
                                               model.Field(e => e.TrialVisitName).Editable(false);
                                           })
-                                          .Read(read => read.Action("GetScheduleVisits", "Schedules"/*, new {ScheduleID = Model.Id}*/).Data("VisitsGetDataRead"))
+                                          .Read(read => read.Action("GetScheduleVisits", "Schedules", new { ScheduleID = Model.Id })/*.Data("VisitsGetDataRead")*/)
                                           .Update(update => update.Action("UpdateScheduleVisit", "Schedules"))
                                           .Destroy(destroy => destroy.Action("DeleteScheduleVisit", "Schedules"))
                                           .Events(events => events.Error("kendo_grid_error_handler").RequestEnd("VisitsRequestEnd"))
@@ -111,7 +100,7 @@
                                               model.Field(e => e.SystemRoleCode).Editable(false);
 
                                           })
-                                                          .Read(read => read.Action("GetScheduleEmployees", "Schedules"/*, new { ScheduleID = Model.Id }*/).Data("EmployeesGetDataRead"))
+                                          .Read(read => read.Action("GetScheduleEmployees", "Schedules", new { ScheduleID = Model.Id })/*.Data("EmployeesGetDataRead")*/)
                                           //.Create(create => create.Action("AddTrialCenter", "Trials"))
                                            .Update(update => update.Action("UpdateScheduleEmployee", "Schedules"))
                                           //.Destroy(destroy => destroy.Action("DeleteTrialCenter", "Trials"))
@@ -124,8 +113,9 @@
             .Text("Подробная информация")
             //.Enabled(!isNew)
             .Selected(false)
-            .ContentHtmlAttributes(new { style = "padding:0;" })
-            .Content(@<text>@Html.Partial("EditorTemplates/ScheduleDetailEditor", Model)</text>);
+            .ContentHtmlAttributes(new {style = "padding:0;"})
+            .LoadContentFrom("GetScheduleDetailContent", "Schedules", new { ScheduleID = Model.Id });
+           // .Content(@<text>@Html.Partial("EditorTemplates/ScheduleDetailEditor", Model)</text>);
 
 
 
@@ -186,22 +176,19 @@
 
 
 
-    //function VisitsOnDataBinding(e) {
+    
+    //function VisitsGetDataRead() {
     //    var schedid = $("#Id").val();
-    //    e.data = $.extend(e.data, { ScheduleID: schedid }); 
+    //    return {ScheduleID: schedid};
     //}
-    function VisitsGetDataRead() {
-        var schedid = $("#Id").val();
-        return {ScheduleID: schedid};
-    }
-    function EmployeesGetDataRead() {
-        var schedid = $("#Id").val();
-        return {ScheduleID: schedid};
-    }
-    function ProceduresGetDataRead() {
-        var schedid = $("#Id").val();
-        return {ScheduleID: schedid};
-    }
+    //function EmployeesGetDataRead() {
+    //    var schedid = $("#Id").val();
+    //    return {ScheduleID: schedid};
+    //}
+    //function ProceduresGetDataRead() {
+    //    var schedid = $("#Id").val();
+    //    return {ScheduleID: schedid};
+    //}
 
 
 
@@ -236,7 +223,9 @@
     function VisitsRequestEnd(e) {
             if(e.type === "update" || e.type === "delete")
             {
-                kendo_grid_reload($("#ProceduresGrid"));
+                //перечитываем грид с сервера
+                $('#VisitsStrip').data().kendoTabStrip.reload($('#VisitsStrip .k-item:nth-child(3)'));
+                //kendo_grid_reload($("#ProceduresGrid"));
             }
      }
 
