@@ -21,7 +21,7 @@
 
         columns.Buttons(buttons =>
         {
-            buttons.HeaderCustom().Tag(ButtonTag.a).Url(Url.Action("Edit", "Schedules")).Title("Добавить").ImageCssClass("k-add");
+            buttons.HeaderCustom().Tag(ButtonTag.a).Url(Url.Action("Create", "Schedules")).Title("Добавить").ImageCssClass("k-add");
             buttons.Custom().Tag(ButtonTag.a).Url(Url.Action("Edit", "Schedules") + "/#:Id#").Title("Изменить").ImageCssClass("k-edit");
             buttons.Delete();
             //buttons.Custom().Tag(ButtonTag.a).Url(Url.Action("RolesEdit", "Schedule") + "/#:Id#").Title("Роли и стоимость").ImageCssClass("k-i-custom");
