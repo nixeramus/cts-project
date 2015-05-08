@@ -1,0 +1,86 @@
+﻿@using TD.Common.Kendo.Mvc5.Grid
+
+@model TD.CTS.Data.Entities.Schedule
+
+@section head{
+    <link href="@Url.Content("~/Content/td/td.kendo.grid.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/td/td.kendo.tabstrip.css")" rel="stylesheet" type="text/css" />
+    <script src="@Url.Content("~/Scripts/td/td.kendo.grid.js")"></script>
+
+    <style type="text/css">
+        .td-textarea-edit {
+            width: 300px !important;
+            height: 60px !important;
+        }
+    </style>
+}
+@{
+    var isNew = true;
+}
+@(Html.Kendo().TabStrip()
+    .Name("TabStrip")
+    .Animation(false)
+    .Items(tabs =>
+    {
+        tabs.Add()
+            .Text("Основное")
+            .Selected(true)
+            .Content(@<text>@Html.Partial("EditorTemplates/MainEditor")</text>);
+    }
+
+      )
+      )
+
+<script>
+    var validator = $("#scheduleForm").kendoValidator().data("kendoValidator");
+    function SaveSchedule() {
+        if (validator.validate()) {
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("AddSchedule", "Schedules")",
+                data: {
+                    "Id": $("#Id").val(),
+                    "BeginDate": $("#BeginDate").val(),
+                    "PatientCode": $("#PatientCode").val(),
+                    "TrialCenterID": $("#TrialCenterID").val(),
+                    "ScheduleStatus": $("#ScheduleStatus").val(),
+                    //"TrialCode": $("#TrialCode").val(),
+                    "Comment": $("#Comment").val()
+                },
+                success: function (result) {
+                    //if(isNew) {
+                    //    //Если создание - то проставляем кодрасписания
+                    //    $("#Id").val(result.Data[0].Id);
+                    //    $("#VisitsGrid").css("display", "block");
+                    //    $("#EmployeeGrid").css("display", "block");
+                    //    $("#ProceduresGrid").css("display", "block");
+
+                    //    //var tabStrip = $("#TabStrip").data("kendoTabStrip");
+                    //    //var tabs = tabStrip.tabGroup.children();
+                    //    //tabStrip.enable(tabs.eq(1), true);
+                    //    //tabStrip.enable(tabs.eq(2), true);
+
+                    //    kendo_grid_reload($("#VisitsGrid"));
+                    //    kendo_grid_reload($("#EmployeeGrid"));
+
+                    //    isNew = false;
+                    //}
+
+                    var saveNotification = $("#SaveNotification").data("kendoNotification");
+                    saveNotification.show("Сохранено", "success");
+                    var url = "@Url.Action("Edit", "Schedules")";
+                    url = url + "/" + result.Data[0].Id;
+                    window.location.replace(url);
+
+
+                },
+            error: function (error) {
+                alert(error.responseText);
+            }
+        });
+    }
+    }
+
+
+
+    </script>
