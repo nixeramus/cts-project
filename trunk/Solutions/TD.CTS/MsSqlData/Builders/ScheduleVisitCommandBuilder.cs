@@ -59,7 +59,19 @@ namespace TD.CTS.MsSqlData.Builders
 
         public override SqlCommand CreateDeleteCommand(SqlConnection connection, ScheduleVisit entity)
         {
-            throw new NotImplementedException();
+             var command = new SqlCommand("ScheduleVisitDel", connection)
+            {
+                CommandType = System.Data.CommandType.StoredProcedure,
+                CommandTimeout = Settings.CommandTimeout
+            };
+
+            command.Parameters.AddWithValue("@ScheduleID", entity.ScheduleID);
+            command.Parameters.AddWithValue("@TrialVisitID", entity.TrialVisitID);
+            command.Parameters.AddWithValue("@TrialCenterID", entity.TrialCenterID);
+            command.Parameters.AddWithValue("@TrialCode", entity.TrialCode);
+            command.Parameters.AddWithValue("@TrialVersionNo", entity.TrialVersionNo);
+
+            return command;
         }
 
 
