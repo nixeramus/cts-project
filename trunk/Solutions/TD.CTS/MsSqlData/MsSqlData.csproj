@@ -55,6 +55,7 @@
     <Compile Include="Builders\ProcedureEmployeeCommandBuilder.cs" />
     <Compile Include="Builders\ScheduleCommandBuilder.cs" />
     <Compile Include="Builders\ScheduleEmployeeCommandBuilder.cs" />
+    <Compile Include="Builders\SchedulePlaningVisitCommandBuilder.cs" />
     <Compile Include="Builders\ScheduleVisitProcedureCommandBuilder.cs" />
     <Compile Include="Builders\TrialCenterCommandBuilder.cs" />
     <Compile Include="Builders\TrialCommandBuilder.cs" />
