@@ -9,17 +9,21 @@
 @{
     var filterRow = new TD.Common.Kendo.Mvc5.Grid.Filters.FilterRow(Html);
 }
-@(Html.Kendo().Grid<TD.CTS.Data.Entities.ScheduleVisit>()
-    .Init("ScheduleVisitsGrid")
+@(Html.Kendo().Grid<TD.CTS.Data.Entities.SchedulePlaningVisit>()
+    .Init("SchedulePlaningVisitsGrid")
     .Editable()
     .Columns(columns =>
     {
 
 
-        columns.Bound(e => e.TrialCode, filterRow).Width(200).Title("Код исследования");
-        columns.Bound(e => e.TrialName, filterRow).Width(200).Title("Наименование исследования");
-        columns.Bound(e => e., filterRow).Width(200).Title("Наименование исследования");
-        
+        columns.Bound(e => e.TrialCode).Width(200).Title("Код исследования");
+        columns.Bound(e => e.TrialName).Width(200).Title("Наименование исследования");
+        columns.Bound(e => e.PatientFullName).Width(200).Title("ФИО пациента");
+        columns.Bound(e => e.TrialVisitName).Width(200).Title("Наименование визита");
+        columns.Bound(e => e.MinDate).Width(200).Title("Дата нач.");
+        columns.Bound(e => e.MaxDate).Width(200).Title("Дата кон.");
+        columns.Bound(e => e.PatientFullName).Width(200).Title("Дата план");
+        columns.Bound(e => e.VisitEmployees).Width(200).Title("Сотрудники");
         //columns.Buttons(buttons =>
         //{
         //    buttons.HeaderCustom().Tag(ButtonTag.a).Url(Url.Action("Create", "Schedules")).Title("Добавить").ImageCssClass("k-add");
@@ -32,40 +36,44 @@
 
 
         //filterRow.AddCell(new TD.Common.Kendo.Mvc5.Grid.Filters.ButtonFilterCell());
-        columns.Bound(e => e.TrialCenterName, filterRow).Width(200).Title("Центр");
-        columns.Bound(e => e.TrialName, filterRow).Width(200).Title("Исследование");
-        columns.Bound(e => e.PatientFullName, filterRow).Width(300).Title("ФИО пациента");
-        filterRow.AddCell(new TD.Common.Kendo.Mvc5.Grid.Filters.EmptyFilterCell());
-        columns.Bound(e => e.BirthDate).Width(200).Title("Дата рождения пациента").Format("{0:dd.MM.yyyy}");
+        //columns.Bound(e => e.TrialCenterName, filterRow).Width(200).Title("Центр");
+        //columns.Bound(e => e.TrialName, filterRow).Width(200).Title("Исследование");
+        //columns.Bound(e => e.PatientFullName, filterRow).Width(300).Title("ФИО пациента");
+        //filterRow.AddCell(new TD.Common.Kendo.Mvc5.Grid.Filters.EmptyFilterCell());
+        //columns.Bound(e => e.BirthDate).Width(200).Title("Дата рождения пациента").Format("{0:dd.MM.yyyy}");
+        ////filterRow.AddCell(new TD.Common.Kendo.Mvc5.Grid.Filters.DateRangeFilterCell("BeginDate"));
+        //columns.Bound(e => e.BeginDate).Width(200).Title("Дата начала исследования").Format("{0:dd.MM.yyyy}");
         //filterRow.AddCell(new TD.Common.Kendo.Mvc5.Grid.Filters.DateRangeFilterCell("BeginDate"));
-        columns.Bound(e => e.BeginDate).Width(200).Title("Дата начала исследования").Format("{0:dd.MM.yyyy}");
-        filterRow.AddCell(new TD.Common.Kendo.Mvc5.Grid.Filters.DateRangeFilterCell("BeginDate"));
 
-        columns.Bound(e => e.ScheduleStatus).Width(200).Title("Статус");
-        filterRow.AddCell(new TD.Common.Kendo.Mvc5.Grid.Filters.EmptyFilterCell());
-        //filterRow.AddCell(new TD.Common.Kendo.Mvc5.Grid.Filters.DropDownFilterCell("ScheduleStatus", ViewBag.ScheduleStatuses, "Name", "Name"));
+        //columns.Bound(e => e.ScheduleStatus).Width(200).Title("Статус");
+        //filterRow.AddCell(new TD.Common.Kendo.Mvc5.Grid.Filters.EmptyFilterCell());
+        ////filterRow.AddCell(new TD.Common.Kendo.Mvc5.Grid.Filters.DropDownFilterCell("ScheduleStatus", ViewBag.ScheduleStatuses, "Name", "Name"));
 
-        columns.ForeignKey(e => e.AuthorLogin, (System.Collections.IEnumerable)ViewBag.Users, "Login", "FullName").Width(200).Title("Автор");
-        filterRow.AddCell(new TD.Common.Kendo.Mvc5.Grid.Filters.CheckBoxFilterCell("OwnSchedulesOnly", "Только свои"));
-        columns.Bound(e => e.CreateDate).Width(200).Title("Дата создания").Format("{0:dd.MM.yyyy}");
-        filterRow.AddCell(new TD.Common.Kendo.Mvc5.Grid.Filters.EmptyFilterCell());
-        columns.ForeignKey(e => e.ModificatorLogin, (System.Collections.IEnumerable)ViewBag.Users, "Login", "FullName").Width(200).Title("Автор последнего изменения");
-        filterRow.AddCell(new TD.Common.Kendo.Mvc5.Grid.Filters.EmptyFilterCell());
-        columns.Bound(e => e.ModificationDate).Width(200).Title("Дата последнего изменения").Format("{0:dd.MM.yyyy}");
-        filterRow.AddCell(new TD.Common.Kendo.Mvc5.Grid.Filters.EmptyFilterCell());
-        columns.Bound(e => e.Comment).Width(300).Title("Примечание");
-        filterRow.AddCell(new TD.Common.Kendo.Mvc5.Grid.Filters.EmptyFilterCell());
+        //columns.ForeignKey(e => e.AuthorLogin, (System.Collections.IEnumerable)ViewBag.Users, "Login", "FullName").Width(200).Title("Автор");
+        //filterRow.AddCell(new TD.Common.Kendo.Mvc5.Grid.Filters.CheckBoxFilterCell("OwnSchedulesOnly", "Только свои"));
+        //columns.Bound(e => e.CreateDate).Width(200).Title("Дата создания").Format("{0:dd.MM.yyyy}");
+        //filterRow.AddCell(new TD.Common.Kendo.Mvc5.Grid.Filters.EmptyFilterCell());
+        //columns.ForeignKey(e => e.ModificatorLogin, (System.Collections.IEnumerable)ViewBag.Users, "Login", "FullName").Width(200).Title("Автор последнего изменения");
+        //filterRow.AddCell(new TD.Common.Kendo.Mvc5.Grid.Filters.EmptyFilterCell());
+        //columns.Bound(e => e.ModificationDate).Width(200).Title("Дата последнего изменения").Format("{0:dd.MM.yyyy}");
+        //filterRow.AddCell(new TD.Common.Kendo.Mvc5.Grid.Filters.EmptyFilterCell());
+        //columns.Bound(e => e.Comment).Width(300).Title("Примечание");
+        //filterRow.AddCell(new TD.Common.Kendo.Mvc5.Grid.Filters.EmptyFilterCell());
 
 
     })
     .DataSource(dataSource => dataSource
         .Ajax()
         .PageSize(20)
-        .Model(model => model.Id(e => e.Id))
-         .Read(read => read.Action("GetSchedules", "Schedules").Data("kendo_grid_getfilters"))
+        .Model(model =>
+        {
+            model.Id(e => e.ScheduleID);
+            model.Id(e => e.TrialVisitID); 
+        })
+             .Read(read => read.Action("GetPlaningVisits", "SchedulesPlanning").Data("kendo_grid_getfilters"))
         //.Create(create => create.Action("AddTrial", "Trials"))
         //.Update(update => update.Action("UpdateTrial", "Trials"))
-        .Destroy(destroy => destroy.Action("DeleteSchedule", "Schedules"))
+        //.Destroy(destroy => destroy.Action("DeleteSchedule", "Schedules"))
         .Events(events => events.Error("kendo_grid_error_handler"))
      )
         //.Events(events => events.Edit("kendo_grid_onrowedit"))
