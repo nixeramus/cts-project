@@ -15,10 +15,6 @@
     .Editable()
     .Columns(columns =>
     {
-        //columns.ButtonsCrud(filterRow);
-        //columns.Template(model => { }).Width(80).ClientTemplate(@"<button class=""k-button k-button-icontext td-grid-button td-grid-edit"" title=""Изменить"" value=""#:Id#""><span class=""k-icon k-edit td-grid-button-image""></span></button><button class=""k-button k-button-icontext k-grid-delete td-grid-button"" title=""Удалить""><span class=""k-icon k-delete td-grid-button-image""></span></button>")
-        //    .HeaderTemplate(@"<button class=""k-button k-button-icontext td-grid-button td-grid-add"" title=""Добавить""><span class=""k-icon k-add td-grid-button-image""></span></button>");
-
         columns.Buttons(buttons =>
         {
             buttons.HeaderCustom().Tag(ButtonTag.a).Url(Url.Action("Create", "Schedules")).Title("Добавить").ImageCssClass("k-add");
@@ -26,9 +22,6 @@
             buttons.Delete();
             //buttons.Custom().Tag(ButtonTag.a).Url(Url.Action("RolesEdit", "Schedule") + "/#:Id#").Title("Роли и стоимость").ImageCssClass("k-i-custom");
         }, filterRow).Width(110);
-        
-        
-        
         
         //filterRow.AddCell(new TD.Common.Kendo.Mvc5.Grid.Filters.ButtonFilterCell());
         columns.Bound(e => e.TrialCenterName, filterRow).Width(200).Title("Центр");
