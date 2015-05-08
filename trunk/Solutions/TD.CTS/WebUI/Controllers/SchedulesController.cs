@@ -39,10 +39,6 @@ namespace TD.CTS.WebUI.Controllers
             return Json(new[] { schedule }.ToDataSourceResult(request, ModelState));
         }
 
-
-
-
-
         public ActionResult Create()
         {
             //TODO:Можно переделать на EDIT сразу, но не нашел как таб
@@ -74,27 +70,21 @@ namespace TD.CTS.WebUI.Controllers
 
 
 
-
-
-
         public ActionResult Edit(int? id)
         {
             var isNew = !id.HasValue;
-            ViewBag.Title = isNew ? "Создание расписания" : "Управление расписанием";
-           
+            ViewBag.Title = "Управление расписанием";
             ViewBag.IsNew = isNew;
 
-            Schedule schedule;
-            if (isNew)
+            if (!id.HasValue)
             {
-                schedule = new Schedule {BeginDate = DateTime.Today};
+                return RedirectToAction("Index", "Schedules");
             }
-            else
-            {
-                schedule = DataProvider.GetItem(new ScheduleDataFilter {ScheduleID = id});
-                if (schedule == null)
+           
+             var schedule = DataProvider.GetItem(new ScheduleDataFilter { ScheduleID = id });
+            if (schedule == null)
                     throw new ApplicationException("Расписание с кодом '" + id + "' не найдено");
-            }
+            
 
             //получаем список пользователей
             var users = DataProvider.GetList(new UserDataFilter());
@@ -113,10 +103,53 @@ namespace TD.CTS.WebUI.Controllers
             ViewBag.ScheduleStatuses = ScheduleStatus.GetScheduleStatuses();
             //-------------------
             //ViewBag.Procedures = DataProvider.GetList(new ProcedureDataFilter());
-            ViewBag.Visits = DataProvider.GetList(new ScheduleVisitDataFilter {ScheduleID = id});
+            ViewBag.Visits = DataProvider.GetList(new ScheduleVisitDataFilter { ScheduleID = id });
             //----------------
             return View(schedule);
         }
+
+
+
+        //public ActionResult Edit(int? id)
+        //{
+        //    var isNew = !id.HasValue;
+        //    //ViewBag.Title = isNew ? "Создание расписания" : "Управление расписанием";
+        //    ViewBag.Title = "Управление расписанием";
+        //    ViewBag.IsNew = isNew;
+
+        //    Schedule schedule;
+        //    if (isNew)
+        //    {
+        //        schedule = new Schedule {BeginDate = DateTime.Today};
+        //    }
+        //    else
+        //    {
+        //        schedule = DataProvider.GetItem(new ScheduleDataFilter {ScheduleID = id});
+        //        if (schedule == null)
+        //            throw new ApplicationException("Расписание с кодом '" + id + "' не найдено");
+        //    }
+
+        //    //получаем список пользователей
+        //    var users = DataProvider.GetList(new UserDataFilter());
+        //    //Получаем список пациентов
+        //    var patients = DataProvider.GetList(new PatientDataFilter());
+        //    //Получаем список исследований
+        //    //var trials = DataProvider.GetList(new TrialDataFilter());
+        //    //Получаем список исследовательских центров
+        //    var trialCenters = DataProvider.GetList(new TrialCenterDataFilter());
+        //    //получаем список ролей
+        //    var systemRoles = DataProvider.GetList(new RoleDataFilter());
+        //    ViewBag.Users = users;
+        //    ViewBag.PatientCode_Data = new SelectList(patients, "Id", "FullName");
+        //    ViewBag.TrialCenterID_Data = new SelectList(trialCenters, "Id", "Number");
+        //    ViewBag.SystemRoles = systemRoles;
+        //    ViewBag.ScheduleStatuses = ScheduleStatus.GetScheduleStatuses();
+        //    //-------------------
+        //    //ViewBag.Procedures = DataProvider.GetList(new ProcedureDataFilter());
+        //    ViewBag.Visits = DataProvider.GetList(new ScheduleVisitDataFilter {ScheduleID = id});
+        //    //----------------
+        //    return View(schedule);
+        //}
 
 
 
