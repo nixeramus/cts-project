@@ -20,9 +20,9 @@
         columns.Bound(e => e.TrialName).Width(200).Title("Наименование исследования");
         columns.Bound(e => e.PatientFullName).Width(200).Title("ФИО пациента");
         columns.Bound(e => e.TrialVisitName).Width(200).Title("Наименование визита");
-        columns.Bound(e => e.MinDate).Width(200).Title("Дата нач.");
-        columns.Bound(e => e.MaxDate).Width(200).Title("Дата кон.");
-        columns.Bound(e => e.PatientFullName).Width(200).Title("Дата план");
+        columns.Bound(e => e.MinDate).Width(200).Title("Дата нач.").Format("{0:dd.MM.yyyy}");
+        columns.Bound(e => e.MaxDate).Width(200).Title("Дата кон.").Format("{0:dd.MM.yyyy}");
+        columns.Bound(e => e.PatientFullName).Width(200).Title("Дата план").Format("{0:dd.MM.yyyy}");
         columns.Bound(e => e.VisitEmployees).Width(200).Title("Сотрудники");
         //columns.Buttons(buttons =>
         //{
@@ -70,7 +70,7 @@
             model.Id(e => e.ScheduleID);
             model.Id(e => e.TrialVisitID); 
         })
-             .Read(read => read.Action("GetPlaningVisits", "SchedulesPlanning").Data("kendo_grid_getfilters"))
+                     .Read(read => read.Action("GetVisits", "SchedulesPlanning").Data("kendo_grid_getfilters"))
         //.Create(create => create.Action("AddTrial", "Trials"))
         //.Update(update => update.Action("UpdateTrial", "Trials"))
         //.Destroy(destroy => destroy.Action("DeleteSchedule", "Schedules"))
@@ -79,3 +79,18 @@
         //.Events(events => events.Edit("kendo_grid_onrowedit"))
 
 )
+<script>
+    $(document).ready(function () {
+        var grid = $("#SchedulePlaningVisitsGrid");
+        kendo_grid_init(grid, true, '@Html.Raw(filterRow.HtmlFilterRow())');
+
+        @*grid.find(".td-grid-add.td-grid-button").click(function () {
+            $().redirect("@Url.Action("Edit", "Schedules")");
+        });
+
+        grid.on("click", ".td-grid-edit.td-grid-button", function () {
+            $().redirect("@Url.Action("Edit", "Schedules")", { Id: $(this).val() });
+        });*@
+    });
+
+</script>
