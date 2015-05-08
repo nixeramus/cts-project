@@ -1,12 +1,14 @@
-﻿@using System.Globalization
-@using TD.Common.Kendo.Mvc5.Grid
+﻿@using TD.CTS.Data.Entities
 @using TD.CTS.WebUI.Models
 
-@model TD.CTS.Data.Entities.Schedule
-
+@model Schedule
+@*@{
+    var isNew = ViewBag.IsNew;
+}*@
 @(Html.Kendo().Grid<ScheduleProcedure>()
     .Name("ProceduresGrid")
     .Selectable(select => select.Type(GridSelectionType.Cell))
+    //.HtmlAttributes(new { style = "display:" + (isNew ? "none" : "block") })
     //.Editable()
     .Columns(columns =>
     {
@@ -21,7 +23,7 @@
             .HeaderTemplate(@"<div style=""text-align:right;width:200px;""></div><div style=""text-align:right;width:200px;"">Визиты</div><div>Процедуры</div>")
             .HtmlAttributes(new { @class = "k-group-cell" });
 
-        var visits = (List<TD.CTS.Data.Entities.ScheduleVisit>)ViewBag.Visits;
+        var visits = (List<ScheduleVisit>)ViewBag.Visits;
         foreach (var visit in visits)
         {
             columns.Template(e => { })
@@ -49,12 +51,11 @@
            model.Field(e => e.TrialCenterId).DefaultValue(Model.TrialCenterID);
            model.Field(e => e.VisitIds).DefaultValue(new List<int>());
        })
-           .Read(read => read.Action("GetScheduleProcedures", "Schedules", new { ScheduleID = Model.Id }))
+       .Read(read => read.Action("GetScheduleProcedures", "Schedules", new { ScheduleID = Model.Id })/*.Data("ProceduresGetDataRead")*/)
        //.Create(create => create.Action("AddTrialProcedure", "Trials"))
        //.Update(update => update.Action("UpdateTrialProcedure", "Trials"))
        //.Destroy(destroy => destroy.Action("DeleteTrialProcedure", "Trials"))
-       .Events(events => events
-           .Error("kendo_grid_error_handler").RequestEnd("RequestEnd"))
+       .Events(events => events.Error("kendo_grid_error_handler")/*.RequestEnd("RequestEnd")*/)
     )
     //.Events(events => events
         //.Edit("OnProcedureEdit")
@@ -65,12 +66,12 @@
 )
 
 <script>
-    var isProcedureEdit = false;
-    function RequestEnd(e) {
-        if (e.type === "update" || e.type === "create") {
-            isProcedureEdit = false;
-        }
-    }
+    //var isProcedureEdit = false;
+    //function RequestEnd(e) {
+    //    if (e.type === "update" || e.type === "create") {
+    //        isProcedureEdit = false;
+    //    }
+   // }
     
     function SelectedVisit(visitId, data) {
         var btn = String.format("<button onclick=\"OpenProceduereEmployeeWindow(\'" + visitId + "','" + data.ProcedureCode+"')\" style=\"color:{0}; border:none; background-color:transparent;\" >{1}</button>", 'green', 'v');
@@ -89,7 +90,7 @@
 
 
     kendo_grid_init($("#ProceduresGrid"));
-    var procGrid = $("#ProceduresGrid");
+    //var procGrid = $("#ProceduresGrid");
     //$("#ProceduresGrid .k-grid-add.td-grid-button").click(function () {
     //procGrid.on("click", ".k-grid-add.td-grid-button", function () {
     //    ClearSelection();
