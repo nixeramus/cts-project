@@ -69,13 +69,13 @@
         var grid = $("#Grid");
         kendo_grid_init(grid, true, '@Html.Raw(filterRow.HtmlFilterRow())');
 
-        grid.find(".td-grid-add.td-grid-button").click(function () {
+        @*grid.find(".td-grid-add.td-grid-button").click(function () {
             $().redirect("@Url.Action("Edit", "Schedules")");
         });
 
         grid.on("click", ".td-grid-edit.td-grid-button", function () {
             $().redirect("@Url.Action("Edit", "Schedules")", { Id: $(this).val() });
-        });
+        });*@
     });
 
 </script>
