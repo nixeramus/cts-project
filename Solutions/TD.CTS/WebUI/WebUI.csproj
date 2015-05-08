@@ -141,7 +141,8 @@
     <Compile Include="Common\Theme.cs" />
     <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
-    <Compile Include="Controllers\ScheduleController.cs" />
+    <Compile Include="Controllers\SchedulesController.cs" />
+    <Compile Include="Controllers\SchedulesPlanningController.cs" />
     <Compile Include="Controllers\TrialController_RolesEdit.cs" />
     <Compile Include="Controllers\TrialController_Edit.cs" />
     <Compile Include="Controllers\TrialController.cs" />
@@ -756,6 +757,9 @@
     <Content Include="Views\Trials\EditorTemplates\RolesEditor.cshtml" />
     <Content Include="Views\Trials\EditorTemplates\VisitCostsEditor.cshtml" />
     <Content Include="Views\Trials\EditorTemplates\IncomeArticlesEditor.cshtml" />
+    <Content Include="Views\Schedules\EditorTemplates\MainEditor.cshtml" />
+    <Content Include="Views\Schedules\Create.cshtml" />
+    <Content Include="Views\SchedulesPlanning\Index.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
