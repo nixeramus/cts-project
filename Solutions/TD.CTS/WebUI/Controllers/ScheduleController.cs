@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using Kendo.Mvc.Extensions;
@@ -41,80 +40,81 @@ namespace TD.CTS.WebUI.Controllers
         }
 
 
-        public ActionResult Edit(int? Id)
+
+
+
+        public ActionResult Create()
         {
-            ViewBag.Title = "Управление расписанием";
+            //TODO:Можно переделать на EDIT сразу, но не нашел как таб
+            ViewBag.Title = "Создание расписания";
+            ViewBag.IsNew = true;
+            var schedule = new Schedule {BeginDate = DateTime.Today};
+
+
+            //получаем список пользователей
+            //var users = DataProvider.GetList(new UserDataFilter());
+            //Получаем список пациентов
+            //var patients = DataProvider.GetList(new PatientDataFilter());
+            //Получаем список исследований
+            //var trials = DataProvider.GetList(new TrialDataFilter());
+            //Получаем список исследовательских центров
+            //var trialCenters = ;
+            //получаем список ролей
+            //var systemRoles = DataProvider.GetList(new RoleDataFilter());
+            //ViewBag.Users = users;
+            ViewBag.PatientCode_Data = new SelectList(DataProvider.GetList(new PatientDataFilter()), "Id", "FullName");
+            ViewBag.TrialCenterID_Data = new SelectList(DataProvider.GetList(new TrialCenterDataFilter()), "Id", "Number");
+            //ViewBag.SystemRoles = systemRoles;
+            ViewBag.ScheduleStatuses = ScheduleStatus.GetScheduleStatuses();
+            //ViewBag.Procedures = DataProvider.GetList(new ProcedureDataFilter());
+            //ViewBag.Visits = DataProvider.GetList(new ScheduleVisitDataFilter { ScheduleID = id });
+            return View(schedule);
+        }
+
+
+
+
+
+
+
+        public ActionResult Edit(int? id)
+        {
+            var isNew = !id.HasValue;
+            ViewBag.Title = isNew ? "Создание расписания" : "Управление расписанием";
+           
+            ViewBag.IsNew = isNew;
 
             Schedule schedule;
-            if (!Id.HasValue)
+            if (isNew)
             {
-                ViewBag.IsNew = true;
                 schedule = new Schedule {BeginDate = DateTime.Today};
             }
             else
             {
-                schedule = DataProvider.GetItem(new ScheduleDataFilter { ScheduleID = Id });
+                schedule = DataProvider.GetItem(new ScheduleDataFilter {ScheduleID = id});
                 if (schedule == null)
-                    throw new ApplicationException("Расписание с кодом '" + Id + "' не найдено");
-                ViewBag.IsNew = false;
+                    throw new ApplicationException("Расписание с кодом '" + id + "' не найдено");
             }
 
+            //получаем список пользователей
             var users = DataProvider.GetList(new UserDataFilter());
-            //Получаем пациентов
+            //Получаем список пациентов
             var patients = DataProvider.GetList(new PatientDataFilter());
             //Получаем список исследований
             //var trials = DataProvider.GetList(new TrialDataFilter());
             //Получаем список исследовательских центров
             var trialCenters = DataProvider.GetList(new TrialCenterDataFilter());
+            //получаем список ролей
             var systemRoles = DataProvider.GetList(new RoleDataFilter());
             ViewBag.Users = users;
             ViewBag.PatientCode_Data = new SelectList(patients, "Id", "FullName");
             ViewBag.TrialCenterID_Data = new SelectList(trialCenters, "Id", "Number");
-
             ViewBag.SystemRoles = systemRoles;
-
-            //var statuses = new List<string>()
-            //{
-            //    "Новое",
-            //    "В работе",
-            //    "Завершено",
-            //    "Прервано"
-            //};
-
             ViewBag.ScheduleStatuses = ScheduleStatus.GetScheduleStatuses();
-
-           // ViewBag.ScheduleStatuses = systemRoles;
-
-            //ViewBag.TrialCode_Data = new SelectList(trials, "Code", "Name");
-            //ViewBag.Hospitals = DataProvider.GetList(new HospitalDataFilter());
-
-            //ViewBag.Materials = DataProvider.GetList(new MaterialDataFilter());
-
+            //-------------------
             //ViewBag.Procedures = DataProvider.GetList(new ProcedureDataFilter());
-
-            //ViewBag.Visits = DataProvider.GetList(new TrialVisitDataFilter { TrialCode = code });
-           // if (Id.HasValue)
-            {
-
-                /*var results = from p in persons
-              group p.car by p.PersonId into g
-              select new { PersonID = g.Key, Cars = g.ToList() };
-                 procedureVisit.Select(p => new ScheduleProcedure {ProcedureCode = p.ProcedureCode, ScheduleId = p.ScheduleID, TrialCenterId = p.TrialCenterID, TrialCode = p.TrialCode, TrialVersionNo = p.TrialVersionNo}).ToList();
-                 
-                 */
-
-                //foreach (var p in procedureVisit)
-                //{
-                  
-                //    //var vis = procedureVisit.Where(r => r.ProcedureCode == p.ProcedureCode && r.ScheduleID=p.ScheduleID);
-                //    var item = new ScheduleProcedure {ProcedureCode =p.ProcedureCode,ScheduleId = p.ScheduleID,TrialCenterId = p.TrialCenterID,TrialCode =p.TrialCode,TrialVersionNo = p.TrialVersionNo, VisitIds = new List<int>()};
-                //    list.Add(item);
-                //}
-
-                
-                ViewBag.Procedures = DataProvider.GetList(new ProcedureDataFilter());
-                ViewBag.Visits = DataProvider.GetList(new ScheduleVisitDataFilter {ScheduleID = Id});
-            }
+            ViewBag.Visits = DataProvider.GetList(new ScheduleVisitDataFilter {ScheduleID = id});
+            //----------------
             return View(schedule);
         }
 
@@ -127,8 +127,8 @@ namespace TD.CTS.WebUI.Controllers
             {
                 DataProvider.Add(schedule);
             }
-
-            return Json(new[] { schedule }.ToDataSourceResult(request, ModelState));
+          
+           return Json(new[] { schedule }.ToDataSourceResult(request, ModelState));
         }
 
         [AcceptVerbs(HttpVerbs.Post)]
@@ -159,11 +159,32 @@ namespace TD.CTS.WebUI.Controllers
 
             return Json(new[] { scheduleVisit }.ToDataSourceResult(request, ModelState));
         }
+
+
+        public ActionResult DeleteScheduleVisit([DataSourceRequest] DataSourceRequest request, ScheduleVisit scheduleVisit)
+        {
+            if (scheduleVisit != null)
+            {
+                DataProvider.Delete(scheduleVisit);
+            }
+
+            return Json(new[] { scheduleVisit }.ToDataSourceResult(request, ModelState));
+        }
+
+
         #endregion
 
 
         #region ScheduleProcedures
 
+        public ActionResult GetScheduleDetailContent(int ScheduleID)
+        {
+          var schedule = DataProvider.GetItem(new ScheduleDataFilter { ScheduleID = ScheduleID });
+          ViewBag.Procedures = DataProvider.GetList(new ProcedureDataFilter());
+          //Берем только запланированные визиты
+          ViewBag.Visits = DataProvider.GetList(new ScheduleVisitDataFilter { ScheduleID = ScheduleID }).Where(e=>e.ScheduleDate.HasValue).ToList();
+          return PartialView("EditorTemplates/ScheduleDetailEditor", schedule);
+        }
         public ActionResult GetScheduleProcedures([DataSourceRequest]DataSourceRequest request, int ScheduleId)
         {
             var procedureVisit = DataProvider.GetList(new ScheduleVisitProcedureDataFilter { ScheduleID = ScheduleId });
@@ -174,7 +195,7 @@ namespace TD.CTS.WebUI.Controllers
             var result =
                 from proc in procedureVisit
                 select
-                    new ScheduleProcedure()
+                    new ScheduleProcedure
                     {
                         ProcedureCode = proc.ProcedureCode,
                         TrialCenterId = proc.TrialCenterID,
@@ -193,8 +214,6 @@ namespace TD.CTS.WebUI.Controllers
             return Json(response.ToDataSourceResult(request));
         }
         #endregion ScheduleProcedures
-
-
 
         #region ScheduleEmployees
         public ActionResult GetScheduleEmployees([DataSourceRequest]DataSourceRequest request, ScheduleEmployeeDataFilter dataFilter)
