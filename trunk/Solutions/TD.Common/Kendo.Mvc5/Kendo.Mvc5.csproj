@@ -66,6 +66,7 @@
     <Compile Include="Grid\Columns\IGridButtonsColumn.cs" />
     <Compile Include="Grid\Fluent\GridButtonsColumnBuilder.cs" />
     <Compile Include="Grid\Fluent\GridButtonsColumnFactory.cs" />
+    <Compile Include="Scheduleler\BuilderExtensions.cs" />
     <None Include="Grid\GridCommandColumnBuilder.cs" />
     <Compile Include="Grid\Filters\ButtonFilterCell.cs" />
     <Compile Include="Grid\Filters\CheckBoxFilterCell.cs" />
