@@ -20,7 +20,7 @@ namespace TD.CTS.WebUI.Controllers
             ViewBag.Hospitals = DataProvider.GetList(new HospitalDataFilter());
             ViewBag.Referals = DataProvider.GetList(new ReferalDataFilter());
 
-            ViewBag.SorceTypes = new List<string>() { "Реферал", "База пациентов", "Реклама", "Прочее" };
+            ViewBag.SorceTypes = Patient.SourceTypes;
 
             return View();
         }

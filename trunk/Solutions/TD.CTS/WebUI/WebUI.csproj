@@ -141,16 +141,17 @@
     <Compile Include="Common\Theme.cs" />
     <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\TasksController.cs" />
+    <Compile Include="Controllers\TrialsController_RolesEdit.cs" />
+    <Compile Include="Controllers\TrialsController_Edit.cs" />
+    <Compile Include="Controllers\TrialsController.cs" />
+    <Compile Include="Controllers\PatientsController.cs" />
+    <Compile Include="Controllers\ReferalsController.cs" />
+    <Compile Include="Controllers\ProceduresController.cs" />
     <Compile Include="Controllers\SchedulesController.cs" />
     <Compile Include="Controllers\SchedulesPlanningController.cs" />
-    <Compile Include="Controllers\TrialController_RolesEdit.cs" />
-    <Compile Include="Controllers\TrialController_Edit.cs" />
-    <Compile Include="Controllers\TrialController.cs" />
-    <Compile Include="Controllers\PatientController.cs" />
-    <Compile Include="Controllers\ReferalController.cs" />
-    <Compile Include="Controllers\ProcedureController.cs" />
     <Compile Include="Controllers\HospitalsController.cs" />
-    <Compile Include="Controllers\CityController.cs" />
+    <Compile Include="Controllers\CitiesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Common\UserSettings.cs" />
@@ -158,6 +159,8 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\ScheduleProcedure.cs" />
+    <Compile Include="Models\TaskSchedulerEvent.cs" />
+    <Compile Include="Models\TaskViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -760,6 +763,9 @@
     <Content Include="Views\Schedules\EditorTemplates\MainEditor.cshtml" />
     <Content Include="Views\Schedules\Create.cshtml" />
     <Content Include="Views\SchedulesPlanning\Index.cshtml" />
+    <Content Include="Views\Tasks\Index.cshtml" />
+    <Content Include="Views\Tasks\Details.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Readonly.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
