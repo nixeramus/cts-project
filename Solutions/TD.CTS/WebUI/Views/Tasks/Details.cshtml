@@ -1,0 +1,64 @@
+﻿@model TD.CTS.WebUI.Models.TaskViewModel
+
+<div class="k-widget k-content k-state-active">
+    @Html.HiddenFor(model => model.Id)
+    <table id="trialForm" class="td-formTable" style="width:auto;margin-bottom:20px;font-weight:500;">
+        <tr>
+            <td class="td-formTable-caption">Исследование:</td>
+            <td>
+                @Html.EditorFor(model => model.TrialName, "Readonly")
+            </td>
+        </tr>
+        <tr>
+            <td class="td-formTable-caption">Дата:</td>
+            <td>
+                @Html.EditorFor(model => model.VisitDate, "Date")
+           </td>
+        </tr>
+        <tr>
+            <td class="td-formTable-caption">Наименование процедуры:</td>
+            <td>
+                @Html.EditorFor(model => model.ProcedureName, "Readonly")
+            </td>
+        </tr>
+        <tr>
+            <td class="td-formTable-caption">ФИО пациента:</td>
+            <td>
+                @Html.EditorFor(model => model.PatientShortName, "Readonly")
+            </td>
+        </tr>
+        <tr>
+            <td class="td-formTable-caption">Процедура выполнена:</td>
+            <td>
+                @Html.CheckBoxFor(model => model.IsDone,  new { onclick = Model.IsDone ? "return false" : "ExecuteTask()" })
+            </td>
+        </tr>
+    </table>
+</div>
+
+<script>
+    $(document).ready(function () {
+        SetContentBlock($(".k-content"));
+        @if (Model.IsDone) { <text>$("#VisitDate").data("kendoDatePicker").readonly();</text> }
+    });
+
+    function ExecuteTask() {
+        var checkbox = $("#IsDone");
+        var datepicker = $("#VisitDate").data("kendoDatePicker");
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("ExecuteTask", "Tasks")",
+            data: {Id: @Model.Id, IsDone: checkbox.is(":checked"), VisitDate: datepicker.value().toISOString()},
+            async: false,
+            success: function () {
+                checkbox.attr("onclick", "return false");
+                datepicker.readonly();
+            },
+            error: function (error) {
+                alert(error.responseText);
+            }
+        });
+    }
+
+</script>

@@ -9,6 +9,8 @@ namespace TD.CTS.Data.Entities
 {
     public class Patient : Entity
     {
+        public static readonly List<string> SourceTypes = new List<string>() { "Реферал", "База пациентов", "Реклама", "Прочее" };
+
         public int Id { get; set; }
 
         [Required(ErrorMessage = "Имя не задано")]
@@ -17,8 +19,13 @@ namespace TD.CTS.Data.Entities
         [Required(ErrorMessage = "Мед. учреждение не выбрано")]
         public int HospitalId { get; set; }
 
+        private string sourceType;
         [Required(ErrorMessage = "Источник не задан")]
-        public string SourceType { get; set; }
+        public string SourceType 
+        {
+            get { return sourceType; }
+            set { sourceType = SourceTypes.FirstOrDefault(s => s == value); }
+        }
 
         public int? ReferalId { get; set; }
 

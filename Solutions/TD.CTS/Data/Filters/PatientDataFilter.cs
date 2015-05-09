@@ -15,7 +15,12 @@ namespace TD.CTS.Data.Filters
 
         public int? HospitalId { get; set; }
 
-        public string SourceType { get; set; }
+        private string sourceType;
+        public string SourceType
+        {
+            get { return sourceType; }
+            set { sourceType = Patient.SourceTypes.FirstOrDefault(s => s == value); }
+        }
 
         public int? ReferalId { get; set; }
 

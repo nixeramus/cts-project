@@ -1,0 +1,69 @@
+﻿@using TD.Common.Kendo.Mvc5.Scheduler
+
+@(Html.Kendo().Scheduler<TD.CTS.WebUI.Models.TaskSchedulerEvent>()
+    .Month("TasksScheduler")
+    .EventTemplate(@"<div><pre>#= title #</pre></div>")
+    .DataSource(source => source
+        .Read(read => read.Action("GetTasks", "Tasks").Data("GetDates"))
+        .ServerOperation(true)
+    )
+    .Events(events => events.DataBound("DataBound"))
+)
+
+<script>
+    $(document).ready(function () {
+        SetContentBlock($("#TasksScheduler"));
+    });
+
+    function GetDates() {
+        var view = $("#TasksScheduler").data("kendoScheduler").view();
+
+        return {
+            visitDateBegin: view.startDate().toISOString(),
+            visitDateEnd: view.endDate().toISOString()
+        };
+    }
+
+    function DataBound(e) {
+        @*$("#TasksScheduler").find(".td-task").click(function () {
+            var id = $(this).attr("value");
+            window.location.replace("@Url.Action("Details", "Tasks")" + "/" + id);
+            $().redirect("@Url.Action("Details", "Tasks")" + "/" + id);
+        });*@
+
+        $("#TasksScheduler").find(".td-task").each(function () {
+            var id = $(this).attr("href");
+            $(this).attr("href", "@Url.Action("Details", "Tasks")" + id);
+        });
+    }
+</script>
+
+<style>
+    .k-scheduler-views{
+        display: none;
+    }
+
+    .k-event {
+        height: 60px !important;
+        overflow-y: auto;
+        overflow-x: hidden;
+        background: transparent;
+        border-style: none;
+    }
+
+    .td-task-undone {
+        color: blue !important;
+    }
+
+    .td-task-done {
+        color: green !important;
+    }
+
+    .td-task-overdue {
+        color: red !important;
+    }
+
+    pre {
+        font-size: 1.2em;
+    }
+</style>
