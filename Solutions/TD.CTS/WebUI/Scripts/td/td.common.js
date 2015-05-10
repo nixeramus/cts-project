@@ -71,3 +71,17 @@ function StretchGrid(conteiner, grid) {
 
     gridContent.height(contentHeight + delta - 2);
 }
+
+function AjaxError(e) {
+    var errorContent = $("#errorContent", e.responseText);
+    if (errorContent.length) {
+        ShowErrorWindow(errorContent);
+        return;
+    }
+    ShowError("В процессе обработки запроса произошла ошибка");
+}
+
+function ShowError(message) {
+    errorContent = $("<div style='text-align:center;color:Red;vertical-align:middle;font-weight:500;font-size:large;'>" + message + "</div>")
+    ShowErrorWindow(errorContent);
+}

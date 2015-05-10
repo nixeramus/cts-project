@@ -166,6 +166,8 @@
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\images\error_48.png" />
+    <Content Include="Content\images\under-construction.png" />
     <Content Include="Content\kendo\2014.2.903\Black\editor.png" />
     <Content Include="Content\kendo\2014.2.903\Black\imagebrowser.png" />
     <Content Include="Content\kendo\2014.2.903\Black\indeterminate.gif" />
@@ -766,6 +768,8 @@
     <Content Include="Views\Tasks\Index.cshtml" />
     <Content Include="Views\Tasks\Details.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Readonly.cshtml" />
+    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Home\UnderConstruction.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

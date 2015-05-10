@@ -48,10 +48,10 @@ function kendo_grid_error_handler(e) {
                 });
             }
         });
-        alert(message);
+        ShowError(message);
+        return;
     }
-
-    alert("Ошибка сервера");
+    AjaxError(e.xhr);
 }
 
 function kendo_grid_onrowedit(e) {

@@ -1,5 +1,4 @@
 ﻿@using TD.Common.Web.Mvc
-
 <!DOCTYPE html>
 <html>
     <head>
@@ -10,9 +9,7 @@
             string selectedTheme = ViewBag.SelectedTheme;
             TD.CTS.Data.Entities.User currentUser = ViewBag.CurrentUser;
         }
-
         
-
         <link href="@Url.Content("~/Content/Site.css")" rel="stylesheet" type="text/css" />
 
     	<link href="@Url.Content("~/Content/kendo/2014.2.903/kendo.common.min.css")" rel="stylesheet" type="text/css" />
@@ -61,9 +58,9 @@
                             items.Add().Text("Исследования").Action("Index", "Trials");
                             items.Add().Text("Расписания").Action("Index", "Schedules").Items(i => i.Add().Text("Планирование визитов").Action("Index", "SchedulesPlanning"));
                             items.Add().Text("Процедуры").Action("Index", "Tasks");
-                            items.Add().Text("Мониторинг").Action("Index", "Home");
-                            items.Add().Text("Правила").Action("Index", "Home");
-                            items.Add().Text("Материалы").Action("Index", "Home");
+                            items.Add().Text("Мониторинг").Action("UnderConstruction", "Home");
+                            items.Add().Text("Правила").Action("UnderConstruction", "Home");
+                            items.Add().Text("Материалы").Action("UnderConstruction", "Home");
                             items.Add().Text(currentUser.FullName)
                                 .HtmlAttributes(new { style = "float:right;" })
                                 .Items(children =>
@@ -91,7 +88,18 @@
 
                 <div class="k-header td-pagetitle">@ViewBag.Title</div>
 
+                @(Html.Kendo().Window()
+                    .Name("ErrorWindow")
+                    .Modal(true)
+                    .Title("Ошибка")
+                    .Visible(false)
+                    .Animation(true)
+                    .Width(500)
+                    .Actions(a => a.Close())
+                )
+
                 @RenderBody()
+                
             </section>
         </div>
 
@@ -105,7 +113,21 @@
                     .css("cursor", "pointer");
 
                 $(window).trigger("resize");
+
+                //$(window).bind("resize", function () {
+                //    errorWindow.center();
+                //});
             });            
+
+            function ShowErrorWindow(contentBlock) {
+                var window = $("#ErrorWindow");
+                //var errorWindow = $("#ErrorWindow").data("kendoWindow");
+                //errorWindow.content(contentBlock.html());
+                window.empty().append(contentBlock);
+                window.css("height", "");
+
+                window.data("kendoWindow").center().open();
+            }
 
         </script>
 

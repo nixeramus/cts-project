@@ -10,12 +10,16 @@ using TD.CTS.Auth;
 using TD.CTS.Data;
 using TD.CTS.Data.Entities;
 using TD.CTS.MockData;
+using NLog;
+using TD.Common.Data.Exceptions;
 
 namespace TD.CTS.WebUI.Controllers
 {
     [Authorize]
     public class BaseController : Controller
     {
+        private static Logger logger = LogManager.GetCurrentClassLogger();
+
         protected IDataProvider DataProvider { get; private set; }
 
         protected User CurrentUser { get; private set; }
@@ -42,12 +46,7 @@ namespace TD.CTS.WebUI.Controllers
 
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            ViewBag.ShowMenu = true;
-
-            ViewBag.Themes = ThemeManager.Themes;
-            ViewBag.SelectedTheme = UserSettings.SelectedTheme.Name;
-            ViewBag.CurrentUser = CurrentUser;
-            //ViewBag.UserAccess = AccessManager.UserAccess;
+            SeViewBagValues(ViewBag);
 
             CultureInfo cultureInfo = new CultureInfo("ru-RU");
             Thread.CurrentThread.CurrentUICulture = cultureInfo;
@@ -55,50 +54,65 @@ namespace TD.CTS.WebUI.Controllers
             base.OnActionExecuting(filterContext);
         }
 
+        private void SeViewBagValues(dynamic viewBag, bool showMenu = true)
+        {
+            viewBag.ShowMenu = showMenu;
+
+            viewBag.Themes = ThemeManager.Themes;
+            viewBag.SelectedTheme = UserSettings.SelectedTheme.Name;
+            viewBag.CurrentUser = CurrentUser;
+            //viewBag.UserAccess = AccessManager.UserAccess;
+        }
+
+
         protected override void OnException(ExceptionContext filterContext)
         {
-            //if (filterContext == null)
-            //    return;
+            if (filterContext == null)
+                return;
 
             //filterContext.HttpContext.Response.TrySkipIisCustomErrors = true;
 
-            //var exception = filterContext.Exception ?? new ApplicationException("Ошибка выполнения запроса");
+            var exception = filterContext.Exception ?? new ApplicationException("Неизвестная ошибка");
 
-            //var controllerName = (string)filterContext.RouteData.Values["controller"];
-            //var actionName = (string)filterContext.RouteData.Values["action"];
-            //var model = new HandleErrorInfo(exception, controllerName, actionName);
+            var controllerName = (string)filterContext.RouteData.Values["controller"];
+            var actionName = (string)filterContext.RouteData.Values["action"];
+            var model = new HandleErrorInfo(exception, controllerName, actionName);
 
-            //logger.WriteControllerException(exception, controllerName, actionName);
+            logger.Error(string.Format("Controller: {0}; Action: {1}", controllerName, actionName), exception);
 
-            //var result = new ViewResult
-            //{
-            //    ViewName = "Error",
-            //    ViewData = new ViewDataDictionary<HandleErrorInfo>(model),
-            //    TempData = filterContext.Controller.TempData
-            //};
+            var result = new ViewResult
+            {
+                ViewName = "Error",
+                ViewData = new ViewDataDictionary<HandleErrorInfo>(model),
+                TempData = filterContext.Controller.TempData
+            };
 
-            //result.ViewBag.Title = "Ошибка";
+            result.ViewBag.Title = "";
 
-            //filterContext.Result = result;
+            filterContext.Result = result;
 
-            //filterContext.ExceptionHandled = true;
+            filterContext.ExceptionHandled = true;
 
+            if (filterContext.HttpContext.Response.StatusCode == 200)
+                filterContext.HttpContext.Response.StatusCode = 500;
 
-            //if ((exception is UnauthorizedAccessException))
-            //{
-            //    result.ViewBag.ShowMenu = false;
-            //    result.ViewBag.ShowDetails = false;
-            //    result.ViewBag.Message = "Недостаточно прав для выполнения операции";
-            //}
-            //else
-            //{
-            //    result.ViewBag.ShowMenu = true;
-            //    result.ViewBag.Message = exception is DBException ? exception.Message : "В процессе обработки запроса произошла ошибка";
-            //    var user = AccessManager.UserAccess;
-            //    result.ViewBag.UserAccess = user;
-            //    result.ViewBag.ShowDetails = user.IsAdmin;
-            //}
-            base.OnException(filterContext);
+            result.ViewBag.IsAjax = Request.IsAjaxRequest();
+
+            if ((exception is UnauthorizedAccessException))
+            {
+                SeViewBagValues(result.ViewBag, false);
+                result.ViewBag.ShowDetails = false;
+                result.ViewBag.Message = "Недостаточно прав для выполнения операции";
+            }
+            else
+            {
+                SeViewBagValues(result.ViewBag);
+                result.ViewBag.ShowDetails = true;//user.IsAdmin;
+                result.ViewBag.Message = exception is DataException ? exception.Message : "В процессе обработки запроса произошла ошибка";
+                //var user = AccessManager.UserAccess;
+                //result.ViewBag.UserAccess = user;
+
+            }
         }
 
         
