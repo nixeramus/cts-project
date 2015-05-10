@@ -1,15 +1,19 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace TD.CTS.Data.Entities
 {
     public class Schedule : Entity
     {
         public int Id { get; set; }
+        [Required(ErrorMessage = "Пациент не заполнен")]
         public int PatientCode { get; set; }
         public string PatientFullName { get; set; }
         public DateTime BirthDate { get; set; }
         public DateTime BeginDate { get; set; }
         public DateTime CreateDate { get; set; }
+
+        [Required(ErrorMessage = "Исследовательский центр не заполнен")]
         public int TrialCenterID { get; set; }
         public string TrialCode { get; set; }
         public string TrialCenterName { get; set; }
