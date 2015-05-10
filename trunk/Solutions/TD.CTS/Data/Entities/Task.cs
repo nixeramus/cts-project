@@ -28,6 +28,8 @@ namespace TD.CTS.Data.Entities
 
         public string TrialCode { get; set; }
 
+        public int ScheduleId { get; set; }
+
         public int PatientId { get; set; }
 
         private string patientFullName;
@@ -48,5 +50,7 @@ namespace TD.CTS.Data.Entities
         public DateTime VisitDate { get; set; }
 
         public bool IsDone { get; set; }
+
+        public int TrialVisitId { get; set; }
     }
 }

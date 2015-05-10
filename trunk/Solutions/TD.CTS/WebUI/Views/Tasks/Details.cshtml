@@ -1,39 +1,96 @@
 ﻿@model TD.CTS.WebUI.Models.TaskViewModel
 
+@section head{
+    <link href="@Url.Content("~/Content/td/td.kendo.grid.css")" rel="stylesheet" type="text/css" />
+    
+    <script src="@Url.Content("~/Scripts/td/td.kendo.grid.js")"></script>
+}
+
 <div class="k-widget k-content k-state-active">
     @Html.HiddenFor(model => model.Id)
-    <table id="trialForm" class="td-formTable" style="width:auto;margin-bottom:20px;font-weight:500;">
+    @Html.HiddenFor(model => model.ScheduleId)
+    @Html.HiddenFor(model => model.ProcedureCode)
+    @Html.HiddenFor(model => model.TrialVisitId)
+    <table id="trialForm" class="td-formTable" style="width:auto;margin-bottom:20px;font-weight:500;margin-left:10px">
         <tr>
             <td class="td-formTable-caption">Исследование:</td>
             <td>
                 @Html.EditorFor(model => model.TrialName, "Readonly")
             </td>
+            <td />
         </tr>
         <tr>
             <td class="td-formTable-caption">Дата:</td>
             <td>
                 @Html.EditorFor(model => model.VisitDate, "Date")
            </td>
+            <td />
         </tr>
         <tr>
             <td class="td-formTable-caption">Наименование процедуры:</td>
             <td>
                 @Html.EditorFor(model => model.ProcedureName, "Readonly")
             </td>
+            <td />
         </tr>
         <tr>
             <td class="td-formTable-caption">ФИО пациента:</td>
             <td>
                 @Html.EditorFor(model => model.PatientShortName, "Readonly")
             </td>
+            <td />
         </tr>
         <tr>
             <td class="td-formTable-caption">Процедура выполнена:</td>
             <td>
                 @Html.CheckBoxFor(model => model.IsDone,  new { onclick = Model.IsDone ? "return false" : "ExecuteTask()" })
             </td>
+            <td />
+        </tr>
+
+        <tr>
+            <td colspan="2"><h4>Список сотрудников</h4></td>
+            <td><h4>Список материалов</h4></td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                @(Html.Kendo().Grid<TD.CTS.Data.Entities.ScheduleEmployee>()
+                    .Name("EmployeesGrid")
+                    .HtmlAttributes(new { style="width:400px;" })
+                    .Scrollable()
+                    .Columns(columns =>
+                    {
+                        columns.ForeignKey(e => e.SystemRoleCode, (System.Collections.IEnumerable)ViewBag.Roles, "Code", "Name").Width(150).Title("Роль");
+                        columns.ForeignKey(e => e.SystemLogin, (System.Collections.IEnumerable)ViewBag.Users, "Login", "FullName").Width("100%").Title("Сотрудник");
+                    })
+                    .DataSource(dataSource => dataSource
+                       .Ajax()
+                       .Read(read => read.Action("GetScheduleEmployees", "Schedules").Data("EmployeesData"))
+                       .Events(events => events.Error("kendo_grid_error_handler"))
+                    )
+                )
+            </td>
+            <td>
+                @(Html.Kendo().Grid<TD.CTS.Data.Entities.TrialVisitMaterial>()
+                    .Name("MaterialsGrid")
+                    .HtmlAttributes(new { style = "width:400px;" })
+                    .Scrollable()
+                    .Columns(columns =>
+                    {
+                        columns.Bound(e => e.MaterialName).Width(250).Title("Материал");
+                        columns.Bound(e => e.Quantity).Width("100%").Title("Количество");
+                    })
+                    .DataSource(dataSource => dataSource
+                       .Ajax()
+                       .Read(read => read.Action("GetTrialVisitMaterials", "Trials").Data("MaterialsData"))
+                       .Events(events => events.Error("kendo_grid_error_handler"))
+                    )
+                )
+            </td>
         </tr>
     </table>
+
+    
 </div>
 
 <script>
@@ -61,4 +118,19 @@
         });
     }
 
+    function EmployeesData(){
+        return { ScheduleId: $("#ScheduleId").val() };
+    }
+
+    function MaterialsData(){
+        return { ProcedureCode: $("#ProcedureCode").val(), TrialVisitId: $("#TrialVisitId").val() };
+    }
+
 </script>
+
+<style>
+    input[type="checkbox"]{
+        width: 24px;
+        height: 24px;
+    }
+</style>

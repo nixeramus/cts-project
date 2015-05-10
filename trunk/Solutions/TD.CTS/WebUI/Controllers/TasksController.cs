@@ -39,6 +39,9 @@ namespace TD.CTS.WebUI.Controllers
             var trial = DataProvider.GetItem(new TrialDataFilter{ Code = task.TrialCode });
             var procedure = DataProvider.GetItem(new ProcedureDataFilter { Code = task.ProcedureCode });
 
+            ViewBag.Roles = DataProvider.GetList(new RoleDataFilter());
+            ViewBag.Users = DataProvider.GetList(new UserDataFilter());
+
             return View(new TaskViewModel 
             { 
                 Id = task.Id,
@@ -50,7 +53,9 @@ namespace TD.CTS.WebUI.Controllers
                 ProcedureName = procedure.Name,
                 TrialCode = task.TrialCode,
                 TrialName = trial.Name,
-                VisitDate = task.VisitDate
+                VisitDate = task.VisitDate,
+                ScheduleId = task.ScheduleId,
+                TrialVisitId = task.TrialVisitId
             });
         }
 

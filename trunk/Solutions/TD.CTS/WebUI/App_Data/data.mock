@@ -1,63 +1,5 @@
 {
   "$type": "System.Collections.Generic.Dictionary`2[[System.Type, mscorlib],[System.Object, mscorlib]], mscorlib",
-  "TD.CTS.Data.Entities.Material, TD.CTS.Data, Version=1.0.0.0, Culture=neutral, PublicKeyToken=69f75ccb18254c4e": {
-    "$type": "TD.CTS.MockData.Repositories.MaterialRepository, TD.CTS.MockData",
-    "Data": {
-      "$type": "System.Collections.Generic.List`1[[TD.CTS.Data.Entities.Material, TD.CTS.Data]], mscorlib",
-      "$values": [
-        {
-          "$type": "TD.CTS.Data.Entities.Material, TD.CTS.Data",
-          "Id": 1,
-          "Name": "Комплект1"
-        },
-        {
-          "$type": "TD.CTS.Data.Entities.Material, TD.CTS.Data",
-          "Id": 2,
-          "Name": "Комплект2"
-        },
-        {
-          "$type": "TD.CTS.Data.Entities.Material, TD.CTS.Data",
-          "Id": 3,
-          "Name": "Комплект3"
-        },
-        {
-          "$type": "TD.CTS.Data.Entities.Material, TD.CTS.Data",
-          "Id": 4,
-          "Name": "Комплект4"
-        },
-        {
-          "$type": "TD.CTS.Data.Entities.Material, TD.CTS.Data",
-          "Id": 5,
-          "Name": "Комплект5"
-        },
-        {
-          "$type": "TD.CTS.Data.Entities.Material, TD.CTS.Data",
-          "Id": 6,
-          "Name": "Комплект6"
-        },
-        {
-          "$type": "TD.CTS.Data.Entities.Material, TD.CTS.Data",
-          "Id": 7,
-          "Name": "Комплект7"
-        },
-        {
-          "$type": "TD.CTS.Data.Entities.Material, TD.CTS.Data",
-          "Id": 8,
-          "Name": "Комплект8"
-        },
-        {
-          "$type": "TD.CTS.Data.Entities.Material, TD.CTS.Data",
-          "Id": 9,
-          "Name": "Комплект9"
-        },
-        {
-          "$type": "TD.CTS.Data.Entities.Material, TD.CTS.Data",
-          "Id": 10,
-          "Name": "Комплект10"
-        }
-      ]
-    }
-  },
   "TD.CTS.Data.Entities.TrialVisitMaterial, TD.CTS.Data, Version=1.0.0.0, Culture=neutral, PublicKeyToken=69f75ccb18254c4e": {
     "$type": "TD.CTS.MockData.Repositories.TrialVisitMaterialRepository, TD.CTS.MockData",
     "Data": {
@@ -66,7 +8,7 @@
         {
           "$type": "TD.CTS.Data.Entities.TrialVisitMaterial, TD.CTS.Data",
           "Id": 3,
-          "TrialProcedureId": 2,
+          "ProcedureCode": "ОВ",
           "TrialVisitId": 1,
           "TrialMaterialId": 1,
           "MaterialName": "Комплект3",
@@ -75,11 +17,29 @@
         {
           "$type": "TD.CTS.Data.Entities.TrialVisitMaterial, TD.CTS.Data",
           "Id": 4,
-          "TrialProcedureId": 1,
+          "ProcedureCode": "ОАК",
           "TrialVisitId": 2,
           "TrialMaterialId": 2,
           "MaterialName": "Комплект5",
           "Quantity": 1
+        },
+        {
+          "$type": "TD.CTS.Data.Entities.TrialVisitMaterial, TD.CTS.Data",
+          "Id": 5,
+          "ProcedureCode": "ОАК",
+          "TrialVisitId": 2,
+          "TrialMaterialId": 3,
+          "MaterialName": "Комплект3",
+          "Quantity": 1
+        },
+        {
+          "$type": "TD.CTS.Data.Entities.TrialVisitMaterial, TD.CTS.Data",
+          "Id": 6,
+          "ProcedureCode": "ОВ",
+          "TrialVisitId": 3,
+          "TrialMaterialId": 2,
+          "MaterialName": "Комплект2",
+          "Quantity": 2
         }
       ]
     }
@@ -128,13 +88,19 @@
           "$type": "TD.CTS.Data.Entities.TrialMaterial, TD.CTS.Data",
           "Id": 1,
           "TrialCode": "AB",
-          "MaterialId": 3
+          "Name": "Комплект1"
         },
         {
           "$type": "TD.CTS.Data.Entities.TrialMaterial, TD.CTS.Data",
           "Id": 2,
           "TrialCode": "AB",
-          "MaterialId": 5
+          "Name": "Комплект2"
+        },
+        {
+          "$type": "TD.CTS.Data.Entities.TrialMaterial, TD.CTS.Data",
+          "Id": 3,
+          "TrialCode": "AB",
+          "Name": "Комплект3"
         }
       ]
     }
@@ -237,670 +203,26 @@
       ]
     }
   },
-  "TD.CTS.Data.Entities.Task, TD.CTS.Data, Version=1.0.0.0, Culture=neutral, PublicKeyToken=69f75ccb18254c4e": {
-    "$type": "TD.CTS.MockData.Repositories.TaskRepository, TD.CTS.MockData",
+  "TD.CTS.Data.Entities.TrialVersion, TD.CTS.Data, Version=1.0.0.0, Culture=neutral, PublicKeyToken=69f75ccb18254c4e": {
+    "$type": "TD.CTS.MockData.Repositories.TrialVersionRepository, TD.CTS.MockData",
     "Data": {
-      "$type": "System.Collections.Generic.List`1[[TD.CTS.Data.Entities.Task, TD.CTS.Data]], mscorlib",
+      "$type": "System.Collections.Generic.List`1[[TD.CTS.Data.Entities.TrialVersion, TD.CTS.Data]], mscorlib",
       "$values": [
         {
-          "$type": "TD.CTS.Data.Entities.Task, TD.CTS.Data",
+          "$type": "TD.CTS.Data.Entities.TrialVersion, TD.CTS.Data",
           "Id": 1,
           "TrialCode": "AB",
-          "PatientId": 2,
-          "PatientFullName": "Степанов Виктор Викторович",
-          "PatientShortName": "Степанов В. В.",
-          "ProcedureCode": "ОАК",
-          "VisitDate": "2015-04-29T00:00:00+03:00",
-          "IsDone": true
+          "AuthorLogin": "cts",
+          "VersionDate": "2015-04-12T15:14:19.887",
+          "VersionStatus": "Активная"
         },
         {
-          "$type": "TD.CTS.Data.Entities.Task, TD.CTS.Data",
+          "$type": "TD.CTS.Data.Entities.TrialVersion, TD.CTS.Data",
           "Id": 2,
           "TrialCode": "AB",
-          "PatientId": 3,
-          "PatientFullName": "Иванов Константин Павлович",
-          "PatientShortName": "Иванов К. П.",
-          "ProcedureCode": "ОАК",
-          "VisitDate": "2015-04-05T00:00:00",
-          "IsDone": false
-        },
-        {
-          "$type": "TD.CTS.Data.Entities.Task, TD.CTS.Data",
-          "Id": 3,
-          "TrialCode": "AB",
-          "PatientId": 2,
-          "PatientFullName": "Степанов Виктор Викторович",
-          "PatientShortName": "Степанов В. В.",
-          "ProcedureCode": "ОВ",
-          "VisitDate": "2015-05-02T00:00:00+03:00",
-          "IsDone": true
-        },
-        {
-          "$type": "TD.CTS.Data.Entities.Task, TD.CTS.Data",
-          "Id": 4,
-          "TrialCode": "AB",
-          "PatientId": 3,
-          "PatientFullName": "Иванов Константин Павлович",
-          "PatientShortName": "Иванов К. П.",
-          "ProcedureCode": "ОВ",
-          "VisitDate": "2015-04-03T00:00:00",
-          "IsDone": false
-        },
-        {
-          "$type": "TD.CTS.Data.Entities.Task, TD.CTS.Data",
-          "Id": 5,
-          "TrialCode": "AB",
-          "PatientId": 2,
-          "PatientFullName": "Степанов Виктор Викторович",
-          "PatientShortName": "Степанов В. В.",
-          "ProcedureCode": "ОВ",
-          "VisitDate": "0001-01-01T00:00:00",
-          "IsDone": true
-        },
-        {
-          "$type": "TD.CTS.Data.Entities.Task, TD.CTS.Data",
-          "Id": 6,
-          "TrialCode": "AB",
-          "PatientId": 3,
-          "PatientFullName": "Иванов Константин Павлович",
-          "PatientShortName": "Иванов К. П.",
-          "ProcedureCode": "ОВ",
-          "VisitDate": "2015-04-06T00:00:00",
-          "IsDone": false
-        },
-        {
-          "$type": "TD.CTS.Data.Entities.Task, TD.CTS.Data",
-          "Id": 7,
-          "TrialCode": "AB",
-          "PatientId": 2,
-          "PatientFullName": "Степанов Виктор Викторович",
-          "PatientShortName": "Степанов В. В.",
-          "ProcedureCode": "ОАК",
-          "VisitDate": "0001-01-01T00:00:00",
-          "IsDone": true
-        },
-        {
-          "$type": "TD.CTS.Data.Entities.Task, TD.CTS.Data",
-          "Id": 8,
-          "TrialCode": "AB",
-          "PatientId": 3,
-          "PatientFullName": "Иванов Константин Павлович",
-          "PatientShortName": "Иванов К. П.",
-          "ProcedureCode": "ОАК",
-          "VisitDate": "2015-04-13T00:00:00+03:00",
-          "IsDone": true
-        },
-        {
-          "$type": "TD.CTS.Data.Entities.Task, TD.CTS.Data",
-          "Id": 9,
-          "TrialCode": "AB",
-          "PatientId": 2,
-          "PatientFullName": "Степанов Виктор Викторович",
-          "PatientShortName": "Степанов В. В.",
-          "ProcedureCode": "ОВ",
-          "VisitDate": "2015-04-12T00:00:00",
-          "IsDone": false
-        },
-        {
-          "$type": "TD.CTS.Data.Entities.Task, TD.CTS.Data",
-          "Id": 10,
-          "TrialCode": "AB",
-          "PatientId": 3,
-          "PatientFullName": "Иванов Константин Павлович",
-          "PatientShortName": "Иванов К. П.",
-          "ProcedureCode": "ОВ",
-          "VisitDate": "2015-04-12T00:00:00",
-          "IsDone": false
-        },
-        {
-          "$type": "TD.CTS.Data.Entities.Task, TD.CTS.Data",
-          "Id": 11,
-          "TrialCode": "AB",
-          "PatientId": 2,
-          "PatientFullName": "Степанов Виктор Викторович",
-          "PatientShortName": "Степанов В. В.",
-          "ProcedureCode": "ОВ",
-          "VisitDate": "2015-04-15T00:00:00",
-          "IsDone": false
-        },
-        {
-          "$type": "TD.CTS.Data.Entities.Task, TD.CTS.Data",
-          "Id": 12,
-          "TrialCode": "AB",
-          "PatientId": 3,
-          "PatientFullName": "Иванов Константин Павлович",
-          "PatientShortName": "Иванов К. П.",
-          "ProcedureCode": "ОВ",
-          "VisitDate": "2015-04-15T00:00:00",
-          "IsDone": true
-        },
-        {
-          "$type": "TD.CTS.Data.Entities.Task, TD.CTS.Data",
-          "Id": 13,
-          "TrialCode": "AB",
-          "PatientId": 2,
-          "PatientFullName": "Степанов Виктор Викторович",
-          "PatientShortName": "Степанов В. В.",
-          "ProcedureCode": "ОАК",
-          "VisitDate": "2015-04-23T00:00:00",
-          "IsDone": false
-        },
-        {
-          "$type": "TD.CTS.Data.Entities.Task, TD.CTS.Data",
-          "Id": 14,
-          "TrialCode": "AB",
-          "PatientId": 3,
-          "PatientFullName": "Иванов Константин Павлович",
-          "PatientShortName": "Иванов К. П.",
-          "ProcedureCode": "ОАК",
-          "VisitDate": "2015-04-23T00:00:00",
-          "IsDone": false
-        },
-        {
-          "$type": "TD.CTS.Data.Entities.Task, TD.CTS.Data",
-          "Id": 15,
-          "TrialCode": "AB",
-          "PatientId": 2,
-          "PatientFullName": "Степанов Виктор Викторович",
-          "PatientShortName": "Степанов В. В.",
-          "ProcedureCode": "ОВ",
-          "VisitDate": "0001-01-01T00:00:00",
-          "IsDone": true
-        },
-        {
-          "$type": "TD.CTS.Data.Entities.Task, TD.CTS.Data",
-          "Id": 16,
-          "TrialCode": "AB",
-          "PatientId": 3,
-          "PatientFullName": "Иванов Константин Павлович",
-          "PatientShortName": "Иванов К. П.",
-          "ProcedureCode": "ОВ",
-          "VisitDate": "2015-04-21T00:00:00",
-          "IsDone": false
-        },
-        {
-          "$type": "TD.CTS.Data.Entities.Task, TD.CTS.Data",
-          "Id": 17,
-          "TrialCode": "AB",
-          "PatientId": 2,
-          "PatientFullName": "Степанов Виктор Викторович",
-          "PatientShortName": "Степанов В. В.",
-          "ProcedureCode": "ОВ",
-          "VisitDate": "2015-04-27T00:00:00",
-          "IsDone": true
-        },
-        {
-          "$type": "TD.CTS.Data.Entities.Task, TD.CTS.Data",
-          "Id": 18,
-          "TrialCode": "AB",
-          "PatientId": 3,
-          "PatientFullName": "Иванов Константин Павлович",
-          "PatientShortName": "Иванов К. П.",
-          "ProcedureCode": "ОВ",
-          "VisitDate": "0001-01-01T00:00:00",
-          "IsDone": true
-        },
-        {
-          "$type": "TD.CTS.Data.Entities.Task, TD.CTS.Data",
-          "Id": 19,
-          "TrialCode": "AB",
-          "PatientId": 2,
-          "PatientFullName": "Степанов Виктор Викторович",
-          "PatientShortName": "Степанов В. В.",
-          "ProcedureCode": "ОАК",
-          "VisitDate": "2015-05-02T00:00:00",
-          "IsDone": true
-        },
-        {
-          "$type": "TD.CTS.Data.Entities.Task, TD.CTS.Data",
-          "Id": 20,
-          "TrialCode": "AB",
-          "PatientId": 3,
-          "PatientFullName": "Иванов Константин Павлович",
-          "PatientShortName": "Иванов К. П.",
-          "ProcedureCode": "ОАК",
-          "VisitDate": "2015-05-09T00:00:00+03:00",
-          "IsDone": true
-        },
-        {
-          "$type": "TD.CTS.Data.Entities.Task, TD.CTS.Data",
-          "Id": 21,
-          "TrialCode": "AB",
-          "PatientId": 2,
-          "PatientFullName": "Степанов Виктор Викторович",
-          "PatientShortName": "Степанов В. В.",
-          "ProcedureCode": "ОВ",
-          "VisitDate": "2015-05-09T00:00:00+03:00",
-          "IsDone": true
-        },
-        {
-          "$type": "TD.CTS.Data.Entities.Task, TD.CTS.Data",
-          "Id": 22,
-          "TrialCode": "AB",
-          "PatientId": 3,
-          "PatientFullName": "Иванов Константин Павлович",
-          "PatientShortName": "Иванов К. П.",
-          "ProcedureCode": "ОВ",
-          "VisitDate": "2015-05-09T00:00:00+03:00",
-          "IsDone": true
-        },
-        {
-          "$type": "TD.CTS.Data.Entities.Task, TD.CTS.Data",
-          "Id": 23,
-          "TrialCode": "AB",
-          "PatientId": 2,
-          "PatientFullName": "Степанов Виктор Викторович",
-          "PatientShortName": "Степанов В. В.",
-          "ProcedureCode": "ОВ",
-          "VisitDate": "2015-05-09T00:00:00+03:00",
-          "IsDone": true
-        },
-        {
-          "$type": "TD.CTS.Data.Entities.Task, TD.CTS.Data",
-          "Id": 24,
-          "TrialCode": "AB",
-          "PatientId": 3,
-          "PatientFullName": "Иванов Константин Павлович",
-          "PatientShortName": "Иванов К. П.",
-          "ProcedureCode": "ОВ",
-          "VisitDate": "2015-05-09T00:00:00+03:00",
-          "IsDone": true
-        },
-        {
-          "$type": "TD.CTS.Data.Entities.Task, TD.CTS.Data",
-          "Id": 25,
-          "TrialCode": "AB",
-          "PatientId": 2,
-          "PatientFullName": "Степанов Виктор Викторович",
-          "PatientShortName": "Степанов В. В.",
-          "ProcedureCode": "ОАК",
-          "VisitDate": "2015-05-09T00:00:00+03:00",
-          "IsDone": true
-        },
-        {
-          "$type": "TD.CTS.Data.Entities.Task, TD.CTS.Data",
-          "Id": 26,
-          "TrialCode": "AB",
-          "PatientId": 3,
-          "PatientFullName": "Иванов Константин Павлович",
-          "PatientShortName": "Иванов К. П.",
-          "ProcedureCode": "ОАК",
-          "VisitDate": "2015-05-09T00:00:00+03:00",
-          "IsDone": true
-        },
-        {
-          "$type": "TD.CTS.Data.Entities.Task, TD.CTS.Data",
-          "Id": 27,
-          "TrialCode": "AB",
-          "PatientId": 2,
-          "PatientFullName": "Степанов Виктор Викторович",
-          "PatientShortName": "Степанов В. В.",
-          "ProcedureCode": "ОВ",
-          "VisitDate": "0001-01-01T00:00:00",
-          "IsDone": true
-        },
-        {
-          "$type": "TD.CTS.Data.Entities.Task, TD.CTS.Data",
-          "Id": 28,
-          "TrialCode": "AB",
-          "PatientId": 3,
-          "PatientFullName": "Иванов Константин Павлович",
-          "PatientShortName": "Иванов К. П.",
-          "ProcedureCode": "ОВ",
-          "VisitDate": "2015-05-07T00:00:00",
-          "IsDone": true
-        },
-        {
-          "$type": "TD.CTS.Data.Entities.Task, TD.CTS.Data",
-          "Id": 29,
-          "TrialCode": "AB",
-          "PatientId": 2,
-          "PatientFullName": "Степанов Виктор Викторович",
-          "PatientShortName": "Степанов В. В.",
-          "ProcedureCode": "ОВ",
-          "VisitDate": "2015-05-10T00:00:00",
-          "IsDone": false
-        },
-        {
-          "$type": "TD.CTS.Data.Entities.Task, TD.CTS.Data",
-          "Id": 30,
-          "TrialCode": "AB",
-          "PatientId": 3,
-          "PatientFullName": "Иванов Константин Павлович",
-          "PatientShortName": "Иванов К. П.",
-          "ProcedureCode": "ОВ",
-          "VisitDate": "2015-05-11T00:00:00",
-          "IsDone": false
-        },
-        {
-          "$type": "TD.CTS.Data.Entities.Task, TD.CTS.Data",
-          "Id": 31,
-          "TrialCode": "AB",
-          "PatientId": 2,
-          "PatientFullName": "Степанов Виктор Викторович",
-          "PatientShortName": "Степанов В. В.",
-          "ProcedureCode": "ОАК",
-          "VisitDate": "2015-05-17T00:00:00",
-          "IsDone": false
-        },
-        {
-          "$type": "TD.CTS.Data.Entities.Task, TD.CTS.Data",
-          "Id": 32,
-          "TrialCode": "AB",
-          "PatientId": 3,
-          "PatientFullName": "Иванов Константин Павлович",
-          "PatientShortName": "Иванов К. П.",
-          "ProcedureCode": "ОАК",
-          "VisitDate": "2015-05-16T00:00:00",
-          "IsDone": false
-        },
-        {
-          "$type": "TD.CTS.Data.Entities.Task, TD.CTS.Data",
-          "Id": 33,
-          "TrialCode": "AB",
-          "PatientId": 2,
-          "PatientFullName": "Степанов Виктор Викторович",
-          "PatientShortName": "Степанов В. В.",
-          "ProcedureCode": "ОВ",
-          "VisitDate": "2015-05-15T00:00:00",
-          "IsDone": false
-        },
-        {
-          "$type": "TD.CTS.Data.Entities.Task, TD.CTS.Data",
-          "Id": 34,
-          "TrialCode": "AB",
-          "PatientId": 3,
-          "PatientFullName": "Иванов Константин Павлович",
-          "PatientShortName": "Иванов К. П.",
-          "ProcedureCode": "ОВ",
-          "VisitDate": "2015-05-15T00:00:00",
-          "IsDone": false
-        },
-        {
-          "$type": "TD.CTS.Data.Entities.Task, TD.CTS.Data",
-          "Id": 35,
-          "TrialCode": "AB",
-          "PatientId": 2,
-          "PatientFullName": "Степанов Виктор Викторович",
-          "PatientShortName": "Степанов В. В.",
-          "ProcedureCode": "ОВ",
-          "VisitDate": "2015-05-19T00:00:00",
-          "IsDone": false
-        },
-        {
-          "$type": "TD.CTS.Data.Entities.Task, TD.CTS.Data",
-          "Id": 36,
-          "TrialCode": "AB",
-          "PatientId": 3,
-          "PatientFullName": "Иванов Константин Павлович",
-          "PatientShortName": "Иванов К. П.",
-          "ProcedureCode": "ОВ",
-          "VisitDate": "2015-05-19T00:00:00",
-          "IsDone": false
-        },
-        {
-          "$type": "TD.CTS.Data.Entities.Task, TD.CTS.Data",
-          "Id": 37,
-          "TrialCode": "AB",
-          "PatientId": 2,
-          "PatientFullName": "Степанов Виктор Викторович",
-          "PatientShortName": "Степанов В. В.",
-          "ProcedureCode": "ОАК",
-          "VisitDate": "2015-05-24T00:00:00",
-          "IsDone": false
-        },
-        {
-          "$type": "TD.CTS.Data.Entities.Task, TD.CTS.Data",
-          "Id": 38,
-          "TrialCode": "AB",
-          "PatientId": 3,
-          "PatientFullName": "Иванов Константин Павлович",
-          "PatientShortName": "Иванов К. П.",
-          "ProcedureCode": "ОАК",
-          "VisitDate": "2015-05-23T00:00:00",
-          "IsDone": false
-        },
-        {
-          "$type": "TD.CTS.Data.Entities.Task, TD.CTS.Data",
-          "Id": 39,
-          "TrialCode": "AB",
-          "PatientId": 2,
-          "PatientFullName": "Степанов Виктор Викторович",
-          "PatientShortName": "Степанов В. В.",
-          "ProcedureCode": "ОВ",
-          "VisitDate": "2015-05-22T00:00:00",
-          "IsDone": false
-        },
-        {
-          "$type": "TD.CTS.Data.Entities.Task, TD.CTS.Data",
-          "Id": 40,
-          "TrialCode": "AB",
-          "PatientId": 3,
-          "PatientFullName": "Иванов Константин Павлович",
-          "PatientShortName": "Иванов К. П.",
-          "ProcedureCode": "ОВ",
-          "VisitDate": "2015-05-22T00:00:00",
-          "IsDone": false
-        },
-        {
-          "$type": "TD.CTS.Data.Entities.Task, TD.CTS.Data",
-          "Id": 41,
-          "TrialCode": "AB",
-          "PatientId": 2,
-          "PatientFullName": "Степанов Виктор Викторович",
-          "PatientShortName": "Степанов В. В.",
-          "ProcedureCode": "ОВ",
-          "VisitDate": "2015-05-28T00:00:00",
-          "IsDone": false
-        },
-        {
-          "$type": "TD.CTS.Data.Entities.Task, TD.CTS.Data",
-          "Id": 42,
-          "TrialCode": "AB",
-          "PatientId": 3,
-          "PatientFullName": "Иванов Константин Павлович",
-          "PatientShortName": "Иванов К. П.",
-          "ProcedureCode": "ОВ",
-          "VisitDate": "2015-05-28T00:00:00",
-          "IsDone": false
-        },
-        {
-          "$type": "TD.CTS.Data.Entities.Task, TD.CTS.Data",
-          "Id": 43,
-          "TrialCode": "AB",
-          "PatientId": 2,
-          "PatientFullName": "Степанов Виктор Викторович",
-          "PatientShortName": "Степанов В. В.",
-          "ProcedureCode": "ОАК",
-          "VisitDate": "2015-05-31T00:00:00",
-          "IsDone": false
-        },
-        {
-          "$type": "TD.CTS.Data.Entities.Task, TD.CTS.Data",
-          "Id": 44,
-          "TrialCode": "AB",
-          "PatientId": 3,
-          "PatientFullName": "Иванов Константин Павлович",
-          "PatientShortName": "Иванов К. П.",
-          "ProcedureCode": "ОАК",
-          "VisitDate": "2015-05-31T00:00:00",
-          "IsDone": false
-        },
-        {
-          "$type": "TD.CTS.Data.Entities.Task, TD.CTS.Data",
-          "Id": 45,
-          "TrialCode": "AB",
-          "PatientId": 2,
-          "PatientFullName": "Степанов Виктор Викторович",
-          "PatientShortName": "Степанов В. В.",
-          "ProcedureCode": "ОВ",
-          "VisitDate": "2015-05-30T00:00:00",
-          "IsDone": false
-        },
-        {
-          "$type": "TD.CTS.Data.Entities.Task, TD.CTS.Data",
-          "Id": 46,
-          "TrialCode": "AB",
-          "PatientId": 3,
-          "PatientFullName": "Иванов Константин Павлович",
-          "PatientShortName": "Иванов К. П.",
-          "ProcedureCode": "ОВ",
-          "VisitDate": "2015-05-30T00:00:00",
-          "IsDone": false
-        },
-        {
-          "$type": "TD.CTS.Data.Entities.Task, TD.CTS.Data",
-          "Id": 47,
-          "TrialCode": "AB",
-          "PatientId": 2,
-          "PatientFullName": "Степанов Виктор Викторович",
-          "PatientShortName": "Степанов В. В.",
-          "ProcedureCode": "ОВ",
-          "VisitDate": "2015-06-05T00:00:00",
-          "IsDone": false
-        },
-        {
-          "$type": "TD.CTS.Data.Entities.Task, TD.CTS.Data",
-          "Id": 48,
-          "TrialCode": "AB",
-          "PatientId": 3,
-          "PatientFullName": "Иванов Константин Павлович",
-          "PatientShortName": "Иванов К. П.",
-          "ProcedureCode": "ОВ",
-          "VisitDate": "2015-06-02T00:00:00",
-          "IsDone": false
-        },
-        {
-          "$type": "TD.CTS.Data.Entities.Task, TD.CTS.Data",
-          "Id": 49,
-          "TrialCode": "AB",
-          "PatientId": 2,
-          "PatientFullName": "Степанов Виктор Викторович",
-          "PatientShortName": "Степанов В. В.",
-          "ProcedureCode": "ОАК",
-          "VisitDate": "2015-06-10T00:00:00",
-          "IsDone": false
-        },
-        {
-          "$type": "TD.CTS.Data.Entities.Task, TD.CTS.Data",
-          "Id": 50,
-          "TrialCode": "AB",
-          "PatientId": 3,
-          "PatientFullName": "Иванов Константин Павлович",
-          "PatientShortName": "Иванов К. П.",
-          "ProcedureCode": "ОАК",
-          "VisitDate": "2015-06-09T00:00:00",
-          "IsDone": false
-        },
-        {
-          "$type": "TD.CTS.Data.Entities.Task, TD.CTS.Data",
-          "Id": 51,
-          "TrialCode": "AB",
-          "PatientId": 2,
-          "PatientFullName": "Степанов Виктор Викторович",
-          "PatientShortName": "Степанов В. В.",
-          "ProcedureCode": "ОВ",
-          "VisitDate": "2015-06-08T00:00:00",
-          "IsDone": false
-        },
-        {
-          "$type": "TD.CTS.Data.Entities.Task, TD.CTS.Data",
-          "Id": 52,
-          "TrialCode": "AB",
-          "PatientId": 3,
-          "PatientFullName": "Иванов Константин Павлович",
-          "PatientShortName": "Иванов К. П.",
-          "ProcedureCode": "ОВ",
-          "VisitDate": "2015-06-08T00:00:00",
-          "IsDone": false
-        },
-        {
-          "$type": "TD.CTS.Data.Entities.Task, TD.CTS.Data",
-          "Id": 53,
-          "TrialCode": "AB",
-          "PatientId": 2,
-          "PatientFullName": "Степанов Виктор Викторович",
-          "PatientShortName": "Степанов В. В.",
-          "ProcedureCode": "ОВ",
-          "VisitDate": "2015-06-13T00:00:00",
-          "IsDone": false
-        },
-        {
-          "$type": "TD.CTS.Data.Entities.Task, TD.CTS.Data",
-          "Id": 54,
-          "TrialCode": "AB",
-          "PatientId": 3,
-          "PatientFullName": "Иванов Константин Павлович",
-          "PatientShortName": "Иванов К. П.",
-          "ProcedureCode": "ОВ",
-          "VisitDate": "2015-06-14T00:00:00",
-          "IsDone": false
-        },
-        {
-          "$type": "TD.CTS.Data.Entities.Task, TD.CTS.Data",
-          "Id": 55,
-          "TrialCode": "AB",
-          "PatientId": 2,
-          "PatientFullName": "Степанов Виктор Викторович",
-          "PatientShortName": "Степанов В. В.",
-          "ProcedureCode": "ОАК",
-          "VisitDate": "2015-06-18T00:00:00",
-          "IsDone": false
-        },
-        {
-          "$type": "TD.CTS.Data.Entities.Task, TD.CTS.Data",
-          "Id": 56,
-          "TrialCode": "AB",
-          "PatientId": 3,
-          "PatientFullName": "Иванов Константин Павлович",
-          "PatientShortName": "Иванов К. П.",
-          "ProcedureCode": "ОАК",
-          "VisitDate": "2015-06-19T00:00:00",
-          "IsDone": false
-        },
-        {
-          "$type": "TD.CTS.Data.Entities.Task, TD.CTS.Data",
-          "Id": 57,
-          "TrialCode": "AB",
-          "PatientId": 2,
-          "PatientFullName": "Степанов Виктор Викторович",
-          "PatientShortName": "Степанов В. В.",
-          "ProcedureCode": "ОВ",
-          "VisitDate": "2015-06-17T00:00:00",
-          "IsDone": false
-        },
-        {
-          "$type": "TD.CTS.Data.Entities.Task, TD.CTS.Data",
-          "Id": 58,
-          "TrialCode": "AB",
-          "PatientId": 3,
-          "PatientFullName": "Иванов Константин Павлович",
-          "PatientShortName": "Иванов К. П.",
-          "ProcedureCode": "ОВ",
-          "VisitDate": "2015-06-17T00:00:00",
-          "IsDone": false
-        },
-        {
-          "$type": "TD.CTS.Data.Entities.Task, TD.CTS.Data",
-          "Id": 59,
-          "TrialCode": "AB",
-          "PatientId": 2,
-          "PatientFullName": "Степанов Виктор Викторович",
-          "PatientShortName": "Степанов В. В.",
-          "ProcedureCode": "ОВ",
-          "VisitDate": "2015-06-22T00:00:00",
-          "IsDone": false
-        },
-        {
-          "$type": "TD.CTS.Data.Entities.Task, TD.CTS.Data",
-          "Id": 60,
-          "TrialCode": "AB",
-          "PatientId": 3,
-          "PatientFullName": "Иванов Константин Павлович",
-          "PatientShortName": "Иванов К. П.",
-          "ProcedureCode": "ОВ",
-          "VisitDate": "2015-06-20T00:00:00",
-          "IsDone": false
+          "AuthorLogin": "cts",
+          "VersionDate": "2015-04-12T15:14:19.887",
+          "VersionStatus": "Неактивная"
         }
       ]
     }

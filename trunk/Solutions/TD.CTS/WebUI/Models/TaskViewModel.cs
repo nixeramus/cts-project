@@ -28,6 +28,10 @@ namespace TD.CTS.WebUI.Models
 
         public bool IsDone { get; set; }
 
+        public int ScheduleId { get; set; }
+
+        public int TrialVisitId { get; set; }
+
         public Task ToTask()
         {
             return new Task
@@ -38,7 +42,9 @@ namespace TD.CTS.WebUI.Models
                 PatientFullName = PatientFullName,
                 ProcedureCode = ProcedureCode,
                 TrialCode = TrialCode,
-                VisitDate = VisitDate
+                VisitDate = VisitDate,
+                ScheduleId = ScheduleId,
+                TrialVisitId = TrialVisitId
             };
         }
     }

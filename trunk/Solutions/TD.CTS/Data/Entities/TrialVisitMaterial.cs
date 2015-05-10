@@ -12,7 +12,7 @@ namespace TD.CTS.Data.Entities
         public int Id { get; set; }
 
         [Required(ErrorMessage = "Нет привязки к процедуре")]
-        public int TrialProcedureId { get; set; }
+        public string ProcedureCode { get; set; }
 
         [Required(ErrorMessage = "Нет привязки к визиту")]
         public int TrialVisitId { get; set; }

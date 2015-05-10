@@ -22,7 +22,7 @@ namespace TD.CTS.MockData.Repositories
 
             return e =>
                 (dataFilter.Id == null || e.Id == dataFilter.Id)
-                && (dataFilter.TrialProcedureId == null || e.TrialProcedureId == dataFilter.TrialProcedureId)
+                && (string.IsNullOrEmpty(dataFilter.ProcedureCode) || e.ProcedureCode == dataFilter.ProcedureCode)
                 && (dataFilter.TrialVisitId == null || e.TrialVisitId == dataFilter.TrialVisitId);
         }
 
@@ -46,17 +46,12 @@ namespace TD.CTS.MockData.Repositories
         private void UpdateMaterialName(TrialVisitMaterial item)
         {
             var trialMaterial = dataProvider.GetItem(new TrialMaterialDataFilter { Id = item.TrialMaterialId });
-            if (trialMaterial != null)
+            if (trialMaterial == null)
             {
-                var material = dataProvider.GetItem(new MaterialDataFilter { Id = trialMaterial.MaterialId });
-                if (material != null)
-                {
-                    item.MaterialName = material.Name;
-                    return;
-                }
+                throw new ApplicationException("Материал не найден");
             }
 
-            throw new ApplicationException("Материал не найден");
+            item.MaterialName = trialMaterial.Name;
         }
     }
 }
