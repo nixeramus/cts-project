@@ -86,6 +86,7 @@
 
         if(!isNew){
             $("#Code").attr("readonly", true);
+            $("#VersionRow").css("display", "table-row");
         }
     });
 
@@ -113,6 +114,7 @@
                         //tabStrip.enable(tabs.eq(4), true);
                         //tabStrip.enable(tabs.eq(5), true);
                         $("#Code").attr("readonly", true);
+                        $("#VersionRow").css("display", "table-row");
                         isNew = false;
                     }
 
@@ -378,7 +380,7 @@
         var rowData = procGrid.dataItem(row);
 
         var grid = $("#VisitMaterialsGrid").data("kendoGrid");
-        visitMaterialsData = { TrialProcedureId: rowData.id, TrialVisitId: visitId };
+        visitMaterialsData = { ProcedureCode: rowData.ProcedureCode, TrialVisitId: visitId };
         grid.dataSource.read();
 
         if (checked) {
@@ -397,7 +399,7 @@
     }
 
     function OnVisitMaterialsSave(e) {
-        e.model.TrialProcedureId = visitMaterialsData.TrialProcedureId;
+        e.model.ProcedureCode = visitMaterialsData.ProcedureCode;
         e.model.TrialVisitId = visitMaterialsData.TrialVisitId;
     }
 

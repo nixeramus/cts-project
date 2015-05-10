@@ -13,6 +13,16 @@
             @Html.EditorFor(model => model.Code)
         </td>
     </tr>
+    <tr id="VersionRow" style="display:none;">
+        <td class="td-formTable-caption" colspan="2" style="width:250px;">Версия исследования</td>
+        <td>
+            @(Html.Kendo().DropDownListFor(model => model.Version)
+                .BindTo((System.Collections.IEnumerable)ViewBag.Versions)
+                .DataTextField("Name")
+                .DataValueField("Id")
+            )
+        </td>
+    </tr>
     <tr>
         <td class="td-formTable-caption" colspan="2">Наименование исследования</td>
         <td>

@@ -7,12 +7,10 @@ using TD.CTS.Data.Entities;
 
 namespace TD.CTS.Data.Filters
 {
-    public class TrialMaterialDataFilter : DataFilter<TrialMaterial>
+    public class TrialVersionDataFilter : DataFilter<TrialVersion>
     {
         public int? Id { get; set; }
 
-        public string TrialCode { get; set; } 
-
-        public string MaterialName { get; set; }
+        public string TrialCode { get; set; }
     }
 }

@@ -71,7 +71,7 @@ namespace TD.CTS.MockData.Repositories
             return e =>
                 (dataFilter.TrialCode == null || e.TrialCode == dataFilter.TrialCode)
                 && (dataFilter.Id == null || e.Id == dataFilter.Id)
-                && (dataFilter.MaterialId == null || e.MaterialId == dataFilter.MaterialId);
+                && (string.IsNullOrEmpty(dataFilter.MaterialName) || e.Name.Contains(dataFilter.MaterialName));
         }
 
         protected override int GetItemIndex(TrialMaterial item)

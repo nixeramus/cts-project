@@ -7,13 +7,16 @@ using System.Threading.Tasks;
 
 namespace TD.CTS.Data.Entities
 {
-    public class TrialMaterial : Entity
+    public class TrialVersion : Entity
     {
         public int Id { get; set; }
 
         public string TrialCode { get; set; }
 
-        [Required(ErrorMessage = "Наименование не задано")]
-        public string Name { get; set; }
+        public string AuthorLogin { get; set; }
+
+        public DateTime VersionDate { get; set; }
+
+        public string VersionStatus { get; set; }
     }
 }

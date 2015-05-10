@@ -21,7 +21,9 @@ namespace TD.CTS.WebUI.Controllers
             if (string.IsNullOrEmpty(id))
             {
                 ViewBag.IsNew = true;
-                trial = new Trial();
+                trial = new Trial { Version = 1 };
+
+                ViewBag.Versions = new[] { new { Id = 1, Name = "1 (Новая)" } };
             }
             else
             {
@@ -29,6 +31,8 @@ namespace TD.CTS.WebUI.Controllers
                 if (trial == null)
                     throw new ApplicationException("Исследование с кодом '" + id + "' не найдено");
                 ViewBag.IsNew = false;
+
+                ViewBag.Versions = DataProvider.GetList(new TrialVersionDataFilter()).Select(v => new { Id = v.Id, Name = string.Format("{0} ({1})", v.Id, v.VersionStatus) });
             }
 
             var users = DataProvider.GetList(new UserDataFilter());
@@ -37,8 +41,6 @@ namespace TD.CTS.WebUI.Controllers
             ViewBag.AdministratorLogin_Data = new SelectList(users, "Login", "FullName");
 
             ViewBag.Hospitals = DataProvider.GetList(new HospitalDataFilter());
-
-            ViewBag.Materials = DataProvider.GetList(new MaterialDataFilter());
 
             ViewBag.Procedures = DataProvider.GetList(new ProcedureDataFilter());
 
@@ -262,9 +264,9 @@ namespace TD.CTS.WebUI.Controllers
 
         #region TrialVisitMaterials
 
-        public ActionResult GetTrialVisitMaterials([DataSourceRequest]DataSourceRequest request, int trialProcedureId, int trialVisitId)
+        public ActionResult GetTrialVisitMaterials([DataSourceRequest]DataSourceRequest request, string procedureCode, int trialVisitId)
         {
-            var list = DataProvider.GetList(new TrialVisitMaterialDataFilter { TrialProcedureId = trialProcedureId, TrialVisitId = trialVisitId });
+            var list = DataProvider.GetList(new TrialVisitMaterialDataFilter { ProcedureCode = procedureCode, TrialVisitId = trialVisitId });
 
             return Json(list.ToDataSourceResult(request));
         }
@@ -305,10 +307,10 @@ namespace TD.CTS.WebUI.Controllers
         public ActionResult GetTrialMaterialsDict(string trialCode)
         {
             var trialMaterials = DataProvider.GetList(new TrialMaterialDataFilter { TrialCode = trialCode });
-            var materials = DataProvider.GetList(new MaterialDataFilter());
-            var dict = trialMaterials.Join(materials, tm => tm.MaterialId, m => m.Id, (tm, m) => new { tm.Id, m.Name });
+            //var materials = DataProvider.GetList(new MaterialDataFilter());
+            //var dict = trialMaterials.Join(materials, tm => tm.MaterialId, m => m.Id, (tm, m) => new { tm.Id, m.Name });
 
-            return Json(dict);
+            return Json(trialMaterials);
         }
 
         #endregion
