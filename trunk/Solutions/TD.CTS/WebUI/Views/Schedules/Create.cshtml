@@ -20,16 +20,7 @@
 @(Html.Kendo().TabStrip()
     .Name("TabStrip")
     .Animation(false)
-    .Items(tabs =>
-    {
-        tabs.Add()
-            .Text("Основное")
-            .Selected(true)
-            .Content(@<text>@Html.Partial("EditorTemplates/MainEditor")</text>);
-    }
-
-      )
-      )
+    .Items(tabs =>{tabs.Add().Text("Основное").Selected(true).Content(@<text>@Html.Partial("EditorTemplates/MainEditor")</text>);}))
 
 <script>
     var validator = $("#scheduleForm").kendoValidator().data("kendoValidator");
@@ -65,9 +56,10 @@
 
                     //    isNew = false;
                     //}
-
+                    $("#SaveButton").attr("disabled", "disabled");
                     var saveNotification = $("#SaveNotification").data("kendoNotification");
                     saveNotification.show("Сохранено", "success");
+                    
                     var url = "@Url.Action("Edit", "Schedules")";
                     url = url + "/" + result.Data[0].Id;
                     window.location.replace(url);
