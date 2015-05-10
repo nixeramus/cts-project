@@ -16,14 +16,14 @@
     {
 
 
-        columns.Bound(e => e.TrialCode).Width(200).Title("Код исследования");
+        columns.Bound(e => e.TrialCode).Width(100).Title("Код исследования");
         columns.Bound(e => e.TrialName).Width(200).Title("Наименование исследования");
         columns.Bound(e => e.PatientFullName).Width(200).Title("ФИО пациента");
         columns.Bound(e => e.TrialVisitName).Width(200).Title("Наименование визита");
-        columns.Bound(e => e.MinDate).Width(200).Title("Дата нач.").Format("{0:dd.MM.yyyy}");
-        columns.Bound(e => e.MaxDate).Width(200).Title("Дата кон.").Format("{0:dd.MM.yyyy}");
-        columns.Bound(e => e.PatientFullName).Width(200).Title("Дата план").Format("{0:dd.MM.yyyy}");
-        columns.Bound(e => e.VisitEmployees).Width(200).Title("Сотрудники");
+        columns.Bound(e => e.MinDate).Width(100).Title("Дата нач.").Format("{0:dd.MM.yyyy}");
+        columns.Bound(e => e.MaxDate).Width(100).Title("Дата кон.").Format("{0:dd.MM.yyyy}");
+        columns.Bound(e => e.PatientFullName).Width(100).Title("Дата план").Format("{0:dd.MM.yyyy}");
+        columns.Bound(e => e.VisitEmployees).Width(100).Title("Сотрудники");
         //columns.Buttons(buttons =>
         //{
         //    buttons.HeaderCustom().Tag(ButtonTag.a).Url(Url.Action("Create", "Schedules")).Title("Добавить").ImageCssClass("k-add");
