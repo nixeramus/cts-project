@@ -11,7 +11,14 @@ namespace TD.CTS.WebUI.Controllers
     {
         public ActionResult Index()
         {
-            ViewBag.Message = "Welcome to ASP.NET MVC!";
+            ViewBag.Title = "Бета версия";
+
+            return View();
+        }
+
+        public ActionResult UnderConstruction()
+        {
+            ViewBag.Title = "Функционал разрабатывается";
 
             return View();
         }

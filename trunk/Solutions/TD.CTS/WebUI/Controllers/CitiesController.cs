@@ -20,6 +20,7 @@ namespace TD.CTS.WebUI.Controllers
             return View();
         }
 
+        [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult GetCities([DataSourceRequest]DataSourceRequest request, CityDataFilter dataFilter)
         {
             var response = DataProvider.GetList(dataFilter ?? new CityDataFilter());

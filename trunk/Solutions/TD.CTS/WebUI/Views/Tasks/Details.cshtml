@@ -93,6 +93,12 @@
     
 </div>
 
+@(Html.Kendo().Notification()
+    .Name("SaveNotification")
+    .Position(p => p.Pinned(true).Top(115).Right(30))
+    .Width(150)
+)
+
 <script>
     $(document).ready(function () {
         SetContentBlock($(".k-content"));
@@ -108,12 +114,16 @@
             url: "@Url.Action("ExecuteTask", "Tasks")",
             data: {Id: @Model.Id, IsDone: checkbox.is(":checked"), VisitDate: datepicker.value().toISOString()},
             async: false,
-            success: function () {
+            success: function (a,b,c,d) {
                 checkbox.attr("onclick", "return false");
                 datepicker.readonly();
+
+                var saveNotification = $("#SaveNotification").data("kendoNotification");
+                saveNotification.show("Сохранено", "success");
             },
             error: function (error) {
-                alert(error.responseText);
+                checkbox.attr("checked", false);
+                AjaxError(error);
             }
         });
     }

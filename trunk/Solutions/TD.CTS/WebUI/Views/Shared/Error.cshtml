@@ -1,0 +1,52 @@
+﻿<div id="errorContent">
+    <table style="margin:0;">
+        <tr>
+            <td><img alt="" src="@Url.Content("~/Content/images/error_48.png")" /></td>
+            <td style="color:Red;vertical-align:middle;font-weight:500;font-size:large;">@ViewBag.Message</td>
+        </tr>
+    </table>
+
+    @if (ViewBag.ShowDetails != null && ViewBag.ShowDetails)
+    {
+        @RenderErrorDetails()
+    }
+</div>
+
+@helper RenderErrorDetails()
+{
+     @(Html.Kendo().PanelBar()
+        .Name("ErrorDetails")
+        .Items(panelbar =>
+        {
+            panelbar.Add().Text("Показать подробности")
+            .Content(@<table class="td-formTable" style="margin-top:0">
+                <tr>
+                    <td class="td-formTable-caption" style="width:50px;">Сообщение:</td>
+                    <td><div style="width:385px; word-wrap:break-word;">@Model.Exception.Message</div></td>
+                </tr>
+                <tr>
+                    <td class="td-formTable-caption">Контроллер:</td>
+                    <td>@Model.ControllerName</td>
+                </tr>
+                <tr>
+                    <td class="td-formTable-caption">Метод:</td>
+                    <td>@Model.ActionName</td>
+                </tr>
+                @if (Model.Exception.InnerException != null)
+                {
+                    @:
+                    <tr>
+                        <td class="td-formTable-caption">Внутренняя ошибка:</td>
+                        <td><div style="width:385px; word-wrap:break-word;">@Model.Exception.InnerException.Message</div></td>
+                    </tr>
+                }
+            </table>);
+        })
+    )
+}
+
+<script>
+    $(document).ready(function () {
+        ShowErrorWindow($("#errorContent").detach());
+    });
+</script>

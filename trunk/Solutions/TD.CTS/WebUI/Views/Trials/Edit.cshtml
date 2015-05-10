@@ -121,9 +121,7 @@
                     var saveNotification = $("#SaveNotification").data("kendoNotification");
                     saveNotification.show("Сохранено", "success");
                 },
-                error: function (error) {
-                    alert(error.responseText);
-                }
+                error: AjaxError
             });
         }
     }
@@ -253,9 +251,7 @@
                         $("#TabStrip-3").html(result);
                         window.close();
                     },
-                    error: function (error) {
-                        alert(error.responseText);
-                    }
+                    error: AjaxError
                 });
             }
         });
@@ -273,9 +269,7 @@
                 success: function (result) {
                     $("#TabStrip-3").html(result);
                 },
-                error: function (error) {
-                    alert(error.responseText);
-                }
+                error: AjaxError
             });
         }
     }
@@ -330,7 +324,7 @@
                 error: function (error) {
                     result = false;
                     grid.select(selectedCell);
-                    alert(error.responseText);
+                    AjaxError(error);
                 }
             });
         }

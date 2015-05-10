@@ -51,3 +51,7 @@ input[type="checkbox"]{
     width: 16px;
     height: 16px;
 }
+
+#ErrorWindow td{
+    padding: 0.25em;
+}

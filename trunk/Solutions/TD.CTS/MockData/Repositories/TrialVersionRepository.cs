@@ -19,6 +19,8 @@ namespace TD.CTS.MockData.Repositories
         public override List<TrialVersion> GenerateData()
         {
             var list = new List<TrialVersion>();
+            if (dataProvider == null)
+                return list;
 
             var trial = dataProvider.GetItem(new TrialDataFilter());
 

@@ -165,9 +165,7 @@
                 var saveNotification = $("#SaveNotification").data("kendoNotification");
                 saveNotification.show("Сохранено", "success");
             },
-            error: function (error) {
-                alert(error.responseText);
-            }
+            error: AjaxError
         });
     }
     }
