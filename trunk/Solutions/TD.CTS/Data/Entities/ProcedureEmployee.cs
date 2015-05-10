@@ -3,7 +3,9 @@
 namespace TD.CTS.Data.Entities
 {
     public class ProcedureEmployee : Entity
+    
     {
+        public int Id { get; set; }
         public int ScheduleID { get; set; }
         public int TrialVisitID { get; set; }
         public int TrialCenterID { get; set; }
