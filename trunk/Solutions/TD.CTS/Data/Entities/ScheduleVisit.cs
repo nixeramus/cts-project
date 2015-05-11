@@ -5,6 +5,8 @@ namespace TD.CTS.Data.Entities
 {
     public class ScheduleVisit : Entity
     {
+        //nulable т.к. я возвращаюю и визиты запланированные и не запланированные
+        public int? ScheduleVisitID { get; set; }
         public int ScheduleID { get; set; }
         public int TrialVisitID { get; set; }
         public int TrialCenterID { get; set; }
