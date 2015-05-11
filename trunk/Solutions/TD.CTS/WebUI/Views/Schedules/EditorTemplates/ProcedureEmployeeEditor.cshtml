@@ -12,28 +12,26 @@
             //.Text("Краткая информация")
             .Selected(true)
             .Content(@<text>
-                          @(Html.Kendo().Grid<ProcedureEmployee>().Init("ProcedureEmployeesEditorGrid")
+                          @(Html.Kendo().Grid<ProcedureEmployee>().Init("ProcedureEmployeesEditorGrid").Editable()
                                 .Columns(columns =>
                                 {
-                                    //columns.Template(e => { }).ClientTemplate(@"<a class=""k-button k-button-icon k-grid-edit"" href=""\#"" title=""Изменить""><span class=""k-icon k-edit""></span></a>");
-                                    columns.Command(e => e.Edit()).Width(100);
-                                    //columns.Bound(e => e.ProcedureCode).Title("Код процедуры");
-                                    columns.ForeignKey(e => e.SystemRoleCode, (System.Collections.IEnumerable)ViewBag.SystemRoles, "Code", "Name").Width(100).Title("Роль");
-                                    columns.ForeignKey(e => e.ExecutorLogin, (System.Collections.IEnumerable) ViewBag.Users, "Login", "FullName").Width(100).Title("Исполнитель");
-
+                                    columns.Buttons(buttons => buttons.Edit()).Width(80);
+                                    columns.ForeignKey(e => e.SystemRoleCode, (System.Collections.IEnumerable)ViewBag.SystemRoles, "Code", "Name").Width(200).Title("Роль");
+                                    columns.ForeignKey(e => e.ExecutorLogin, (System.Collections.IEnumerable) ViewBag.Users, "Login", "FullName").Width(250).Title("Исполнитель");
+                                    columns.Template(e => { }).ClientTemplate(" ").Width("100%").HtmlAttributes(new { @class = "k-group-cell" });
                                 })
                                 .DataSource(dataSource => dataSource
                                     .Ajax()
                                     .Model(model =>
                                     {
-                                       model.Id(e => e.ScheduleID);
+                                       model.Id(e => e.Id);
                                        model.Field(e => e.SystemRoleCode).Editable(false);
                                        model.Field(e => e.ExecutorLogin).Editable(true);
                                     })
                                     .Read(read => read.Action("GetProcedureEmployees", "Schedules", new {ScheduleID = Model.Id, TrialCenterID = Model.TrialCenterID, TrialVersionNo = Model.TrialVersionNo}))
-                                    .Update(update => update.Action("UpdateProcedureEmployee", "Schedules", new {ScheduleID = Model.Id, TrialCenterID = Model.TrialCenterID, TrialVersionNo = Model.TrialVersionNo}))
+                                    .Update(update => update.Action("UpdateProcedureEmployee", "Schedules"))
                                     .Events(events => events.Error("kendo_grid_error_handler") /*.RequestEnd("RequestEnd")*/)
-                                    )
+                                            ).Events(e => e.Edit("kendo_grid_onrowedit"))
    
                                 )
                       </text>);
@@ -44,7 +42,7 @@
 
 
 
-    //kendo_grid_init($("#ProcedureEmployeesEditorGrid"));
+    kendo_grid_init($("#ProcedureEmployeesEditorGrid"));
 
     
 
