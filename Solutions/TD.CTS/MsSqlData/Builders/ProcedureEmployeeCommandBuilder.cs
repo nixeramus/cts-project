@@ -41,13 +41,14 @@ namespace TD.CTS.MsSqlData.Builders
                 CommandType = System.Data.CommandType.StoredProcedure,
                 CommandTimeout = Settings.CommandTimeout
             };
-
-            command.Parameters.AddWithValue("@ScheduleID", entity.ScheduleID);
-            command.Parameters.AddWithValue("@TrialVisitID", entity.TrialVisitID);
-            command.Parameters.AddWithValue("@TrialCenterID", entity.TrialCenterID);
-            command.Parameters.AddWithValue("@TrialVersionNo", entity.TrialVersionNo);
-            command.Parameters.AddWithValue("@ProcedureCode", entity.ProcedureCode);
-            command.Parameters.AddWithValue("@SystemRoleCode", entity.SystemRoleCode);
+            
+            //command.Parameters.AddWithValue("@ScheduleID", entity.ScheduleID);
+            //command.Parameters.AddWithValue("@TrialVisitID", entity.TrialVisitID);
+            //command.Parameters.AddWithValue("@TrialCenterID", entity.TrialCenterID);
+            //command.Parameters.AddWithValue("@TrialVersionNo", entity.TrialVersionNo);
+            //command.Parameters.AddWithValue("@ProcedureCode", entity.ProcedureCode);
+            //command.Parameters.AddWithValue("@SystemRoleCode", entity.SystemRoleCode);
+            command.Parameters.AddWithValue("@ProcedureEmployeeID", entity.Id);
             command.Parameters.AddWithValue("@ExecutorLogin", entity.ExecutorLogin);
             return command;
         }
@@ -59,6 +60,7 @@ namespace TD.CTS.MsSqlData.Builders
 
         public override void LoadEntityAttributes(SqlDataReader reader, ProcedureEmployee entity)
         {
+            entity.Id = reader.GetValue<int>("ProcedureEmployeeID");
             entity.ScheduleID = reader.GetValue<int>("ScheduleID");
             entity.TrialVisitID = reader.GetValue<int>("TrialVisitID");
             entity.TrialVersionNo = reader.GetValue<int>("TrialVersionNo");
