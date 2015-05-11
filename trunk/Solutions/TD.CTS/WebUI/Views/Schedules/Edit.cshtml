@@ -58,6 +58,7 @@
                                           .PageSize(20)
                                           .Model(model =>
                                           {
+                                              model.Id(e => e.Id);
                                               model.Id(e => e.ScheduleID); //(e => e.Id);
                                               model.Id(e => e.TrialVisitID); 
                                               model.Field(e => e.TrialCode).DefaultValue(Model.TrialCode);
@@ -80,7 +81,7 @@
                 @(Html.Kendo().Grid<TD.CTS.Data.Entities.ScheduleEmployee>()
                              .Init("EmployeeGrid")
                                       .Editable()
-                                      .HtmlAttributes(new { style = "display:" + (isNew ? "none" : "block") })
+                                      //.HtmlAttributes(new { style = "display:" + (isNew ? "none" : "block") })
                                       .Columns(columns =>
                                       {
                                           columns.Buttons(buttons => buttons.Edit()).Width(80);
@@ -212,7 +213,8 @@
             //SystemRoleCode:'DO',
             //TrialCenterID :2
         };
-
+        
+        //kendo_grid_init($("#ProcedureEmployeesEditorGrid"));
         var tabgrid = $('#ProcedureEmployeesEditorGrid').data("kendoGrid");
         tabgrid.dataSource.read(filter);
         tabgrid.refresh();
