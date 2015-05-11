@@ -16,17 +16,8 @@ namespace TD.CTS.MsSqlData.Builders
             };
 
             var entityFilter = (ScheduleVisitDataFilter)filter;
-
             command.Parameters.AddWithValue("@ScheduleID", entityFilter.ScheduleID.GetNullableParameterValue());
-            //command.Parameters.AddWithValue("@BeginDateBeg", entityFilter.BeginDateBegin.GetNullableParameterValue());
-            //command.Parameters.AddWithValue("@BeginDateEnd", entityFilter.BeginDateEnd.GetNullableParameterValue());
-            //command.Parameters.AddWithValue("@CreateDateBeg", entityFilter.CreateDateBegin.GetNullableParameterValue());
-            //command.Parameters.AddWithValue("@CreateDateEnd", entityFilter.CreateDateEnd.GetNullableParameterValue());
-            //command.Parameters.AddWithValue("@TrialName", entityFilter.TrialName.GetLikeParameterValue());
-            //command.Parameters.AddWithValue("@TrialCenterName", entityFilter.TrialCenterName.GetLikeParameterValue());
-            //command.Parameters.AddWithValue("@PatientFullName", entityFilter.PatientFullName.GetLikeParameterValue());
-            //command.Parameters.AddWithValue("@OwnSchedulesOnly", entityFilter.OwnSchedulesOnly);
-
+            command.Parameters.AddWithValue("@ScheduleVisitID", entityFilter.ScheduleVisitID.GetNullableParameterValue());
             return command;
         }
 
@@ -44,12 +35,12 @@ namespace TD.CTS.MsSqlData.Builders
                 CommandTimeout = Settings.CommandTimeout
             };
 
+            command.Parameters.AddWithValue("@ScheduleVisitID", entity.Id.GetNullableParameterValue());
             command.Parameters.AddWithValue("@ScheduleID", entity.ScheduleID);
             command.Parameters.AddWithValue("@TrialVisitID", entity.TrialVisitID);
             command.Parameters.AddWithValue("@TrialCenterID", entity.TrialCenterID);
             command.Parameters.AddWithValue("@TrialCode", entity.TrialCode);
             command.Parameters.AddWithValue("@TrialVersionNo", entity.TrialVersionNo);
-
             command.Parameters.AddWithValue("@ScheduleDate", entity.ScheduleDate.GetNullableParameterValue());
             command.Parameters.AddWithValue("@ActualDate", entity.ActualDate.GetNullableParameterValue());
             
