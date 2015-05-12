@@ -1,9 +1,17 @@
 ﻿@using TD.Common.Kendo.Mvc5.Common
 @using TD.Common.Kendo.Mvc5.Grid
+@using TD.CTS.Data.Entities
+@using TD.CTS.WebUI.Models
 
 @section head{
     <link href="@Url.Content("~/Content/td/td.kendo.grid.css")" rel="stylesheet" type="text/css" />
     <script src="@Url.Content("~/Scripts/td/td.kendo.grid.js")"></script>
+<style type="text/css">
+    .timewindow-color {
+        background-color: #dbe5f1;
+    }
+</style>
+
 }
 
 @{
@@ -12,18 +20,61 @@
 @(Html.Kendo().Grid<TD.CTS.Data.Entities.SchedulePlaningVisit>()
     .Init("SchedulePlaningVisitsGrid")
     .Editable()
+    .Reorderable(reorderable => reorderable.Columns(false))
     .Columns(columns =>
     {
+        columns.Bound(e => e.TrialCode).Width(80).Title("Код иссл.").Locked(true);
+        columns.Bound(e => e.TrialName).Width(200).Title("Наименование иссл.").Locked(true);
+        columns.Bound(e => e.PatientFullName).Width(250).Title("ФИО пациента").Locked(true);
+        columns.Bound(e => e.TrialVisitName).Width(200).Title("Наименование визита").Locked(true);
+        columns.Bound(e => e.MinDate).Width(100).Title("Дата нач.").Format("{0:dd.MM.yyyy}").Locked(true);
+        columns.Bound(e => e.MaxDate).Width(100).Title("Дата кон.").Format("{0:dd.MM.yyyy}").Locked(true);
+        columns.Bound(e => e.ScheduleDate).Width(100).Title("Дата план").Format("{0:dd.MM.yyyy}").Locked(true);
+        columns.Bound(e => e.VisitEmployees).Width(200).Title("Сотрудники").Locked(true);
+
+        var calend = (ScheduleCalend)ViewBag.Calend;
+         var calendDates = (List<ScheduleCalendDate>)calend.dateList;
+
+         //columns.Group(group => group
+         //     .Title("Contact Info")
+         //     .Columns(info =>
+         //     {
+         //         info.Bound(x => x.ContactTitle).Width(200);
+         //         info.Bound(x => x.ContactName).Width(200);
+         //         info.Group(g => g.Title("Location")
+         //             .Columns(location =>
+         //             {
+         //                 location.Bound(c => c.Country).Width(200);
+         //                 location.Bound(c => c.City).Width(200);
+         //             })
+         //         );
+         //         info.Bound(x => x.Phone);
+         //     })
+         // );
+        foreach (var calendDate in calendDates)
+        {
+            columns.Template(e => { })
+                .ClientTemplate("#= SelectedVisit("+"\"" + calendDate.CalendDate.ToString("dd.MM.yyyy")+"\"" + ", data) #")
+                .HeaderTemplate(string.Format(@"<div style='text-align:center;'></span><input type='hidden' value='{1}'/>{0}</div>", calendDate.CalendDate.ToString("ddd"), calendDate.CalendDate.ToString("dd.MM.yyyy")))
+                .Width(40)
+                .HtmlAttributes(new { style = "text-align:center;" });
+        }
+        columns.Template(e => { }).ClientTemplate(" ").Width("100%").HtmlAttributes(new { @class = "k-group-cell" });
 
 
-        columns.Bound(e => e.TrialCode).Width(100).Title("Код исследования");
-        columns.Bound(e => e.TrialName).Width(200).Title("Наименование исследования");
-        columns.Bound(e => e.PatientFullName).Width(200).Title("ФИО пациента");
-        columns.Bound(e => e.TrialVisitName).Width(200).Title("Наименование визита");
-        columns.Bound(e => e.MinDate).Width(100).Title("Дата нач.").Format("{0:dd.MM.yyyy}");
-        columns.Bound(e => e.MaxDate).Width(100).Title("Дата кон.").Format("{0:dd.MM.yyyy}");
-        columns.Bound(e => e.PatientFullName).Width(100).Title("Дата план").Format("{0:dd.MM.yyyy}");
-        columns.Bound(e => e.VisitEmployees).Width(100).Title("Сотрудники");
+
+//            columns.Template(e => { })
+//                .ClientTemplate(/*"<span style='color:red;'>!</span>"*/"#= SelectedVisit(" + visit.TrialVisitID + ", data) #")
+//                .HeaderTemplate(string.Format(@"<div style='text-align:center;'></span><input type='hidden' value='{2}'/></div>
+//<div style=""text-align:center;"">{0}</div><div style=""text-align:center;"">{1}</div>", visit.TrialVisitName, visit.ScheduleDate.HasValue ? visit.ScheduleDate.Value.Date.ToString("dd.MM.yyyy") : "", visit.TrialVisitID))
+//                .HtmlAttributes(new { style = "text-align:center;" })
+//                .Width(100);
+
+            //            //buttonsRow.Append(@"<th style='text-align:center; style='text-align:right;><a class='k-button k-button-icontext k-grid-edit td-grid-button' href='\#' title='Изменить визит'><span class='k-icon k-edit td-grid-button-image'></span></a>");
+            //            //buttonsRow.Append(@"<a class='k-button k-button-icontext k-grid-delete td-grid-button' href='\#' title='Удалить визит'><span class='k-icon k-delete td-grid-button-image'></span></a></th>");
+        
+
+       
         //columns.Buttons(buttons =>
         //{
         //    buttons.HeaderCustom().Tag(ButtonTag.a).Url(Url.Action("Create", "Schedules")).Title("Добавить").ImageCssClass("k-add");
@@ -70,21 +121,25 @@
             model.Id(e => e.ScheduleID);
             model.Id(e => e.TrialVisitID); 
         })
-                     .Read(read => read.Action("GetVisits", "SchedulesPlanning").Data("kendo_grid_getfilters"))
-        //.Create(create => create.Action("AddTrial", "Trials"))
+        .Read(read => read.Action("GetVisits", "SchedulesPlanning").Data("kendo_grid_getfilters"))
         //.Update(update => update.Action("UpdateTrial", "Trials"))
-        //.Destroy(destroy => destroy.Action("DeleteSchedule", "Schedules"))
         .Events(events => events.Error("kendo_grid_error_handler"))
      )
-        //.Events(events => events.Edit("kendo_grid_onrowedit"))
+   .Events(events => events.DataBound("onDataBound"))
 
 )
 <script>
+  
     $(document).ready(function () {
+       // var grid = $("#SchedulePlaningVisitsGrid");
+        //kendo_grid_init(grid, true, '@Html.Raw(filterRow.HtmlFilterRow())');
         var grid = $("#SchedulePlaningVisitsGrid");
-        kendo_grid_init(grid, true, '@Html.Raw(filterRow.HtmlFilterRow())');
+        kendo_grid_init(grid,1);
 
-        @*grid.find(".td-grid-add.td-grid-button").click(function () {
+
+
+
+                @*grid.find(".td-grid-add.td-grid-button").click(function () {
             $().redirect("@Url.Action("Edit", "Schedules")");
         });
 
@@ -92,5 +147,87 @@
             $().redirect("@Url.Action("Edit", "Schedules")", { Id: $(this).val() });
         });*@
     });
+    function SelectedVisit(calendDateStr, data) {
+        var calendDate = kendo.parseDate(calendDateStr, "dd.MM.yyyy");
+        var retStr = "";
+        //Проверяем входит ли заданная дата из колонки в окнео визита
+        if (calendDate >= data.MinDate && calendDate <= data.MaxDate) {
+            retStr = "<div class='timewindow'></div>";
+        }
+        if (calendDate.getTime() == data.ScheduleDate.getTime()) {
+            retStr = "<div class='timewindow'>" +
+                "<input type=\"checkbox\" class=\"k-checkbox\" checked=\"checked\" value=\"" + calendDateStr + "\" style=\"margin:0;\" />" +//display:none;
+                "</div>";
+        }
+            
 
+        //var btn = String.format("<button onclick=\"OpenProceduereEmployeeWindow(\'" + visitId + "','" + data.ProcedureCode + "')\" style=\"color:{0}; border:none; background-color:transparent;\" >{1}</button>", 'green', 'v');
+        //if ($.inArray(visitId, data.VisitIds) !== -1) {
+
+        //    return btn;
+        //return "<span style='color:green;'>V</span>"; //"<input type=\"checkbox\" value=\"" + visitId + "\" checked style=\"display:none;margin:0;\" /><span class=\"k-icon k-i-tick\"></span>";
+        //}
+        return retStr;
+        //return "<button onclick='OpenProceduereEmployeeWindow()' style='color:red; border:none; background-color:transperent;' >!</button>";
+        //return "<span style='color:red;'>!</span>";//<input type=\"checkbox\" value=\"" + visitId + "\" style=\"display:none;margin:0;\" />
+        // return "<input class=\"td-visit-checkbox\" type=\"checkbox\" value=\"" + visitId + "\" checked style=\"display:none;margin:0;\" /><span class=\"k-icon k-i-tick\"></span>";
+
+    }
+    function onDataBound(arg) {
+        $('.timewindow').parents('td').addClass("timewindow-color");
+        //$('td').each(function() {
+        //    if ($(this).text() == 'Jane') {
+        //        $(this).addClass('customClass');
+        //    }
+        //});
+
+
+        var grid = $("#SchedulePlaningVisitsGrid").data("kendoGrid");
+        var data = grid.dataSource.data();
+
+        $.each(data, function (i, row) {
+            var status = row.RankState;
+
+            if (status == 1) {
+                $('tr[data-uid="' + row.uid + '"] ').css("color", "orange"); //green
+            }
+            if (status == 2)
+            {
+                $('tr[data-uid="' + row.uid + '"] ').css("color", "red");  //yellow
+            }
+
+
+        });
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        var myElem = document.getElementById('trParentHeader');
+        if (myElem == null) {
+            $("#SchedulePlaningVisitsGrid").find("th.k-header").parent().last().before("<tr id='trParentHeader'> " +
+                " <th colspan='7' class='k-header'>01.01.2015</th> " +
+                " <th scope='col' colspan='7' class='k-header'>08.01.2015</th>" +
+                 " <th scope='col' colspan='7' class='k-header'>12.01.2015</th>" +
+                "</tr>");
+        }
+    }
 </script>
