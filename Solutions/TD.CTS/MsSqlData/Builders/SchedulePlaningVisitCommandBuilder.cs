@@ -38,40 +38,42 @@ namespace TD.CTS.MsSqlData.Builders
 
         public override SqlCommand CreateUpdateCommand(SqlConnection connection, SchedulePlaningVisit entity)
         {
-            var command = new SqlCommand("ScheduleVisitUpd", connection)
-            {
-                CommandType = System.Data.CommandType.StoredProcedure,
-                CommandTimeout = Settings.CommandTimeout
-            };
+            throw new NotImplementedException();
+            //var command = new SqlCommand("ScheduleVisitUpd", connection)
+            //{
+            //    CommandType = System.Data.CommandType.StoredProcedure,
+            //    CommandTimeout = Settings.CommandTimeout
+            //};
 
-            command.Parameters.AddWithValue("@ScheduleID", entity.ScheduleID);
-            command.Parameters.AddWithValue("@TrialVisitID", entity.TrialVisitID);
-            command.Parameters.AddWithValue("@TrialCenterID", entity.TrialCenterID);
-            command.Parameters.AddWithValue("@TrialCode", entity.TrialCode);
-            command.Parameters.AddWithValue("@TrialVersionNo", entity.TrialVersionNo);
+            //command.Parameters.AddWithValue("@ScheduleID", entity.ScheduleID);
+            //command.Parameters.AddWithValue("@TrialVisitID", entity.TrialVisitID);
+            //command.Parameters.AddWithValue("@TrialCenterID", entity.TrialCenterID);
+            //command.Parameters.AddWithValue("@TrialCode", entity.TrialCode);
+            //command.Parameters.AddWithValue("@TrialVersionNo", entity.TrialVersionNo);
 
-            command.Parameters.AddWithValue("@ScheduleDate", entity.ScheduleDate.GetNullableParameterValue());
-            command.Parameters.AddWithValue("@ActualDate", entity.ActualDate.GetNullableParameterValue());
+            //command.Parameters.AddWithValue("@ScheduleDate", entity.ScheduleDate.GetNullableParameterValue());
+            //command.Parameters.AddWithValue("@ActualDate", entity.ActualDate.GetNullableParameterValue());
             
 
-            return command;
+            //return command;
         }
 
         public override SqlCommand CreateDeleteCommand(SqlConnection connection, SchedulePlaningVisit entity)
         {
-             var command = new SqlCommand("ScheduleVisitDel", connection)
-            {
-                CommandType = System.Data.CommandType.StoredProcedure,
-                CommandTimeout = Settings.CommandTimeout
-            };
+            throw new NotImplementedException();
+            // var command = new SqlCommand("ScheduleVisitDel", connection)
+            //{
+            //    CommandType = System.Data.CommandType.StoredProcedure,
+            //    CommandTimeout = Settings.CommandTimeout
+            //};
 
-            command.Parameters.AddWithValue("@ScheduleID", entity.ScheduleID);
-            command.Parameters.AddWithValue("@TrialVisitID", entity.TrialVisitID);
-            command.Parameters.AddWithValue("@TrialCenterID", entity.TrialCenterID);
-            command.Parameters.AddWithValue("@TrialCode", entity.TrialCode);
-            command.Parameters.AddWithValue("@TrialVersionNo", entity.TrialVersionNo);
+            //command.Parameters.AddWithValue("@ScheduleID", entity.ScheduleID);
+            //command.Parameters.AddWithValue("@TrialVisitID", entity.TrialVisitID);
+            //command.Parameters.AddWithValue("@TrialCenterID", entity.TrialCenterID);
+            //command.Parameters.AddWithValue("@TrialCode", entity.TrialCode);
+            //command.Parameters.AddWithValue("@TrialVersionNo", entity.TrialVersionNo);
 
-            return command;
+            //return command;
         }
 
 
@@ -89,6 +91,11 @@ namespace TD.CTS.MsSqlData.Builders
             entity.VisitNo = reader.GetValue<int>("VisitNo");
             entity.BaseDay = reader.GetValue<int>("BaseDay");
             entity.Limit = reader.GetValue<int>("Limit");
+
+            entity.PatientFullName = reader.GetString("PatientFullName");
+            entity.MinDate = reader.GetValue<DateTime>("MinDate");
+            entity.MaxDate = reader.GetValue<DateTime>("MaxDate");
+            entity.RankState = reader.GetValue<int>("RankState");
         }
 
         public override void LoadNewEntityAttributes(SqlDataReader reader, SchedulePlaningVisit entity)
