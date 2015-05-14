@@ -162,6 +162,8 @@
     <Compile Include="Models\ScheduleProcedure.cs" />
     <Compile Include="Models\TaskSchedulerEvent.cs" />
     <Compile Include="Models\TaskViewModel.cs" />
+    <Compile Include="Models\TrialProcedureViewModel.cs" />
+    <Compile Include="Models\TrialVisitMaterialViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

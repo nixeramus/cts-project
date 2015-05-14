@@ -1,16 +1,14 @@
 ﻿@using TD.Common.Kendo.Mvc5.Grid
 
-@model string
-
-@(Html.Kendo().Grid<TD.CTS.Data.Entities.TrialProcedure>()
+@(Html.Kendo().Grid<TD.CTS.WebUI.Models.TrialProcedureViewModel>()
     .Name("ProceduresGrid")
     .Selectable(select => select.Type(GridSelectionType.Cell))
     .Editable()
     .Columns(columns =>
     {
-        columns.ButtonsCrud()
-            .HeaderHtmlAttributes(new { style = "min-width:60px;vertical-align:bottom;text-align:right;" })
-            .HtmlAttributes(new { @class = "k-group-cell" });
+        columns.Buttons(buttons => { buttons.Add(); buttons.Delete(); })
+            .HeaderHtmlAttributes(new { style = "vertical-align:bottom;" })
+            .HtmlAttributes(new { @class = "k-group-cell" }).Width(60);
         columns.ForeignKey(e => e.ProcedureCode, (System.Collections.IEnumerable)ViewBag.Procedures, "Code", "Name")
             .Width(400)
             .Filterable(false)
@@ -38,12 +36,9 @@
        {
            model.Id(e => e.Id);
            model.Field(e => e.ProcedureCode).Editable(false);
-           model.Field(e => e.TrialCode).DefaultValue(Model);
-           model.Field(e => e.VisitIds).DefaultValue(new List<int>());
        })
-       .Read(read => read.Action("GetTrialProcedures", "Trials", new { TrialCode = Model }))
+       .Read(read => read.Action("GetTrialProcedures", "Trials").Data("GetTrialCode"))
        .Create(create => create.Action("AddTrialProcedure", "Trials"))
-       .Update(update => update.Action("UpdateTrialProcedure", "Trials"))
        .Destroy(destroy => destroy.Action("DeleteTrialProcedure", "Trials"))
        .Events(events => events
            .Error("kendo_grid_error_handler").RequestEnd("RequestEnd"))
@@ -57,20 +52,24 @@
 
 <div id="VisitMaterials" style="display:none;">
     <h4>Материалы</h4>
-    @(Html.Kendo().Grid<TD.CTS.Data.Entities.TrialVisitMaterial>()
+    @(Html.Kendo().Grid<TD.CTS.WebUI.Models.TrialVisitMaterialViewModel>()
         .Name("VisitMaterialsGrid")
         .Editable()
         .AutoBind(false)
         .Scrollable()
         .Columns(columns =>
         {
-            columns.ButtonsCrud().HeaderHtmlAttributes(new { style = "text-align:right;" });
+            columns.Buttons(buttons =>
+            {
+                buttons.Add();
+                buttons.Delete();
+            }).Width(50).HeaderHtmlAttributes(new { style = "text-align:right;" });
             columns.Bound(e => e.TrialMaterialId)
                 .ClientTemplate("#= MaterialName #")
                 .EditorTemplateName("VisitMaterialEditor")
                 .Width(250).Title("Наименование материала");
 
-            columns.Bound(e => e.Quantity).Width(120).Title("Количество");
+            //columns.Bound(e => e.Quantity).Width(120).Title("Количество");
             columns.Template(e => { }).ClientTemplate(" ").Width("100%");
         })
         .DataSource(dataSource => dataSource
@@ -78,15 +77,18 @@
            .Model(model =>
            {
                model.Id(e => e.Id);
-               model.Field(e => e.Quantity).DefaultValue(1);
+               //model.Field(e => e.Quantity).DefaultValue(1);
            })
            .Read(read => read.Action("GetTrialVisitMaterials", "Trials").Data("VisitMaterialsData"))
            .Create(create => create.Action("AddTrialVisitMaterial", "Trials"))
-           .Update(update => update.Action("UpdateTrialVisitMaterial", "Trials"))
            .Destroy(destroy => destroy.Action("DeleteTrialVisitMaterial", "Trials"))
-           .Events(events => events.Error("kendo_grid_error_handler"))
+           .Events(events => events.Error("kendo_grid_error_handler").RequestEnd("OnVisitMaterialRequestEnd"))
         )
-        .Events(events => events.Edit("kendo_grid_onrowedit").Save("OnVisitMaterialsSave"))
+        .Events(events => events
+            .Edit("OnVisitMaterialEdit")
+            .Save("OnVisitMaterialsSave")
+            .Cancel("OnVisitMaterialCancel"))
+        .AutoBind(false)
     )
 </div>
 
@@ -109,7 +111,7 @@
         {
             source.Read(read =>
             {
-                read.Action("GetProcedures", "Trials", new { TrialCode = Model }).Data("GetTrialProcedureId");
+                read.Action("GetProcedures", "Trials").Data("GetTrialCode");
             });
         })
         .Value("#: value #")
@@ -118,7 +120,6 @@
 </script>
 
 <script>
-    kendo_grid_init($("#ProceduresGrid"));
     var procGrid = $("#ProceduresGrid");
 
     procGrid.on("click", ".k-grid-add.td-grid-button", function () {
@@ -144,18 +145,8 @@
         DeleteVisit(id);
     });
 
-    kendo_grid_init($("#VisitMaterialsGrid"));
-    var materialsGrid = $("#VisitMaterialsGrid");
     $("#VisitMaterialsGrid .k-grid-add.td-grid-button").click(function () {
-        kendo_grid_createrow(materialsGrid);
-    });
-
-    procGrid.on("change", ".td-visit-checkbox", function () {
-        if ($(this).is(":checked")) {
-            $("#VisitMaterials").show();
-        } else {
-            $("#VisitMaterials").hide();
-        }
+        kendo_grid_createrow($("#VisitMaterialsGrid"));
     });
 
 </script>

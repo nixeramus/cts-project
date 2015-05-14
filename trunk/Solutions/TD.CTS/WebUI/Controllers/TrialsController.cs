@@ -26,7 +26,7 @@ namespace TD.CTS.WebUI.Controllers
 
         public ActionResult GetTrials([DataSourceRequest]DataSourceRequest request, TrialDataFilter dataFilter)
         {
-            var response = DataProvider.GetList(dataFilter ?? new TrialDataFilter());
+            var response = DataProvider.GetList(dataFilter);
 
             return Json(response.ToDataSourceResult(request));
         }

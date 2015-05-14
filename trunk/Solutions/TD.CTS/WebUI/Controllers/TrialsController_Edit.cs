@@ -8,6 +8,7 @@ using System.Web.Mvc;
 using TD.CTS.Data.Entities;
 using TD.CTS.Data.Filters;
 using TD.CTS.WebUI.Common;
+using TD.CTS.WebUI.Models;
 
 namespace TD.CTS.WebUI.Controllers
 {
@@ -50,9 +51,9 @@ namespace TD.CTS.WebUI.Controllers
         }
 
         #region TrialCenters
-        public ActionResult GetTrialCenters([DataSourceRequest]DataSourceRequest request, string trialCode)
+        public ActionResult GetTrialCenters([DataSourceRequest]DataSourceRequest request, TrialCenterDataFilter dataFilter)
         {
-            var response = string.IsNullOrEmpty(trialCode) ? new List<TrialCenter>() : DataProvider.GetList(new TrialCenterDataFilter { TrialCode = trialCode });
+            var response = DataProvider.GetList(dataFilter);
 
             return Json(response.ToDataSourceResult(request));
         }
@@ -94,9 +95,9 @@ namespace TD.CTS.WebUI.Controllers
 
         #region TrialMaterials
 
-        public ActionResult GetTrialMaterials([DataSourceRequest]DataSourceRequest request, string trialCode)
+        public ActionResult GetTrialMaterials([DataSourceRequest]DataSourceRequest request, TrialMaterialDataFilter dataFilter)
         {
-            var response = DataProvider.GetList(new TrialMaterialDataFilter { TrialCode = trialCode });
+            var response = DataProvider.GetList(dataFilter);
 
             return Json(response.ToDataSourceResult(request));
         }
@@ -138,9 +139,14 @@ namespace TD.CTS.WebUI.Controllers
 
         #region TrialProcedures
 
-        public ActionResult GetTrialProcedures([DataSourceRequest]DataSourceRequest request, string trialCode)
+        public ActionResult GetTrialProcedures([DataSourceRequest]DataSourceRequest request, TrialProcedureDataFilter dataFilter)
         {
-            var response = DataProvider.GetList(new TrialProcedureDataFilter { TrialCode = trialCode });
+            var visits = DataProvider.GetList(new TrialProcedureVisitDataFilter 
+            { 
+                TrialCode = dataFilter.TrialCode, 
+                TrialVersionId = dataFilter.TrialVersionId 
+            });
+            var response = DataProvider.GetList(dataFilter).Select(p => TrialProcedureViewModel.Create(p, visits));
 
             return Json(response.ToDataSourceResult(request));
         }
@@ -157,17 +163,6 @@ namespace TD.CTS.WebUI.Controllers
         }
 
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult UpdateTrialProcedure([DataSourceRequest] DataSourceRequest request, TrialProcedure trialProcedure)
-        {
-            if (trialProcedure != null && ModelState.IsValid)
-            {
-                DataProvider.Update(trialProcedure);
-            }
-
-            return Json(new[] { trialProcedure }.ToDataSourceResult(request, ModelState));
-        }
-
-        [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult DeleteTrialProcedure([DataSourceRequest] DataSourceRequest request, TrialProcedure trialProcedure)
         {
             if (trialProcedure != null)
@@ -178,19 +173,19 @@ namespace TD.CTS.WebUI.Controllers
             return Json(new[] { trialProcedure }.ToDataSourceResult(request, ModelState));
         }
 
-        public ActionResult GetProceduresEditor(string trialCode)
+        public ActionResult GetProceduresEditor(string trialCode, int trialVersionId)
         {
             ViewBag.Procedures = DataProvider.GetList(new ProcedureDataFilter());
 
-            ViewBag.Visits = DataProvider.GetList(new TrialVisitDataFilter { TrialCode = trialCode }).OrderBy(v => v.Days);
+            ViewBag.Visits = DataProvider.GetList(new TrialVisitDataFilter { TrialCode = trialCode, TrialVersionId = trialVersionId })
+                .OrderBy(v => v.Days);
 
-            return PartialView("EditorTemplates/ProceduresEditor", trialCode);
+            return PartialView("EditorTemplates/ProceduresEditor");
         }
 
-        public JsonResult GetProcedures(string trialCode, int trialProcedureId)
+        public JsonResult GetProcedures(TrialProcedureDataFilter dataFilter)
         {
-            var exists = DataProvider.GetList(new TrialProcedureDataFilter { TrialCode = trialCode })
-                .Where(p => p.Id != trialProcedureId)
+            var exists = DataProvider.GetList(dataFilter)
                 .Select(p => p.ProcedureCode)
                 .ToList();
 
@@ -204,7 +199,7 @@ namespace TD.CTS.WebUI.Controllers
 
         #region TrialVisits
 
-        public ActionResult GetVisitEditor(int? id, string trialCode)
+        public ActionResult GetVisitEditor(int? id, string trialCode, int trialVersionId)
         {
             TrialVisit visit;
             if (id.HasValue)
@@ -216,7 +211,7 @@ namespace TD.CTS.WebUI.Controllers
             }
             else
             {
-                visit = new TrialVisit { TrialCode = trialCode };
+                visit = new TrialVisit { TrialCode = trialCode, TrialVersionId = trialVersionId };
                 ViewBag.IsNew = true;
             }
 
@@ -231,7 +226,7 @@ namespace TD.CTS.WebUI.Controllers
                 DataProvider.Add(trialVisit);
             }
 
-            return GetProceduresEditor(trialVisit.TrialCode);
+            return GetProceduresEditor(trialVisit.TrialCode, trialVisit.TrialVersionId);
         }
 
         [AcceptVerbs(HttpVerbs.Post)]
@@ -242,31 +237,52 @@ namespace TD.CTS.WebUI.Controllers
                 DataProvider.Update(trialVisit);
             }
 
-            return GetProceduresEditor(trialVisit.TrialCode);
+            return GetProceduresEditor(trialVisit.TrialCode, trialVisit.TrialVersionId);
         }
 
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult DeleteTrailVisit(TrialVisit trialVisit)
         {
             DataProvider.Delete(trialVisit);
-            
-            return GetProceduresEditor(trialVisit.TrialCode);
+
+            return GetProceduresEditor(trialVisit.TrialCode, trialVisit.TrialVersionId);
         }
 
-        public ActionResult GetTrialVisits([DataSourceRequest]DataSourceRequest request, string trialCode)
+        public ActionResult GetTrialVisits([DataSourceRequest]DataSourceRequest request, TrialVisitDataFilter dataFilter)
         {
-            var response = DataProvider.GetList(new TrialVisitDataFilter { TrialCode = trialCode }).OrderBy(v => v.Days);
+            var response = DataProvider.GetList(dataFilter).OrderBy(v => v.Days);
 
             return Json(response.ToDataSourceResult(request));
         }
 
         #endregion
 
+        #region TrialProcedureVisit
+
+        public ActionResult AddTrialProcedureVisit(TrialProcedureVisit visit)
+        { 
+            DataProvider.Add(visit);
+
+            return Json(visit);
+        }
+
+        public ActionResult DeleteTrialProcedureVisit(TrialProcedureVisit visit)
+        {
+            DataProvider.Delete(visit);
+
+            return Json(visit);
+        }
+
+        #endregion
+
         #region TrialVisitMaterials
 
-        public ActionResult GetTrialVisitMaterials([DataSourceRequest]DataSourceRequest request, string procedureCode, int trialVisitId)
+        public ActionResult GetTrialVisitMaterials([DataSourceRequest]DataSourceRequest request, TrialVisitMaterialDataFilter dataFilter)
         {
-            var list = DataProvider.GetList(new TrialVisitMaterialDataFilter { ProcedureCode = procedureCode, TrialVisitId = trialVisitId });
+            var list = DataProvider.GetList(dataFilter)
+                .Join(DataProvider.GetList(new TrialMaterialDataFilter{ TrialCode = dataFilter.TrialCode}), 
+                    vm => vm.TrialMaterialId, m => m.Id,
+                    (vm, m) => TrialVisitMaterialViewModel.Create(vm, m.Name));
 
             return Json(list.ToDataSourceResult(request));
         }
@@ -279,18 +295,10 @@ namespace TD.CTS.WebUI.Controllers
                 DataProvider.Add(trialVisitMaterial);
             }
 
-            return Json(new[] { trialVisitMaterial }.ToDataSourceResult(request, ModelState));
-        }
+            var material = DataProvider.GetItem(new TrialMaterialDataFilter { Id = trialVisitMaterial.TrialMaterialId });
 
-        [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult UpdateTrialVisitMaterial([DataSourceRequest] DataSourceRequest request, TrialVisitMaterial trialVisitMaterial)
-        {
-            if (trialVisitMaterial != null && ModelState.IsValid)
-            {
-                DataProvider.Update(trialVisitMaterial);
-            }
-
-            return Json(new[] { trialVisitMaterial }.ToDataSourceResult(request, ModelState));
+            return Json(new[] { TrialVisitMaterialViewModel.Create(trialVisitMaterial, material == null ? null : material.Name )}
+                .ToDataSourceResult(request, ModelState));
         }
 
         [AcceptVerbs(HttpVerbs.Post)]
@@ -304,12 +312,10 @@ namespace TD.CTS.WebUI.Controllers
             return Json(new[] { trialVisitMaterial }.ToDataSourceResult(request, ModelState));
         }
 
-        public ActionResult GetTrialMaterialsDict(string trialCode)
+        public ActionResult GetTrialMaterialsDict(TrialMaterialDataFilter dataFilter)
         {
-            var trialMaterials = DataProvider.GetList(new TrialMaterialDataFilter { TrialCode = trialCode });
-            //var materials = DataProvider.GetList(new MaterialDataFilter());
-            //var dict = trialMaterials.Join(materials, tm => tm.MaterialId, m => m.Id, (tm, m) => new { tm.Id, m.Name });
-
+            var trialMaterials = DataProvider.GetList(dataFilter);
+            
             return Json(trialMaterials);
         }
 

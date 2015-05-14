@@ -26,17 +26,17 @@ namespace TD.CTS.WebUI.Controllers
 
         #region TrialCenterProcedureRole
 
-        public ActionResult GetTrialCenterProcedureRoles([DataSourceRequest]DataSourceRequest request, int trialProcedureId)
+        public ActionResult GetTrialCenterProcedureRoles([DataSourceRequest]DataSourceRequest request, TrialCenterProcedureRoleDataFilter filter)
         {
-            var response = DataProvider.GetList(new TrialCenterProcedureRoleDataFilter { TrialProcedureId = trialProcedureId });
+            var response = DataProvider.GetList(filter);//new TrialCenterProcedureRoleDataFilter { ProcedureCode = trialProcedureId });
 
             return Json(response.ToDataSourceResult(request));
         }
 
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult AddTrialCenterProcedureRole([DataSourceRequest] DataSourceRequest request, TrialCenterProcedureRole role, int procedureId)
+        public ActionResult AddTrialCenterProcedureRole([DataSourceRequest] DataSourceRequest request, TrialCenterProcedureRole role)//, int procedureId)
         {
-            role.TrialProcedureId = procedureId;
+            //role.TrialProcedureId = procedureId;
             if (role != null && ModelState.IsValid)
             {
                 DataProvider.Add(role);
@@ -45,16 +45,16 @@ namespace TD.CTS.WebUI.Controllers
             return Json(new[] { role }.ToDataSourceResult(request, ModelState));
         }
 
-        [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult UpdateTrialCenterProcedureRole([DataSourceRequest] DataSourceRequest request, TrialCenterProcedureRole role)
-        {
-            if (role != null && ModelState.IsValid)
-            {
-                DataProvider.Update(role);
-            }
+        //[AcceptVerbs(HttpVerbs.Post)]
+        //public ActionResult UpdateTrialCenterProcedureRole([DataSourceRequest] DataSourceRequest request, TrialCenterProcedureRole role)
+        //{
+        //    if (role != null && ModelState.IsValid)
+        //    {
+        //        DataProvider.Update(role);
+        //    }
 
-            return Json(new[] { role }.ToDataSourceResult(request, ModelState));
-        }
+        //    return Json(new[] { role }.ToDataSourceResult(request, ModelState));
+        //}
 
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult DeleteTrialCenterProcedureRole([DataSourceRequest] DataSourceRequest request, TrialCenterProcedureRole role)

@@ -63,3 +63,15 @@ function kendo_grid_onpopupedit(e) {
     e.container.find("a.k-grid-update").html("<span class='k-icon k-update'></span>Сохранить");
     e.container.find("a.k-grid-cancel").html("<span class='k-icon k-cancel'></span>Отменить");
 }
+
+function kendo_grid_resizeColumn(grid, index, width) {
+    //$("#grid .k-grid-header-wrap").find("colgroup col") //header
+    grid.find(".k-grid-header colgroup col")
+       .eq(index)
+       .css({ width: width });
+
+    //$("#grid .k-grid-content").find("colgroup col") //content
+    grid.find(".k-grid-content colgroup col")
+       .eq(index)
+       .css({ width: width });
+}

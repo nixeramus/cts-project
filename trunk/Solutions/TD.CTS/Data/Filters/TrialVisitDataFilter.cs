@@ -13,6 +13,6 @@ namespace TD.CTS.Data.Filters
 
         public string TrialCode { get; set; }
 
-        public string Name { get; set; }
+        public int? TrialVersionId { get; set; }
     }
 }

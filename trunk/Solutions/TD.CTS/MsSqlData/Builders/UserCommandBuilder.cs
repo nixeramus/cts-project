@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Data.SqlTypes;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml;
 using TD.CTS.Data.Entities;
 using TD.CTS.Data.Filters;
 using TD.CTS.Data.Helpers;
@@ -23,7 +17,7 @@ namespace TD.CTS.MsSqlData.Builders
                 CommandTimeout = Settings.CommandTimeout
             };
 
-            var entityFilter = (UserDataFilter)filter;
+            var entityFilter = (UserDataFilter)filter ?? new UserDataFilter();
 
             command.Parameters.AddWithValue("@SystemLogin", entityFilter.Login.GetNullableParameterValue());
             command.Parameters.AddWithValue("@HospitalID", entityFilter.HospitalId.GetNullableParameterValue());

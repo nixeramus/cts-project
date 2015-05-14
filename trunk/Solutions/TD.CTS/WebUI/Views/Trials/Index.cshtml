@@ -22,8 +22,8 @@
             buttons.HeaderCustom().Tag(ButtonTag.a).Url(Url.Action("Edit", "Trials")).Title("Добавить").ImageCssClass("k-add");
             buttons.Custom().Tag(ButtonTag.a).Url(Url.Action("Edit", "Trials") + "/#:Code#").Title("Изменить").ImageCssClass("k-edit");
             buttons.Delete();
-            buttons.Custom().Tag(ButtonTag.a).Url(Url.Action("RolesEdit", "Trials") + "/#:Code#").Title("Роли и стоимость").ImageCssClass("k-i-custom");
-        }, filterRow).Width(110);
+            //buttons.Custom().Tag(ButtonTag.a).Url(Url.Action("RolesEdit", "Trials") + "/#:Code#").Title("Роли и стоимость").ImageCssClass("k-i-custom");
+        }, filterRow).Width(80);//110);
         columns.Bound(e => e.Name, filterRow).Width(200).Title("Наименование");
         columns.Bound(e => e.Status).Width(100).Title("Статус");
         filterRow.AddCell(new EmptyFilterCell());

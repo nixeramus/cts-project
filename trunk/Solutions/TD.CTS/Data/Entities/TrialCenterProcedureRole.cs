@@ -15,7 +15,11 @@ namespace TD.CTS.Data.Entities
         public int TrialCenterId { get; set; }
 
         [Required(ErrorMessage = "Процедура не выбрана")]
-        public int TrialProcedureId { get; set; }
+        public string ProcedureCode { get; set; }
+
+        public string TrialCode { get; set; }
+
+        public int TrialVersionId { get; set; }
 
         [Required(ErrorMessage = "Роль не выбрана")]
         public string RoleCode { get; set; }

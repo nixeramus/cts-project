@@ -1,14 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Data.SqlTypes;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Xml;
 using TD.CTS.Data.Entities;
 using TD.CTS.Data.Filters;
-using TD.CTS.Data.Helpers;
 
 namespace TD.CTS.MsSqlData.Builders
 {
@@ -22,7 +15,7 @@ namespace TD.CTS.MsSqlData.Builders
                 CommandTimeout = Settings.CommandTimeout
             };
 
-            var entityFilter = (TaskDataFilter)filter;
+            var entityFilter = (TaskDataFilter)filter ?? new TaskDataFilter();
 
             command.Parameters.AddWithValue("@ScheduleVisitProcedureID", entityFilter.Id.GetNullableParameterValue());
             command.Parameters.AddWithValue("@ScheduleDateBegin", entityFilter.VisitDateBegin.GetNullableParameterValue());

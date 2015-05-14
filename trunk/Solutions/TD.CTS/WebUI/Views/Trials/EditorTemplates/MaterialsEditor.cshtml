@@ -2,6 +2,10 @@
 
 @model string
 
+@{
+    var isNew = ViewBag.IsNew;
+}
+
 @(Html.Kendo().Grid<TD.CTS.Data.Entities.TrialMaterial>()
     .Init("MaterialsGrid")
     .Editable()
@@ -9,7 +13,6 @@
     {
         columns.ButtonsCrud();
         columns.Bound(e => e.Name).Width("100%").Title("Наименование материала");
-        //columns.ForeignKey(e => e.MaterialId, (System.Collections.IEnumerable)ViewBag.Materials, "Id", "Name").Width("100%").Title("Наименование материала");
     })
     .DataSource(dataSource => dataSource
        .Ajax()
@@ -19,11 +22,12 @@
            model.Id(e => e.Id);
            model.Field(e => e.TrialCode).DefaultValue(Model);
        })
-       .Read(read => read.Action("GetTrialMaterials", "Trials", new { TrialCode = Model }))
+       .Read(read => read.Action("GetTrialMaterials", "Trials").Data("GetTrialCode"))
        .Create(create => create.Action("AddTrialMaterial", "Trials"))
        .Update(update => update.Action("UpdateTrialMaterial", "Trials"))
        .Destroy(destroy => destroy.Action("DeleteTrialMaterial", "Trials"))
        .Events(events => events.Error("kendo_grid_error_handler"))
     )
     .Events(events => events.Edit("kendo_grid_onrowedit"))
+    .AutoBind(!isNew)
 )

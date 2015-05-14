@@ -1,15 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Data.SqlTypes;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml;
+﻿using System.Data.SqlClient;
 using TD.CTS.Data.Entities;
 using TD.CTS.Data.Filters;
-using TD.CTS.Data.Helpers;
 
 namespace TD.CTS.MsSqlData.Builders
 {
@@ -23,7 +14,7 @@ namespace TD.CTS.MsSqlData.Builders
                 CommandTimeout = Settings.CommandTimeout
             };
 
-            var entityFilter = (TrialCenterDataFilter)filter;
+            var entityFilter = (TrialCenterDataFilter)filter ?? new TrialCenterDataFilter { Id = -1 };
 
             command.Parameters.AddWithValue("@TrialCode", entityFilter.TrialCode.GetNullableParameterValue());
             command.Parameters.AddWithValue("@TrialCenterID", entityFilter.Id.GetNullableParameterValue());
