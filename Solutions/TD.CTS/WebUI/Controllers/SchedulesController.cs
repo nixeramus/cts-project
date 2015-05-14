@@ -3,6 +3,7 @@ using System.Linq;
 using System.Web.Mvc;
 using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI;
+using TD.Common.Data.Exceptions;
 using TD.CTS.Data.Entities;
 using TD.CTS.Data.Filters;
 using TD.CTS.WebUI.Models;
@@ -187,7 +188,14 @@ namespace TD.CTS.WebUI.Controllers
         {
             if (scheduleVisit != null && ModelState.IsValid)
             {
-                DataProvider.Update(scheduleVisit);
+                if (scheduleVisit.Id.HasValue)
+                {
+                    DataProvider.Update(scheduleVisit);
+                }
+                else
+                {
+                    DataProvider.Add(scheduleVisit);
+                }
             }
 
             return Json(new[] { scheduleVisit }.ToDataSourceResult(request, ModelState));
@@ -198,6 +206,8 @@ namespace TD.CTS.WebUI.Controllers
         {
             if (scheduleVisit != null)
             {
+                if (!scheduleVisit.Id.HasValue)
+                    throw new DataException("Невозможно удалить дату у незапланированного визита ");
                 DataProvider.Delete(scheduleVisit);
             }
 
@@ -265,6 +275,18 @@ namespace TD.CTS.WebUI.Controllers
             return Json(new[] { scheduleEmployee }.ToDataSourceResult(request, ModelState));
         }
         #endregion
+
+
+
+        public ActionResult DeleteScheduleEmployee([DataSourceRequest] DataSourceRequest request, ScheduleEmployee scheduleEmployee)
+        {
+            if (scheduleEmployee != null)
+            {
+                DataProvider.Delete(scheduleEmployee);
+            }
+
+            return Json(new[] { scheduleEmployee }.ToDataSourceResult(request, ModelState));
+        }
 
         #region ProcedureEmployees
         public ActionResult GetProcedureEmployees([DataSourceRequest]DataSourceRequest request, ProcedureEmployeeDataFilter dataFilter)

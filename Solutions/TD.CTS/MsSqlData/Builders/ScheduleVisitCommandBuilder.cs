@@ -23,7 +23,21 @@ namespace TD.CTS.MsSqlData.Builders
 
         public override SqlCommand CreateAddCommand(SqlConnection connection, ScheduleVisit entity)
         {
-            throw new NotImplementedException();
+            var command = new SqlCommand("ScheduleVisitAdd", connection)
+            {
+                CommandType = System.Data.CommandType.StoredProcedure,
+                CommandTimeout = Settings.CommandTimeout
+            };
+
+            command.Parameters.AddWithValue("@ScheduleVisitID", entity.Id.GetNullableParameterValue());
+            command.Parameters.AddWithValue("@ScheduleID", entity.ScheduleID);
+            command.Parameters.AddWithValue("@TrialVisitID", entity.TrialVisitID);
+            command.Parameters.AddWithValue("@TrialCenterID", entity.TrialCenterID);
+            command.Parameters.AddWithValue("@TrialCode", entity.TrialCode);
+            command.Parameters.AddWithValue("@TrialVersionNo", entity.TrialVersionNo);
+            command.Parameters.AddWithValue("@ScheduleDate", entity.ScheduleDate.GetNullableParameterValue());
+            command.Parameters.AddWithValue("@ActualDate", entity.ActualDate.GetNullableParameterValue());
+            return command;
         }
 
 
@@ -36,11 +50,6 @@ namespace TD.CTS.MsSqlData.Builders
             };
 
             command.Parameters.AddWithValue("@ScheduleVisitID", entity.Id.GetNullableParameterValue());
-            command.Parameters.AddWithValue("@ScheduleID", entity.ScheduleID);
-            command.Parameters.AddWithValue("@TrialVisitID", entity.TrialVisitID);
-            command.Parameters.AddWithValue("@TrialCenterID", entity.TrialCenterID);
-            command.Parameters.AddWithValue("@TrialCode", entity.TrialCode);
-            command.Parameters.AddWithValue("@TrialVersionNo", entity.TrialVersionNo);
             command.Parameters.AddWithValue("@ScheduleDate", entity.ScheduleDate.GetNullableParameterValue());
             command.Parameters.AddWithValue("@ActualDate", entity.ActualDate.GetNullableParameterValue());
             
@@ -56,11 +65,11 @@ namespace TD.CTS.MsSqlData.Builders
                 CommandTimeout = Settings.CommandTimeout
             };
 
-            command.Parameters.AddWithValue("@ScheduleID", entity.ScheduleID);
-            command.Parameters.AddWithValue("@TrialVisitID", entity.TrialVisitID);
-            command.Parameters.AddWithValue("@TrialCenterID", entity.TrialCenterID);
-            command.Parameters.AddWithValue("@TrialCode", entity.TrialCode);
-            command.Parameters.AddWithValue("@TrialVersionNo", entity.TrialVersionNo);
+            command.Parameters.AddWithValue("@ScheduleVisitID", entity.Id);
+            //command.Parameters.AddWithValue("@TrialVisitID", entity.TrialVisitID);
+            //command.Parameters.AddWithValue("@TrialCenterID", entity.TrialCenterID);
+            //command.Parameters.AddWithValue("@TrialCode", entity.TrialCode);
+            //command.Parameters.AddWithValue("@TrialVersionNo", entity.TrialVersionNo);
 
             return command;
         }
@@ -71,7 +80,7 @@ namespace TD.CTS.MsSqlData.Builders
             entity.ScheduleID = reader.GetValue<int>("ScheduleID");
             entity.TrialVisitID = reader.GetValue<int>("TrialVisitID");
             entity.TrialCenterID = reader.GetValue<int>("TrialCenterID");
-            entity.TrialCode = reader.GetString("TrialCode");
+            entity.TrialCode = reader.GetString("TrialCode").TrimEnd();
             entity.TrialVersionNo = reader.GetValue<int>("TrialVersionNo");
             entity.ScheduleDate = reader.GetNullableValue<DateTime>("ScheduleDate");
             entity.ActualDate = reader.GetNullableValue<DateTime>("ActualDate");
@@ -79,6 +88,10 @@ namespace TD.CTS.MsSqlData.Builders
             entity.VisitNo = reader.GetValue<int>("VisitNo");
             entity.BaseDay = reader.GetValue<int>("BaseDay");
             entity.Limit = reader.GetValue<int>("Limit");
+            entity.Id = reader.GetNullableValue<int>("ScheduleVisitID");
+
+            entity.MinDate = reader.GetNullableValue<DateTime>("MinDate");
+            entity.MaxDate = reader.GetNullableValue<DateTime>("MaxDate");
         }
 
         public override void LoadNewEntityAttributes(SqlDataReader reader, ScheduleVisit entity)

@@ -46,11 +46,20 @@ namespace TD.CTS.MsSqlData.Builders
 
         public override SqlCommand CreateDeleteCommand(SqlConnection connection, ScheduleEmployee entity)
         {
-            throw new NotImplementedException();
+            var command = new SqlCommand("ScheduleEmployeeDel", connection)
+            {
+                CommandType = System.Data.CommandType.StoredProcedure,
+                CommandTimeout = Settings.CommandTimeout
+            };
+
+            command.Parameters.AddWithValue("@ScheduleEmployeeID", entity.Id);
+            command.Parameters.AddWithValue("@ScheduleID", entity.ScheduleID);
+            return command;
         }
 
         public override void LoadEntityAttributes(SqlDataReader reader, ScheduleEmployee entity)
         {
+            entity.Id = reader.GetNullableValue<int>("ScheduleEmployeeID");
             entity.ScheduleID = reader.GetValue<int>("ScheduleID");
             entity.SystemRoleCode = reader.GetString("SystemRoleCode").Trim();
             entity.SystemLogin = reader.GetNullableString("SystemLogin");

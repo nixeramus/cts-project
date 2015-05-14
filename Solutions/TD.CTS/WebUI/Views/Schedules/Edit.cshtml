@@ -1,4 +1,6 @@
-﻿@using TD.Common.Kendo.Mvc5.Grid
+﻿@using TD.Common.Kendo.Mvc5.Common
+@using TD.Common.Kendo.Mvc5.Grid
+@using TD.CTS.MsSqlData.Builders
 
 @model TD.CTS.Data.Entities.Schedule
 
@@ -44,10 +46,14 @@
                           @(Html.Kendo().Grid<TD.CTS.Data.Entities.ScheduleVisit>()
                                       .Init("VisitsGrid")
                                       .Editable()
-                                      .HtmlAttributes(new {style = "display:" + (isNew ? "none" : "block")})
+                                      //.HtmlAttributes(new {style = "display:" + (isNew ? "none" : "block")})
                                       .Columns(columns =>
                                       {
-                                          columns.Buttons(buttons => buttons.Edit()).Width(80);
+                                          columns.Buttons(buttons =>
+                                          {
+                                              buttons.Edit();
+                                              buttons.Delete();
+                                          }).Width(80); //buttons.Delete();
                                           columns.Bound(e => e.TrialVisitName).Width(200).Title("Наименование");
                                           columns.Bound(e => e.BaseDay).Width(150).Title("Смещение").ClientTemplate("#=BaseDay#&nbsp;&plusmn;&nbsp;#=Limit#");
                                           columns.Bound(e => e.ScheduleDate).Width(200).EditorTemplateName("Date").Format("{0:dd.MM.yyyy}").Title("Назначенная дата");
@@ -71,7 +77,7 @@
                                           .Destroy(destroy => destroy.Action("DeleteScheduleVisit", "Schedules"))
                                           .Events(events => events.Error("kendo_grid_error_handler").RequestEnd("VisitsRequestEnd"))
                                       )
-                                      .Events(events => events.Edit("kendo_grid_onrowedit")/*.DataBinding("VisitsOnDataBinding")*/)
+                                         .Events(events => events.Edit("OnVisitsEdit")/*.Edit("kendo_grid_onrowedit")*//*.DataBinding("VisitsOnDataBinding")*/)
                                       )
                       </text>);
         visittabs.Add()
@@ -192,10 +198,27 @@
 
 
 
-
-
-
-
+    //Изменение визита
+    function OnVisitsEdit(e) {
+        var datePickerInRow = $(e.container).find('#ScheduleDate').data("kendoDatePicker");
+        datePickerInRow.min(e.model.MinDate);
+        datePickerInRow.max(e.model.MaxDate);
+        //Вызываем базовое редактирование
+        kendo_grid_onrowedit(e);
+    }
+    //Окончание действия над визитом
+    function VisitsRequestEnd(e) {
+        if(e.type === "update" || e.type === "destroy")
+        {
+            //перечитываем грид с сервера при обновлении и удалении
+            $('#VisitsStrip').data().kendoTabStrip.reload($('#VisitsStrip .k-item:nth-child(3)'));
+            //после удаления обновляем грид
+            if(e.type === "destroy")
+            {
+                kendo_grid_reload($("#VisitsGrid"));
+            }
+        }
+    }
 
 
     function OpenProceduereEmployeeWindow(trialvisitid,procedurecode) {
@@ -220,14 +243,7 @@
         tabgrid.refresh();
     }
     
-    function VisitsRequestEnd(e) {
-            if(e.type === "update" || e.type === "delete")
-            {
-                //перечитываем грид с сервера
-                $('#VisitsStrip').data().kendoTabStrip.reload($('#VisitsStrip .k-item:nth-child(3)'));
-                //kendo_grid_reload($("#ProceduresGrid"));
-            }
-     }
+    
 
 
 
