@@ -2,17 +2,17 @@
 @*@{
     var isNew = ViewBag.IsNew;
 }*@
-<table id="scheduleForm" class="td-formTable" style="width:auto;">
+<table id="scheduleForm" class="td-formTable k-content" style="margin-top:0;/*width:auto;margin-bottom:10px;*/">
     @*margin-top: 0 k-content*@
     <tr>
         <td style="width:120px;">
             @(Html.Kendo().Button().Name("BackButton").SpriteCssClass("k-icon k-i-arrow-w").Tag("a").Content("Назад").HtmlAttributes(new { style = "width:100%;", href = Url.Action("Index", "Schedules") })/*.Events(e => e.Click("Back"))*/)
         </td>
         <td style="width:40px;"></td>
-        <td>
+        <td style="width:250px;">
             @(Html.Kendo().Button().Name("SaveButton").SpriteCssClass("k-icon k-update").Content("Сохранить").HtmlAttributes(new { style = "width:230px;" }).Events(e => e.Click("SaveSchedule")))
         </td>
-        <td></td>
+        <td style="width:100px;"></td>
     </tr>
     <tr>
         <td class="td-formTable-caption" colspan="2" style="width:250px;">Дата начала исследования</td>
