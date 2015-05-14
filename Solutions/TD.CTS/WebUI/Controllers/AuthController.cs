@@ -14,6 +14,7 @@ namespace TD.CTS.WebUI.Controllers
         {
             ViewBag.ReturnUrl = returnUrl;
             return View(new Credentials { Username = "cts", Password = "cts_" });
+            //return View();
         }
 
         [HttpPost]

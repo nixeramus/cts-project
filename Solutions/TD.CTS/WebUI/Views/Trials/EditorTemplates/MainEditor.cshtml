@@ -93,12 +93,13 @@
             {
                 model.Id(e => e.Id);
             })
-            .Read(read => read.Action("GetTrialCenters", "Trials", new { TrialCode = Model.Code }))
+                .Read(read => read.Action("GetTrialCenters", "Trials").Data("GetTrialCode"))
             .Create(create => create.Action("AddTrialCenter", "Trials"))
             .Update(update => update.Action("UpdateTrialCenter", "Trials"))
             .Destroy(destroy => destroy.Action("DeleteTrialCenter", "Trials"))
             .Events(events => events.Error("kendo_grid_error_handler"))
          )
          .Events(events => events.Edit("OnCenterEdit").Save("OnCenterSave"))
+         .AutoBind(!isNew)
 )
 

@@ -6,7 +6,7 @@
     {
         source.Read(read =>
         {
-            read.Action("GetTrialMaterialsDict", "Trials").Type(HttpVerbs.Post).Data("TrialMaterialsData");
+            read.Action("GetTrialMaterialsDict", "Trials").Type(HttpVerbs.Post).Data("GetTrialCode");
         }).ServerFiltering(false);
     })
     .DataValueField("Id")

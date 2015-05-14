@@ -1,15 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Data.SqlTypes;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml;
 using TD.CTS.Data.Entities;
 using TD.CTS.Data.Filters;
-using TD.CTS.Data.Helpers;
 
 namespace TD.CTS.MsSqlData.Builders
 {
@@ -23,7 +15,7 @@ namespace TD.CTS.MsSqlData.Builders
                 CommandTimeout = Settings.CommandTimeout
             };
 
-            var entityFilter = (TrialDataFilter)filter;
+            var entityFilter = (TrialDataFilter)filter ?? new TrialDataFilter();
 
             command.Parameters.AddWithValue("@TrialCode", entityFilter.Code.GetNullableParameterValue());
             command.Parameters.AddWithValue("@TrialName", entityFilter.Name.GetLikeParameterValue());
@@ -63,7 +55,7 @@ namespace TD.CTS.MsSqlData.Builders
             command.Parameters.AddWithValue("@TrialCode", entity.Code);
             command.Parameters.AddWithValue("@TrialName", entity.Name);
             command.Parameters.AddWithValue("@TaxiBooking", entity.TaxiBooking);
-            command.Parameters.AddWithValue("@TaxiService", entity.TaxiService);
+            command.Parameters.AddWithValue("@TaxiService", entity.TaxiService.GetNullableParameterValue());
             
             return command;
         }

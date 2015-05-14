@@ -9,11 +9,15 @@ namespace TD.CTS.Data.Filters
 {
     public class TrialCenterProcedureRoleDataFilter : DataFilter<TrialCenterProcedureRole>
     {
-        public int? Id { get; set; }
+        //public int? Id { get; set; }
 
         public int? TrialCenterId { get; set; }
 
-        public int? TrialProcedureId { get; set; }
+        public string ProcedureCode { get; set; }
+
+        public string TrialCode { get; set; }
+
+        public int? TrialVersionId { get; set; }
 
         public string RoleCode { get; set; }
     }

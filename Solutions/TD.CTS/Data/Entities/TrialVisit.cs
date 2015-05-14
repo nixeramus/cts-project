@@ -13,6 +13,10 @@ namespace TD.CTS.Data.Entities
 
         public string TrialCode { get; set; }
 
+        public int TrialVersionId { get; set; }
+
+        public int Number { get; set; }
+
         [Required(ErrorMessage = "Наименование не задано")]
         public string Name { get; set; }
 
@@ -21,6 +25,6 @@ namespace TD.CTS.Data.Entities
 
         public int Punctuality { get; set; }
 
-        public decimal Cost { get; set; }
+        public decimal? Cost { get; set; }
     }
 }

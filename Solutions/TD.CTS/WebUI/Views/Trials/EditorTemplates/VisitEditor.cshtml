@@ -7,6 +7,7 @@
             <td>
                 @Html.HiddenFor(model => model.Id)
                 @Html.HiddenFor(model => model.TrialCode)
+                @Html.HiddenFor(model => model.TrialVersionId)
                 @Html.Hidden("IsNew", (bool)ViewBag.IsNew)
                 @Html.EditorFor(model => model.Name)
                 @Html.ValidationMessageFor(model => model.Name)

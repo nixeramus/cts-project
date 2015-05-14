@@ -1,15 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Data.SqlTypes;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml;
+﻿using System.Data.SqlClient;
 using TD.CTS.Data.Entities;
 using TD.CTS.Data.Filters;
-using TD.CTS.Data.Helpers;
 
 namespace TD.CTS.MsSqlData.Builders
 {
@@ -23,7 +14,7 @@ namespace TD.CTS.MsSqlData.Builders
                 CommandTimeout = Settings.CommandTimeout
             };
 
-            var entityFilter = (ReferalDataFilter)filter;
+            var entityFilter = (ReferalDataFilter)filter ?? new ReferalDataFilter();
 
             command.Parameters.AddWithValue("@ReferalCode", entityFilter.Id.GetNullableParameterValue());
             command.Parameters.AddWithValue("@HospitalID", entityFilter.HospitalId.GetNullableParameterValue());

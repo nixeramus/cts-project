@@ -37,7 +37,7 @@
                         .Enabled(!isNew);
                     tabs.Add().Text("Визиты")
                         .ContentHtmlAttributes(new { style = "padding:0;" })
-                        .Content(@<text>@Html.Partial("EditorTemplates/ProceduresEditor", trialCode)</text>)
+                        .Content(@<text>@Html.Partial("EditorTemplates/ProceduresEditor")</text>)
                         .Enabled(!isNew);
                     @*tabs.Add().Text("Роли")
                         .ContentHtmlAttributes(new { style = "padding:0;" })
@@ -90,6 +90,10 @@
         }
     });
 
+    function GetTrialCode(){
+        return { TrialCode: $("#Code").val(), TrialVersionId: $("#Version").data("kendoDropDownList").value() };
+    }
+
     function SaveTrial() {
         if (validator.validate()) {
             $.ajax({
@@ -105,17 +109,8 @@
                 },
                 success: function (result) {
                     if(isNew) {
-                        $("#CentersGrid").css("display", "block");
-                        var tabStrip = $("#TabStrip").data("kendoTabStrip");
-                        var tabs = tabStrip.tabGroup.children();
-                        tabStrip.enable(tabs.eq(1), true);
-                        tabStrip.enable(tabs.eq(2), true);
-                        //tabStrip.enable(tabs.eq(3), true);
-                        //tabStrip.enable(tabs.eq(4), true);
-                        //tabStrip.enable(tabs.eq(5), true);
-                        $("#Code").attr("readonly", true);
-                        $("#VersionRow").css("display", "table-row");
-                        isNew = false;
+                        window.location.replace("@Url.Action("Edit", "Trials")" + "/" + $("#Code").val());
+                        return;
                     }
 
                     var saveNotification = $("#SaveNotification").data("kendoNotification");
@@ -166,11 +161,13 @@
         if(e.type === "update" || e.type === "create")
         {
             isProcedureEdit = false;
+            $('#ProceduresGrid .k-grid-header th:eq(0)').css("min-width", "");
         }
     }
 
     function OnProcedureCancel(e){
         isProcedureEdit = false;
+        $('#ProceduresGrid .k-grid-header th:eq(0)').css("min-width", "");
     }
 
     function OnProcedureEdit(e){
@@ -182,8 +179,11 @@
         isProcedureEdit = true;
         ClearSelection();
 
-        kendo_grid_onrowedit(e);
+        $('#ProceduresGrid .k-grid-header th:eq(0)').css("min-width", "60px");
 
+        e.container.find("a.k-grid-delete").closest("td").html('<a class="k-button k-button-icontext k-primary k-grid-update td-grid-button" href="#" title="Обновить"><span class="k-icon k-update td-grid-button-image"></span></a>' +
+                    '<a class="k-button k-button-icontext k-grid-cancel td-grid-button" href="#" title="Отмена"><span class="k-icon k-cancel td-grid-button-image"></span></a>');
+        
         var dropDown = kendo.template($("#procedureTemplate").html());
         e.container.find("td:eq(1)").html(dropDown({ value: e.model.ProcedureCode }));
     }
@@ -191,9 +191,17 @@
     function OnProcedureSave(e){
         e.model.ProcedureCode = e.container.find("#ProcedureCode").val();
         e.model.dirty = true;
+        if (e.model.isNew()){
+            e.model.TrialCode = $("#Code").val(); 
+            e.model.TrialVersionId = $("#Version").data("kendoDropDownList").value();
+        }
     }
 
+    var NotChange = false;
     function OnChange(e){
+        if (NotChange)
+            return;
+
         if (isProcedureEdit){
             var grid = $("#ProceduresGrid").data("kendoGrid");
             if(grid.select().length > 0)
@@ -220,7 +228,7 @@
         var window = $("#VisitEdit").data("kendoWindow");
         window.refresh({
             url: "@Url.Action("GetVisitEditor", "Trials")",
-            data: { id: id, trialCode: "@Model.Code" }
+            data: { Id: id, TrialCode: $("#Code").val(), TrialVersionId: $("#Version").data("kendoDropDownList").value() }
     });
     }
 
@@ -242,12 +250,12 @@
                     data: {
                         "Id": form.find("#Id").val(),
                         "Name": form.find("#Name").val(),
-                        "TrialCode": "@Model.Code",
+                        "TrialCode": form.find("#TrialCode").val(),
+                        "TrialVersionId": form.find("#TrialVersionId").val(),
                         "Days": form.find("#Days").val(),
                         "Punctuality": form.find("#Punctuality").val()
                     },
                     success: function (result) {
-                        //$("#TabStrip-3").load("@Url.Action("GetProceduresEditor", "Trials", new { trialCode = @Model.Code })");
                         $("#TabStrip-3").html(result);
                         window.close();
                     },
@@ -262,10 +270,7 @@
             $.ajax({
                 type: "POST",
                 url: "@Url.Action("DeleteTrailVisit", "Trials")",
-                data: {
-                    "Id": id,
-                    "TrialCode": "@Model.Code"
-                },
+                data: { Id: id, TrialCode: $("#Code").val(), TrialVersionId: $("#Version").data("kendoDropDownList").value() },
                 success: function (result) {
                     $("#TabStrip-3").html(result);
                 },
@@ -280,10 +285,23 @@
     var selectedCell;
 
     function SelectedVisit(visitId, data){
-        if($.inArray(visitId, data.VisitIds) !== -1)
-            return "<input class=\"td-visit-checkbox\" type=\"checkbox\" value=\"" + visitId + "\" checked style=\"display:none;margin:0;\" /><span class=\"k-icon k-i-tick\"></span>";
+        var index = GetVisitIndex(visitId, data.Visits);
+        if(index !== -1)
+            return "<input class=\"td-visit-checkbox\" type=\"checkbox\" dataId=\"" + data.Visits[index].Id +
+                "\" value=\"" + visitId + "\" checked style=\"display:none;margin:0;\" /><span class=\"k-icon k-i-tick\"></span>";
 
         return "<input class=\"td-visit-checkbox\" type=\"checkbox\" value=\"" + visitId + "\" style=\"display:none;margin:0;\" />";
+    }
+
+    function GetVisitIndex(visitId, visits){
+        if (!visits)
+            return -1;
+        for (var i = 0, len = visits.length; i < len; i++) {
+            if (visits[i].TrialVisitId === visitId)
+                return i;
+        }
+
+        return -1;
     }
 
     function Update(){
@@ -295,36 +313,49 @@
             var row = selectedCell.closest("tr");
             var grid = $("#ProceduresGrid").data("kendoGrid");
             var rowData = grid.dataItem(row);
-            var inArray = $.inArray(visitId, rowData.VisitIds) !== -1;
-            if((checked && inArray) || (!checked && !inArray)){
+            var index = GetVisitIndex(visitId, rowData.Visits);
+            if((checked && index !== -1) || (!checked && index === -1)){
                 selectedCell.html(SelectedVisit(visitId, rowData));
                 return result;
             }
-            var values = $(row).find('input:checkbox:checked').map(function () {
-                return parseInt(this.value);
-            }).get();
 
-            var newRow = {
-                "Id": rowData.Id,
-                "ProcedureCode": rowData.ProcedureCode,
-                "TrialCode": rowData.TrialCode,
-                "VisitIds": values
-            }; 
+            var data;
+            var url;
+            if (checked) {
+                data = {
+                    TrialVisitId: visitId,
+                    ProcedureCode: rowData.ProcedureCode,
+                    TrialCode: rowData.TrialCode,
+                    TrialVersionId: rowData.TrialVersionId
+                };
+                url = "@Url.Action("AddTrialProcedureVisit", "Trials")";
+            } else {
+                data = { Id: input.attr("dataId") };
+                url = "@Url.Action("DeleteTrialProcedureVisit", "Trials")";
+            };
 
             $.ajax({
                 type: "POST",
-                url: "@Url.Action("UpdateTrialProcedure", "Trials")",
-                data: newRow,
+                url: url,
+                data: data,
                 async: false,
-                success: function (data) {
-                    //rowData.VisitIds = values;
-                    grid.dataSource.pushUpdate(newRow);
+                success: function (newVisit) {
+                    if (checked){
+                        rowData.Visits.push(newVisit);
+                    }else{
+                        rowData.Visits.splice(index, 1);
+                    }
+                    grid.dataSource.pushUpdate(rowData);
                     selectedCell.html(SelectedVisit(visitId, rowData));
+                    UpdateVisitMaterials();
                 },
                 error: function (error) {
                     result = false;
-                    grid.select(selectedCell);
                     AjaxError(error);
+                    NotChange = true;
+                    grid.select(selectedCell);
+                    OnSelect(grid);
+                    NotChange = false;
                 }
             });
         }
@@ -367,25 +398,19 @@
         var input = selectedCell.find("input");
         var checked = input.is(':checked');
 
-        var visitId = parseInt(input.val());
+        if(!checked) {
+            div.hide();
+            visitMaterialsData = null;
+            return;
+        }
 
-        var row = selectedCell.closest("tr");
-        var procGrid = $("#ProceduresGrid").data("kendoGrid");
-        var rowData = procGrid.dataItem(row);
+        var visitMaterialId = input.attr("dataId");
 
         var grid = $("#VisitMaterialsGrid").data("kendoGrid");
-        visitMaterialsData = { ProcedureCode: rowData.ProcedureCode, TrialVisitId: visitId };
+        visitMaterialsData = { TrialVisitProcedureId: visitMaterialId };
         grid.dataSource.read();
 
-        if (checked) {
-            div.show();
-        } else {
-            div.hide();
-        }
-    }
-
-    function TrialMaterialsData() {
-        return { TrialCode: $("#TrialCode").val() };
+        div.show();
     }
 
     function VisitMaterialsData() {
@@ -393,16 +418,27 @@
     }
 
     function OnVisitMaterialsSave(e) {
-        e.model.ProcedureCode = visitMaterialsData.ProcedureCode;
-        e.model.TrialVisitId = visitMaterialsData.TrialVisitId;
+        e.model.TrialVisitProcedureId = visitMaterialsData.TrialVisitProcedureId;
+        e.model.TrialCode = $("#Code").val();
     }
 
-    @* ProcedureRoles *@
-    @*
-    function ProcedureRolesGridBound(e) {
-        this.expandRow(this.tbody.find("tr.k-master-row"));
-    } 
-    *@
+    function OnVisitMaterialEdit(e){
+        kendo_grid_resizeColumn($('#VisitMaterialsGrid'), 0, "75px");
+
+        e.container.find("a.k-grid-delete").closest("td").html('<a class="k-button k-button-icontext k-primary k-grid-update td-grid-button" href="#" title="Обновить"><span class="k-icon k-update td-grid-button-image"></span></a>' +
+                    '<a class="k-button k-button-icontext k-grid-cancel td-grid-button" href="#" title="Отмена"><span class="k-icon k-cancel td-grid-button-image"></span></a>');
+    }
+
+    function OnVisitMaterialCancel(e){
+        kendo_grid_resizeColumn($('#VisitMaterialsGrid'), 0, "50px");
+    }
+
+    function OnVisitMaterialRequestEnd(e){
+        if(e.type === "update" || e.type === "create")
+        {
+            kendo_grid_resizeColumn($('#VisitMaterialsGrid'), 0, "50px");
+        }
+    }
 </script>
 
 
