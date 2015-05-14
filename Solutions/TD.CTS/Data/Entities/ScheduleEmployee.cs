@@ -5,7 +5,7 @@ namespace TD.CTS.Data.Entities
 {
     public class ScheduleEmployee : Entity
     {
-        public int ScheduleEmployeeID { get; set; }
+        public int? Id { get; set; }
         public int ScheduleID { get; set; }
         public string SystemRoleCode { get; set; }
         [Required(ErrorMessage = "Сотрудник не задан")]

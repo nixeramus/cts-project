@@ -19,5 +19,9 @@ namespace TD.CTS.Data.Entities
         public int VisitNo { get; set; }
         public int BaseDay { get; set; }
         public int Limit { get; set; }
+
+        public DateTime? MinDate { get; set; }
+        public DateTime? MaxDate { get; set; }
+        
     }
 }
