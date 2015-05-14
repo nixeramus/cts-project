@@ -21,12 +21,12 @@
     var isNew = ViewBag.IsNew;
     //var buttonsRow = new System.Text.StringBuilder(@"<tr class='k-filter-row'><th/><th style='text-align:right;'><a class='k-button k-button-icontext k-grid-add td-grid-button' title='Добавить визит' href='javascript: void(0)'><span class='k-icon k-add td-grid-button-image'></span></a></th>");
 }
-@(Html.Kendo().TabStrip()
+@*@(Html.Kendo().TabStrip()
     .Name("HeaderTabStrip")
     .Animation(false)
     .Items(tabs =>{tabs.Add().Text("Основное").Selected(true).Content(@<text>@Html.Partial("EditorTemplates/MainEditor")@RenderFooter(isNew)</text>);})
-)
-
+)*@
+@Html.Partial("EditorTemplates/MainEditor")@RenderFooter(isNew)
 
 @*@Html.RenderPartial(@Html.Partial("EditorTemplates/ScheduleDetailEditor", Model))*@
 @(Html.Kendo().Window().Name("ProcedureEmployeeWindow").Width(700).Height(350).Draggable().Resizable().Title("Сотрудники").Content(@<text>@Html.Partial("EditorTemplates/ProcedureEmployeeEditor", Model)</text>).Visible(false).Modal(false)/*.HtmlAttributes(new { @class = "k-popup-edit-form" })*/)
@@ -90,7 +90,12 @@
                                       //.HtmlAttributes(new { style = "display:" + (isNew ? "none" : "block") })
                                       .Columns(columns =>
                                       {
-                                          columns.Buttons(buttons => buttons.Edit()).Width(80);
+                                          columns.Buttons(buttons =>
+                                          {
+                                              buttons.Edit();
+                                              buttons.Delete();
+                                              
+                                          }).Width(80);
                                           columns.Bound(e => e.SystemRoleCode).Width(100).Title("Код роли");
                                           columns.ForeignKey(e => e.SystemRoleCode, (System.Collections.IEnumerable)ViewBag.SystemRoles, "Code", "Name").Width(300).Title("Роль");
                                           columns.ForeignKey(e => e.SystemLogin, (System.Collections.IEnumerable)ViewBag.Users, "Login", "FullName").Width(200).Title("Сотрудник").EditorTemplateName("GridNullableForeignKey");
@@ -110,8 +115,8 @@
                                           .Read(read => read.Action("GetScheduleEmployees", "Schedules", new { ScheduleID = Model.Id })/*.Data("EmployeesGetDataRead")*/)
                                           //.Create(create => create.Action("AddTrialCenter", "Trials"))
                                            .Update(update => update.Action("UpdateScheduleEmployee", "Schedules"))
-                                          //.Destroy(destroy => destroy.Action("DeleteTrialCenter", "Trials"))
-                                          .Events(events => events.Error("kendo_grid_error_handler"))
+                                           .Destroy(destroy => destroy.Action("DeleteScheduleEmployee", "Schedules"))
+                                                   .Events(events => events.Error("kendo_grid_error_handler").RequestEnd("EmployeesRequestEnd"))
                                       )
                                       .Events(events => events.Edit("kendo_grid_onrowedit"))
                 )
@@ -196,7 +201,7 @@
     //}
 
 
-
+//------------------------------Визиты-----------------------------------------------------------------------
 
     //Изменение визита
     function OnVisitsEdit(e) {
@@ -219,6 +224,14 @@
             }
         }
     }
+    //-------------------------Сотрудники по умолчанию-------------------------------------------------------------------------------------
+    function EmployeesRequestEnd(e) {
+            if(e.type === "destroy")
+            {
+                kendo_grid_reload($("#EmployeeGrid"));
+            }
+    }
+    //--------------------------------------------------------------------------------------------------------------
 
 
     function OpenProceduereEmployeeWindow(trialvisitid,procedurecode) {
