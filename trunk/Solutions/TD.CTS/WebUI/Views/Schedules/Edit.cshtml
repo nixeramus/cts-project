@@ -1,13 +1,10 @@
-﻿@using TD.Common.Kendo.Mvc5.Common
-@using TD.Common.Kendo.Mvc5.Grid
-@using TD.CTS.MsSqlData.Builders
+﻿@using TD.Common.Kendo.Mvc5.Grid
 
 @model TD.CTS.Data.Entities.Schedule
 
 @section head{
     <link href="@Url.Content("~/Content/td/td.kendo.grid.css")" rel="stylesheet" type="text/css" />
     <link href="@Url.Content("~/Content/td/td.kendo.tabstrip.css")" rel="stylesheet" type="text/css" />
-
     <script src="@Url.Content("~/Scripts/td/td.kendo.grid.js")"></script>
 
     <style type="text/css">
@@ -184,22 +181,7 @@
     
 
 
-
-
     
-    //function VisitsGetDataRead() {
-    //    var schedid = $("#Id").val();
-    //    return {ScheduleID: schedid};
-    //}
-    //function EmployeesGetDataRead() {
-    //    var schedid = $("#Id").val();
-    //    return {ScheduleID: schedid};
-    //}
-    //function ProceduresGetDataRead() {
-    //    var schedid = $("#Id").val();
-    //    return {ScheduleID: schedid};
-    //}
-
 
 //------------------------------Визиты-----------------------------------------------------------------------
 
@@ -237,10 +219,6 @@
     function OpenProceduereEmployeeWindow(trialvisitid,procedurecode) {
         var window = $("#ProcedureEmployeeWindow").data("kendoWindow");
         window.center().open();
-       // var grid = $("#VisitsGrid").data("kendoGrid");
-        
-        //var row = $(caler).closest("tr");
-        //var item = grid.dataItem(row);
         var filter = {        
             //ScheduleID :17,
             TrialVisitID:trialvisitid/*1*/,
@@ -251,22 +229,11 @@
         };
         
         //kendo_grid_init($("#ProcedureEmployeesEditorGrid"));
-        var tabgrid = $('#ProcedureEmployeesEditorGrid').data("kendoGrid");
-        tabgrid.dataSource.read(filter);
-        tabgrid.refresh();
+        kendo_grid_reload($("#ProcedureEmployeesEditorGrid"));
+        //var tabgrid = $('#ProcedureEmployeesEditorGrid').data("kendoGrid");
+        //tabgrid.dataSource.read(filter);
+        //tabgrid.refresh();
     }
-    
-    
-
-
-
-       
-    
-
-
-
-
-
 
 
 

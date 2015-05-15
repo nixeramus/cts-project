@@ -217,7 +217,6 @@ namespace TD.CTS.WebUI.Controllers
 
         #endregion
 
-
         #region ScheduleProcedures
 
         public ActionResult GetScheduleDetailContent(int ScheduleID)
@@ -259,12 +258,18 @@ namespace TD.CTS.WebUI.Controllers
         #endregion ScheduleProcedures
 
         #region ScheduleEmployees
+        /// <summary>
+        /// Получение списка сотрудников для ролей из расписания
+        /// </summary>
         public ActionResult GetScheduleEmployees([DataSourceRequest]DataSourceRequest request, ScheduleEmployeeDataFilter dataFilter)
         {
             var response = DataProvider.GetList(dataFilter ?? new ScheduleEmployeeDataFilter());
             return Json(response.ToDataSourceResult(request));
         }
 
+        /// <summary>
+        /// Изменение сотрудника по умолчанию для роли из расписания
+        /// </summary>
         public ActionResult UpdateScheduleEmployee([DataSourceRequest] DataSourceRequest request, ScheduleEmployee scheduleEmployee)
         {
             if (scheduleEmployee != null && ModelState.IsValid)
@@ -274,10 +279,10 @@ namespace TD.CTS.WebUI.Controllers
 
             return Json(new[] { scheduleEmployee }.ToDataSourceResult(request, ModelState));
         }
-        #endregion
 
-
-
+        /// <summary>
+        /// Удаление сотрудника по умолчанию для роли из расписания
+        /// </summary>
         public ActionResult DeleteScheduleEmployee([DataSourceRequest] DataSourceRequest request, ScheduleEmployee scheduleEmployee)
         {
             if (scheduleEmployee != null)
@@ -287,6 +292,7 @@ namespace TD.CTS.WebUI.Controllers
 
             return Json(new[] { scheduleEmployee }.ToDataSourceResult(request, ModelState));
         }
+        #endregion
 
         #region ProcedureEmployees
         public ActionResult GetProcedureEmployees([DataSourceRequest]DataSourceRequest request, ProcedureEmployeeDataFilter dataFilter)
