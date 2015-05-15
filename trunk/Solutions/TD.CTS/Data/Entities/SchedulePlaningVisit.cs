@@ -27,6 +27,7 @@ namespace TD.CTS.Data.Entities
         public string VisitEmployees { get; set; }
         public int BaseDay { get; set; }
         public int Limit { get; set; }
+        public int? Id { get; set; }
 
         //0-запланированный 1-началочь окно -2 кончилось окно 3- еще не началось
         public int RankState { get; set; }
