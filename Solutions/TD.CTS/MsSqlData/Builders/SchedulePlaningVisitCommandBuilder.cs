@@ -16,17 +16,7 @@ namespace TD.CTS.MsSqlData.Builders
             };
 
             var entityFilter = (SchedulePlaningVisitDataFilter)filter;
-
-            //command.Parameters.AddWithValue("@ScheduleID", entityFilter.ScheduleID.GetNullableParameterValue());
-            //command.Parameters.AddWithValue("@BeginDateBeg", entityFilter.BeginDateBegin.GetNullableParameterValue());
-            //command.Parameters.AddWithValue("@BeginDateEnd", entityFilter.BeginDateEnd.GetNullableParameterValue());
-            //command.Parameters.AddWithValue("@CreateDateBeg", entityFilter.CreateDateBegin.GetNullableParameterValue());
-            //command.Parameters.AddWithValue("@CreateDateEnd", entityFilter.CreateDateEnd.GetNullableParameterValue());
-            //command.Parameters.AddWithValue("@TrialName", entityFilter.TrialName.GetLikeParameterValue());
-            //command.Parameters.AddWithValue("@TrialCenterName", entityFilter.TrialCenterName.GetLikeParameterValue());
-            //command.Parameters.AddWithValue("@PatientFullName", entityFilter.PatientFullName.GetLikeParameterValue());
-            //command.Parameters.AddWithValue("@OwnSchedulesOnly", entityFilter.OwnSchedulesOnly);
-
+            command.Parameters.AddWithValue("@ScheduleVisitID", entityFilter.ScheduleVisitID.GetNullableParameterValue());
             return command;
         }
 
@@ -38,24 +28,18 @@ namespace TD.CTS.MsSqlData.Builders
 
         public override SqlCommand CreateUpdateCommand(SqlConnection connection, SchedulePlaningVisit entity)
         {
-            throw new NotImplementedException();
-            //var command = new SqlCommand("ScheduleVisitUpd", connection)
-            //{
-            //    CommandType = System.Data.CommandType.StoredProcedure,
-            //    CommandTimeout = Settings.CommandTimeout
-            //};
+            var command = new SqlCommand("SchedulePlaningVisitUpd", connection)
+            {
+                CommandType = System.Data.CommandType.StoredProcedure,
+                CommandTimeout = Settings.CommandTimeout
+            };
 
-            //command.Parameters.AddWithValue("@ScheduleID", entity.ScheduleID);
-            //command.Parameters.AddWithValue("@TrialVisitID", entity.TrialVisitID);
-            //command.Parameters.AddWithValue("@TrialCenterID", entity.TrialCenterID);
-            //command.Parameters.AddWithValue("@TrialCode", entity.TrialCode);
-            //command.Parameters.AddWithValue("@TrialVersionNo", entity.TrialVersionNo);
+            command.Parameters.AddWithValue("@ScheduleVisitID", entity.Id.GetNullableParameterValue());
+            command.Parameters.AddWithValue("@ScheduleDate", entity.ScheduleDate.GetNullableParameterValue());
+            command.Parameters.AddWithValue("@ActualDate", entity.ActualDate.GetNullableParameterValue());
 
-            //command.Parameters.AddWithValue("@ScheduleDate", entity.ScheduleDate.GetNullableParameterValue());
-            //command.Parameters.AddWithValue("@ActualDate", entity.ActualDate.GetNullableParameterValue());
-            
 
-            //return command;
+            return command;
         }
 
         public override SqlCommand CreateDeleteCommand(SqlConnection connection, SchedulePlaningVisit entity)
@@ -96,6 +80,7 @@ namespace TD.CTS.MsSqlData.Builders
             entity.MinDate = reader.GetValue<DateTime>("MinDate");
             entity.MaxDate = reader.GetValue<DateTime>("MaxDate");
             entity.RankState = reader.GetValue<int>("RankState");
+            entity.Id = reader.GetNullableValue<int>("ScheduleVisitID");
         }
 
         public override void LoadNewEntityAttributes(SqlDataReader reader, SchedulePlaningVisit entity)

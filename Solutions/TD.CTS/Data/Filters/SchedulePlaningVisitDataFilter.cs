@@ -4,6 +4,6 @@ namespace TD.CTS.Data.Filters
 {
     public class SchedulePlaningVisitDataFilter: DataFilter<SchedulePlaningVisit>
     {
-        //public int? ScheduleID { get; set; }
+        public int? ScheduleVisitID { get; set; }
     }
 }

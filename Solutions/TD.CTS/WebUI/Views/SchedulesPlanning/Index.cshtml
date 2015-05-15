@@ -17,20 +17,20 @@
 }
 @(Html.Kendo().Grid<TD.CTS.Data.Entities.SchedulePlaningVisit>()
     .Init("SchedulePlaningVisitsGrid")
-    .Selectable(select => select.Type(GridSelectionType.Cell))
+    //.Selectable()
     .Editable()
     .Reorderable(reorderable => reorderable.Columns(false))
     .Columns(columns =>
     {
-        columns.Buttons(buttons => buttons.Edit()).Width(80).Locked(true);
-        columns.Bound(e => e.TrialCode).Width(80).Title("Код иссл.").Locked(true);
-        columns.Bound(e => e.TrialName).Width(200).Title("Наименование иссл.").Locked(true);
-        columns.Bound(e => e.PatientFullName).Width(250).Title("ФИО пациента").Locked(true);
-        columns.Bound(e => e.TrialVisitName).Width(200).Title("Наименование визита").Locked(true);
-        columns.Bound(e => e.MinDate).Width(100).Title("Дата нач.").Format("{0:dd.MM.yyyy}").Locked(true);
-        columns.Bound(e => e.MaxDate).Width(100).Title("Дата кон.").Format("{0:dd.MM.yyyy}").Locked(true);
-        columns.Bound(e => e.ScheduleDate).Width(100).Title("Дата план").Format("{0:dd.MM.yyyy}").Locked(true);
-        columns.Bound(e => e.VisitEmployees).Width(200).Title("Сотрудники").Locked(true);
+        columns.Buttons(buttons => buttons.Edit()).Width(80).Locked(true).HtmlAttributes(new { @class = "k-group-cell" }); ;
+        columns.Bound(e => e.TrialCode).Width(80).Title("Код иссл.").Locked(true).HtmlAttributes(new { @class = "k-group-cell" }); ;
+        columns.Bound(e => e.TrialName).Width(200).Title("Наименование иссл.").Locked(true).HtmlAttributes(new { @class = "k-group-cell" }); ;
+        columns.Bound(e => e.PatientFullName).Width(250).Title("ФИО пациента").Locked(true).HtmlAttributes(new { @class = "k-group-cell" }); ;
+        columns.Bound(e => e.TrialVisitName).Width(200).Title("Наименование визита").Locked(true).HtmlAttributes(new { @class = "k-group-cell" }); ;
+        columns.Bound(e => e.MinDate).Width(100).Title("Дата нач.").Format("{0:dd.MM.yyyy}").Locked(true).HtmlAttributes(new { @class = "k-group-cell" }); ;
+        columns.Bound(e => e.MaxDate).Width(100).Title("Дата кон.").Format("{0:dd.MM.yyyy}").Locked(true).HtmlAttributes(new { @class = "k-group-cell" }); ;
+        columns.Bound(e => e.ScheduleDate).Width(100).Title("Дата план").Format("{0:dd.MM.yyyy}").Locked(true).HtmlAttributes(new { @class = "k-group-cell" }); ;
+        columns.Bound(e => e.VisitEmployees).Width(200).Title("Сотрудники").Locked(true).HtmlAttributes(new { @class = "k-group-cell" }); ;
 
         var calend = (ScheduleCalend)ViewBag.Calend;
          var calendDates = calend.dateList;
@@ -38,7 +38,7 @@
         {
             columns.Template(e => { })
                 .ClientTemplate("#= SelectedVisit("+"\"" + calendDate.CalendDate.ToString("dd.MM.yyyy")+"\"" + ", data) #")
-                .HeaderTemplate(string.Format(@"<div style='text-align:center;'></span><input type='hidden' value='{1}'/>{0}</div>", calendDate.CalendDate.ToString("ddd"), calendDate.CalendDate.ToString("dd.MM.yyyy")))
+                .HeaderTemplate(string.Format(@"<div style='text-align:center;' title='{1}'></span><input type='hidden' value='{1}'/>{0}</div>", calendDate.CalendDate.ToString("ddd"), calendDate.CalendDate.ToString("dd.MM.yyyy")))
                 .Width(40)
                 .HtmlAttributes(new { style = "text-align:center;" });
         }
@@ -62,6 +62,7 @@
         {
             model.Id(e => e.ScheduleID);
             model.Id(e => e.TrialVisitID);
+            model.Id(e => e.Id);
             model.Field(e => e.TrialCode).Editable(false);
             model.Field(e => e.TrialName).Editable(false);
             model.Field(e => e.PatientFullName).Editable(false);
@@ -77,28 +78,113 @@
         .Update(update => update.Action("UpdateScheduleVisit", "SchedulesPlanning"))
         .Events(events => events.Error("kendo_grid_error_handler"))
      )
-               .Events(events => events.DataBound("onDataBound").Edit("OnSchedulesPlanningEdit").Change("OnSchedulesPlanningChange"))
+                       .Events(events => events.DataBound("onDataBound").Edit("OnSchedulesPlanningEdit").Cancel("OnSchedulesPlanningCancel").Save("OnSchedulesPlanningSave"))
 
 )
 <script>
-  
+    var urlSaveVisit = "@Url.Action("UpdateScheduleVisit", "SchedulesPlanning")";
+    var urlDelVisit = "@Url.Action("DeleteScheduleVisit", "SchedulesPlanning")";
+    var grid;
     $(document).ready(function () {
-       // var grid = $("#SchedulePlaningVisitsGrid");
-        //kendo_grid_init(grid, true, '@Html.Raw(filterRow.HtmlFilterRow())');
-        var grid = $("#SchedulePlaningVisitsGrid");
-        kendo_grid_init(grid,1);
+        grid = $("#SchedulePlaningVisitsGrid");
+        kendo_grid_init(grid, true);
+        grid.on("change", "input:checkbox", function () {
+            if ($(this).is(":checked")) {
+                grid.find('input:checkbox').not(this).prop('checked', false);
 
-
-
-
-                @*grid.find(".td-grid-add.td-grid-button").click(function () {
-            $().redirect("@Url.Action("Edit", "Schedules")");
+            }
         });
-
-        grid.on("click", ".td-grid-edit.td-grid-button", function () {
-            $().redirect("@Url.Action("Edit", "Schedules")", { Id: $(this).val() });
-        });*@
     });
+
+    function OnSchedulesPlanningSave(arg) {
+        //1.Находим выбранную дату
+        //1.1. Находим комбобокс с галочкой в строке
+        var rowCb = arg.container.find('input:checkbox:checked').first();
+        //Получаем ссылку на модель
+        var model = arg.model;
+        //1.2. Если есть выбранная галка
+        if (rowCb.length > 0) {
+           
+            //находим дату из расписания и заданную
+            var scheddate = model.ScheduleDate;
+            var selectedDate = kendo.parseDate(rowCb.val(), "dd.MM.yyyy");
+
+            //Если они отличаются
+            if (!scheddate || scheddate.getTime() != selectedDate.getTime()) {
+                model.ScheduleDate = selectedDate;
+                //model.dirty = true;
+                SaveScheduleVisit(model, urlSaveVisit);
+                //после вставки вычитать грид для обновления айдишки
+                if (model.Id == null)
+                    {kendo_grid_reload(grid);}
+            } else {alert('Дата не изменилась');}
+        } else {
+            //Если галка не выбрана
+            if (model.Id != null) {
+                //И есть код визита
+                SaveScheduleVisit(model, urlDelVisit);
+                kendo_grid_reload(grid);
+            } else {
+                alert("Выберите дату");
+            }
+
+        }
+    }
+
+
+
+    function OnSchedulesPlanningCancel() {
+        kendo_grid_reload(grid);
+       // $("#SchedulePlaningVisitsGrid").data("kendoGrid").cancelRow();
+    }
+
+
+
+
+    function SaveScheduleVisit(data,url) {
+        //alert(visit);
+
+        var sendData =
+        {
+            "Id": data.Id,
+            "ScheduleID": data.ScheduleID,
+            "TrialVisitID": data.TrialVisitID,
+            "TrialCenterID": data.TrialCenterID,
+            "TrialCode": data.TrialCode,
+            "TrialVersionNo": data.TrialVersionNo,
+            "ScheduleDate": data.ScheduleDate.toISOString(),
+            "ActualDate": data.ActualDate
+        };
+
+
+
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: sendData,
+            async: false,
+            success: function (newVisit) {
+                //alert(newVisit);
+                //if (checked) {
+                //    rowData.Visits.push(newVisit);
+                //} else {
+                //    rowData.Visits.splice(index, 1);
+                //}
+                //grid.dataSource.pushUpdate(rowData);
+                //selectedCell.html(SelectedVisit(visitId, rowData));
+            },
+            error: function (error) {
+                //result = false;
+                AjaxError(error);
+                //NotChange = true;
+                //grid.select(selectedCell);
+                //OnSelect(grid);
+                //NotChange = false;
+            }
+        });
+    }
+
     function SelectedVisit(calendDateStr, data) {
         var calendDate = kendo.parseDate(calendDateStr, "dd.MM.yyyy");
         var retStr = "";
@@ -106,45 +192,22 @@
         //Проверяем входит ли заданная дата из колонки в окнео визита
         if (calendDate >= data.MinDate && calendDate <= data.MaxDate) {
             //retStr = "<div class='timewindow'>{0}</div>";
-        
-        //
-        if (data.ScheduleDate!= null && calendDate.getTime() == data.ScheduleDate.getTime()) {
-            retStr = "<div class='timewindow'><input type=\"checkbox\" class=\"k-checkbox\" checked value=\"" + calendDateStr + "\" style=\"margin:0;display:none;\" /><span class=\"k-icon k-i-tick\"></span></div>";
 
-        } else {
-            retStr = "<div class='timewindow'><input type=\"checkbox\" class=\"k-checkbox\" disabled value=\"" + calendDateStr + "\" style=\"margin:0;display:none;\" /></div>";
+            //
+            if (data.ScheduleDate!= null && calendDate.getTime() == data.ScheduleDate.getTime()) {
+                retStr = "<div class='timewindow'><input type=\"checkbox\" class=\"k-checkbox\" checked value=\"" + calendDateStr + "\" style=\"margin:0;display:none;\" /><span class=\"k-icon k-i-tick\"></span></div>";
+
+            } else {
+                retStr = "<div class='timewindow'><input type=\"checkbox\" class=\"k-checkbox\"  value=\"" + calendDateStr + "\" style=\"margin:0;display:none;\" /></div>";
+            }
+
         }
-            
-        }
-        //retStr = String.format("retStr", checkBox);
-        
 
-
-        //if ($.inArray(visitId, data.VisitIds) !== -1)
-        //    return "<input class=\"td-visit-checkbox\" type=\"checkbox\" value=\"" + visitId + "\" checked style=\"display:none;margin:0;\" /><span class=\"k-icon k-i-tick\"></span>";
-
-        //return "<input class=\"td-visit-checkbox\" type=\"checkbox\" value=\"" + visitId + "\" style=\"display:none;margin:0;\" />";
-        //var btn = String.format("<button onclick=\"OpenProceduereEmployeeWindow(\'" + visitId + "','" + data.ProcedureCode + "')\" style=\"color:{0}; border:none; background-color:transparent;\" >{1}</button>", 'green', 'v');
-        //if ($.inArray(visitId, data.VisitIds) !== -1) {
-
-        //    return btn;
-        //return "<span style='color:green;'>V</span>"; //"<input type=\"checkbox\" value=\"" + visitId + "\" checked style=\"display:none;margin:0;\" /><span class=\"k-icon k-i-tick\"></span>";
-        //}
         return retStr;
-        //return "<button onclick='OpenProceduereEmployeeWindow()' style='color:red; border:none; background-color:transperent;' >!</button>";
-        //return "<span style='color:red;'>!</span>";//<input type=\"checkbox\" value=\"" + visitId + "\" style=\"display:none;margin:0;\" />
-        // return "<input class=\"td-visit-checkbox\" type=\"checkbox\" value=\"" + visitId + "\" checked style=\"display:none;margin:0;\" /><span class=\"k-icon k-i-tick\"></span>";
 
     }
     function onDataBound(arg) {
         $('.timewindow').parents('td').addClass("timewindow-color");
-        //$('td').each(function() {
-        //    if ($(this).text() == 'Jane') {
-        //        $(this).addClass('customClass');
-        //    }
-        //});
-
-
         var grid = $("#SchedulePlaningVisitsGrid").data("kendoGrid");
         var data = grid.dataSource.data();
 
@@ -158,27 +221,7 @@
             {
                 $('tr[data-uid="' + row.uid + '"] ').css("color", "red");  //yellow
             }
-
-
         });
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -189,35 +232,38 @@
             $("#SchedulePlaningVisitsGrid").find("th.k-header").parent().last().before("<tr id='trParentHeader'> " +
                 " <th colspan='7' class='k-header'>01.01.2015</th> " +
                 " <th scope='col' colspan='7' class='k-header'>08.01.2015</th>" +
-                 " <th scope='col' colspan='7' class='k-header'>12.01.2015</th>" +
+                " <th scope='col' colspan='7' class='k-header'>12.01.2015</th>" +
                 "</tr>");
         }
     }
-    
 
-    var selectedCell;
-    var isProcedureEdit = false;;
+
     function OnSchedulesPlanningEdit(e) {
-        if (!Update()) {
-            e.preventDefault();
-            return;
-        }
-
-        isProcedureEdit = true;
-        //ClearSelection();
-
+        //1.Переводим в режим редактирования строку
+        //удаляем иконки
+        e.container.find('span.k-i-tick').remove();
+        //отображаем инпуты
+        e.container.find('input:checkbox').css("display", "inline-block");
         kendo_grid_onrowedit(e);
+    }
 
-        //var dropDown = kendo.template($("#procedureTemplate").html());
-        //e.container.find("td:eq(1)").html(dropDown({ value: e.model.ProcedureCode }));
-    }
-    
-    function ClearSelection() {
-        var grid = $("#SchedulePlaningVisitsGrid").data("kendoGrid");
-        selectedCell = null;
-        grid.clearSelection();
-    }
-    function Update(){
+   
+
+
+
+
+
+
+
+
+
+
+    //function ClearSelection() {
+    //    var grid = $("#SchedulePlaningVisitsGrid").data("kendoGrid");
+    //    selectedCell = null;
+    //    grid.clearSelection();
+    //}
+        @*function Update(){
         var result = true;
         if(selectedCell != null){
             var input = selectedCell.find("input");
@@ -240,7 +286,7 @@
                 "ProcedureCode": rowData.ProcedureCode,
                 "TrialCode": rowData.TrialCode,
                 "VisitIds": values
-            }; 
+            };
 
             $.ajax({
                 type: "POST",
@@ -261,29 +307,8 @@
     }
 
     return result;
-    }
+        }*@
 
-    function OnSelect(grid){
-        var cell = grid.select();
-        if(cell.length > 0){
-            cell.find("input").css("display","inline-block");
-            cell.find("span").remove();
-            selectedCell = cell;
-        } else {
-            selectedCell = null;
-        }
 
-    }
-    function OnSchedulesPlanningChange(e) {
-        if (isProcedureEdit) {
-            var grid = $("#ProceduresGrid").data("kendoGrid");
-            if (grid.select().length > 0)
-                grid.clearSelection();
-            return;
-        }
-
-        if (Update())
-            OnSelect($("#SchedulePlaningVisitsGrid").data("kendoGrid"));
-    }
 
 </script>
