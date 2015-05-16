@@ -13,8 +13,8 @@ namespace TD.CTS.WebUI.Controllers
         public ActionResult Login(string returnUrl)
         {
             ViewBag.ReturnUrl = returnUrl;
-            return View(new Credentials { Username = "cts", Password = "cts_" });
-            //return View();
+            //return View(new Credentials { Username = "cts", Password = "cts_" });
+            return View();
         }
 
         [HttpPost]

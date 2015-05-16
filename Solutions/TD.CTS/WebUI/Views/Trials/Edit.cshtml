@@ -158,8 +158,7 @@
 <script>
     var isProcedureEdit = false;
     function RequestEnd(e){
-        if(e.type === "update" || e.type === "create")
-        {
+        if(e.type === "update" || e.type === "create"){
             isProcedureEdit = false;
             $('#ProceduresGrid .k-grid-header th:eq(0)').css("min-width", "");
         }
@@ -171,10 +170,10 @@
     }
 
     function OnProcedureEdit(e){
-        if(!Update()){
-            e.preventDefault();
-            return;
-        }
+        //if(!Update(true)){
+        //    e.preventDefault();
+        //    return;
+        //}
 
         isProcedureEdit = true;
         ClearSelection();
@@ -209,7 +208,7 @@
             return;
         }
 
-        if(Update())
+        //if(Update())
             OnSelect($("#ProceduresGrid").data("kendoGrid"));
     }
 
@@ -304,7 +303,7 @@
         return -1;
     }
 
-    function Update(){
+    function Update(endEdit){
         var result = true;
         if(selectedCell != null){
             var input = selectedCell.find("input");
@@ -340,24 +339,34 @@
                 data: data,
                 async: false,
                 success: function (newVisit) {
+                    var rowIdx = $("tr", grid.tbody).index(row);
+                    var colIdx = $("td", row).index(selectedCell);
                     if (checked){
                         rowData.Visits.push(newVisit);
                     }else{
                         rowData.Visits.splice(index, 1);
                     }
                     grid.dataSource.pushUpdate(rowData);
-                    selectedCell.html(SelectedVisit(visitId, rowData));
+                    
+                    selectedCell = $(grid.tbody[0].rows[rowIdx].cells[colIdx]);
+
                     UpdateVisitMaterials();
+                    var saveNotification = $("#SaveNotification").data("kendoNotification");
+                    saveNotification.show("Сохранено", "success");
                 },
                 error: function (error) {
                     result = false;
                     AjaxError(error);
-                    NotChange = true;
-                    grid.select(selectedCell);
-                    OnSelect(grid);
-                    NotChange = false;
+                    endEdit = false;
                 }
             });
+
+            if (!endEdit){
+                NotChange = true;
+                grid.select(selectedCell);
+                OnSelect(grid);
+                NotChange = false;
+            }
         }
 
         return result;
@@ -365,6 +374,14 @@
 
     function OnSelect(grid){
         var cell = grid.select();
+        if (selectedCell != null){
+            var input = selectedCell.find("input");
+            var visitId = parseInt(input.val());
+            var row = selectedCell.closest("tr");
+            var grid = $("#ProceduresGrid").data("kendoGrid");
+            var rowData = grid.dataItem(row);
+            selectedCell.html(SelectedVisit(visitId, rowData));
+        }
         if(cell.length > 0){
             cell.find("input").css("display","inline-block");
             cell.find("span").remove();
@@ -378,10 +395,22 @@
 
     function ClearSelection(){
         var grid = $("#ProceduresGrid").data("kendoGrid");
-        selectedCell = null;
+        if (selectedCell != null){
+            var input = selectedCell.find("input");
+            var visitId = parseInt(input.val());
+            var row = selectedCell.closest("tr");
+            var grid = $("#ProceduresGrid").data("kendoGrid");
+            var rowData = grid.dataItem(row);
+            selectedCell.html(SelectedVisit(visitId, rowData));
+        }
         grid.clearSelection();
         UpdateVisitMaterials();
     }
+
+    $("#ProceduresGrid").on("change", ".td-visit-checkbox", function () {
+        if (!Update())
+            $(this).attr("checked", !($(this).is(":checked")));
+    });
 </script>
 
 @* VisitMaterials *@
