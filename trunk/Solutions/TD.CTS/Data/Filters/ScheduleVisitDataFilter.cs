@@ -6,6 +6,5 @@ namespace TD.CTS.Data.Filters
     {
         public int? ScheduleVisitID { get; set; }
         public int? ScheduleID { get; set; }
-     
     }
 }
