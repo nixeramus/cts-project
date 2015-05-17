@@ -1,0 +1,40 @@
+﻿@using TD.Common.Kendo.Mvc5.Grid
+
+@model TD.CTS.Data.Entities.Schedule
+<input type="hidden" id="VisitRoleEmployeeWindow_VisitId"/>
+@(Html.Kendo().Grid<TD.CTS.Data.Entities.ScheduleEmployee>()
+    .Init("VisitRoleEmployeeGrid")
+    .Columns(columns =>
+    {
+        columns.Buttons(buttons => buttons.Edit()).Width(80);
+        //columns.Bound(e => e.SystemRoleCode).Width(100).Title("Код роли");
+        columns.ForeignKey(e => e.SystemRoleCode, (System.Collections.IEnumerable)ViewBag.SystemRoles, "Code", "Name").Width(300).Title("Роль");
+        columns.ForeignKey(e => e.SystemLogin, (System.Collections.IEnumerable)ViewBag.Users, "Login", "FullName").Width(200).Title("Сотрудник").EditorTemplateName("GridNullableForeignKey");
+        //columns.Bound(e => e.SystemLogin).Width(100).Title("Сотрудник");
+        //columns.Template(e => { }).ClientTemplate(" ").Width("100%").HtmlAttributes(new { @class = "k-group-cell" });
+    })
+    .DataSource(dataSource => dataSource
+        .Ajax()
+        .PageSize(50)
+        .Model(model =>
+        {
+            model.Id(e => e.ScheduleID); //(e => e.Id);
+            model.Id(e => e.SystemRoleCode);
+            model.Field(e => e.SystemRoleCode).Editable(false);
+        })
+         .Read(read => read.Action("GetScheduleEmployees", "Schedules", new { ScheduleID = Model.Id })/*.Data("EmployeesGetDataRead")*/)
+         .Update(update => update.Action("UpdateScheduleVisitEmployee", "Schedules"))
+         //.Destroy(destroy => destroy.Action("DeleteScheduleEmployee", "Schedules"))
+        .Events(events => events.Error("kendo_grid_error_handler"))
+    )
+    .Editable()
+        .Events(events => events.Edit("kendo_grid_onrowedit").Save("OnSaveVisitRoleEmployee"))
+)
+<script>
+    function OnSaveVisitRoleEmployee(e) {
+        var visitId=$("#VisitRoleEmployeeWindow").find("input:hidden#VisitRoleEmployeeWindow_VisitId").val();
+        alert(visitId);
+
+    }
+
+</script>
