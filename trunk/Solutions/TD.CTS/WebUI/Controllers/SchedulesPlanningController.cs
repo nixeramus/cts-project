@@ -11,12 +11,33 @@ namespace TD.CTS.WebUI.Controllers
 {
     public class SchedulesPlanningController : BaseController
     {
-        public ActionResult Index()
+        public ActionResult Index(int? year,int? month)
         {
             ViewBag.Title = "Планирование визитов";
 
+            //DateTime defaultDate;
+            //if (year.HasValue && month.HasValue)
+            //{
+            //    defaultDate = new DateTime(year.Value, month.Value, 1);
+               
+            //}
+            //else
+            //{
+            //    defaultDate = DateTime.Today;
+            //}
+
+            ////var datestart=defaultDate.
+            //var firstDayOfMonth = new DateTime(defaultDate.Year, defaultDate.Month, 1);
+            //var lastDayOfMonth = firstDayOfMonth.AddMonths(1).AddDays(-1);
+
             //ViewBag.Users = DataProvider.GetList(new UserDataFilter());
-            var calend= new ScheduleCalend(new DateTime(2015,05,01), new DateTime(2015,06,01));
+            //var datestart = new DateTime(2015, 05, 01);
+            //var dateend = new DateTime(2015, 06, 01);
+
+
+
+            //var calend = new ScheduleCalend(firstDayOfMonth, lastDayOfMonth);
+            var calend = new ScheduleCalend(year, month);
             ViewBag.Calend = calend;
             return View();
         }
