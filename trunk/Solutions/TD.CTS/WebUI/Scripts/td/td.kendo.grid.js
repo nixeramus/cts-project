@@ -40,7 +40,7 @@ function kendo_grid_clearfilters(grid) {
 
 function kendo_grid_error_handler(e) {
     if (e.errors) {
-        var message = "Errors:\n";
+        var message = "";
         $.each(e.errors, function (key, value) {
             if ('errors' in value) {
                 $.each(value.errors, function () {

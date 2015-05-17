@@ -2,7 +2,7 @@
 @using TD.Common.Kendo.Mvc5.Common
 @using TD.Common.Web.Mvc
 
-@model string
+@model TD.CTS.Data.Entities.Trial
 
 @section head{
     <link href="@Url.Content("~/Content/td/td.kendo.grid.css")" rel="stylesheet" type="text/css" />
@@ -10,6 +10,9 @@
 
     <script src="@Url.Content("~/Scripts/td/td.kendo.grid.js")"></script>
 }
+
+@Html.HiddenFor(model => model.Code)
+@Html.HiddenFor(model => model.Version)
 
 @(Html.Kendo().TabStrip()
     .Name("TabStrip")
@@ -20,13 +23,13 @@
             tabs.Add().Text("Роли")
                 .Selected(true)
                 .ContentHtmlAttributes(new { style = "padding:0;" })
-                .Content(@<text>@Html.Partial("EditorTemplates/RolesEditor", Model)</text>);
+                .Content(@<text>@Html.Partial("EditorTemplates/RolesEditor")</text>);
             tabs.Add().Text("Стоимость визитов")
                 .ContentHtmlAttributes(new { style = "padding:0;" })
-                .Content(@<text>@Html.Partial("EditorTemplates/VisitCostsEditor", Model)</text>);
+                .Content(@<text>@Html.Partial("EditorTemplates/VisitCostsEditor", Model.Code)</text>);
             tabs.Add().Text("Статьи доходов")
                 .ContentHtmlAttributes(new { style = "padding:0;" })
-                .Content(@<text>@Html.Partial("EditorTemplates/IncomeArticlesEditor", Model)</text>);
+                .Content(@<text>@Html.Partial("EditorTemplates/IncomeArticlesEditor", Model.Code)</text>);
         }
     )
 )
@@ -49,6 +52,10 @@
             StretchGrid($(conteiner), $(conteiner.firstElementChild));
         });
     });
+
+    function GetTrialCode() {
+        return { TrialCode: $("#Code").val(), TrialVersionId: $("#Version").val() };
+    }
 
     function ShowTab(e) {
         StretchGrid($(e.contentElement), $(e.contentElement.firstElementChild));

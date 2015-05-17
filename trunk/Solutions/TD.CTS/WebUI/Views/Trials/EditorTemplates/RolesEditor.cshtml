@@ -1,9 +1,11 @@
 ﻿@using TD.Common.Kendo.Mvc5.Grid
 
-@model string
+@model TD.CTS.Data.Entities.Trial
+
+@Html.Partial("EditorTemplates/TrialVersionEditor", Model)
 
 @(Html.Kendo().Grid<TD.CTS.Data.Entities.TrialProcedure>()
-    .Init("ProcedureRolesGrid")
+    .Name("ProcedureRolesGrid")
     .Columns(columns =>
     {
         columns.ForeignKey(e => e.ProcedureCode, (System.Collections.IEnumerable)ViewBag.Procedures, "Code", "Name")
@@ -16,7 +18,7 @@
        {
            model.Id(e => e.Id);
        })
-       .Read(read => read.Action("GetTrialProcedures", "Trials", new { TrialCode = Model }))
+       .Read(read => read.Action("GetTrialProcedures", "Trials").Data("GetTrialCode"))
     )
     .Events(events => events.DataBound("ProcedureRolesGridBound"))
     .ClientDetailTemplateId("RolesTemplate")
@@ -27,7 +29,7 @@
         .Name("RolesGrid_#=Id#")
         .Columns(columns =>
         {
-            columns.ButtonsCrud();
+            columns.Buttons(buttons => { buttons.Add(); buttons.Delete(); }).Width(50);
             columns.ForeignKey(e => e.TrialCenterId, (System.Collections.IEnumerable)ViewBag.TrialCenters, "Id", "Number")
                 .Width(200).Title("Исл. центр");
             columns.ForeignKey(e => e.RoleCode, (System.Collections.IEnumerable)ViewBag.Roles, "Code", "Name")
@@ -40,16 +42,59 @@
             {
                 model.Id(e => e.Id);
             })
-            .Read(read => read.Action("GetTrialCenterProcedureRoles", "Trials", new { TrialProcedureId = "#=Id#" }))
-            .Create(create => create.Action("AddTrialCenterProcedureRole", "Trials", new { ProcedureId = "#=Id#" }))
+            .Read(read => read.Action("GetTrialCenterProcedureRoles", "Trials", new { ProcedureCode = "#=ProcedureCode#" }).Data("GetTrialCode"))
+            .Create(create => create.Action("AddTrialCenterProcedureRole", "Trials"))
             .Update(update => update.Action("UpdateTrialCenterProcedureRole", "Trials"))
             .Destroy(update => update.Action("DeleteTrialCenterProcedureRole", "Trials"))
-            .Events(events => events.Error("kendo_grid_error_handler"))
+            .Events(events => events.Error("kendo_grid_error_handler").RequestEnd("OnRoleRequestEnd"))
         )
-        .Events(events => events.Edit("kendo_grid_onrowedit"))
+        .Events(events => events
+            .Edit("OnRoleEdit")
+            .Save("OnRoleSave")
+            .Cancel("OnRoleCancel")
+        )
         .Scrollable(scroll => scroll.Height("auto"))
         .Editable()
         .ToClientTemplate()
     )
     @Html.Raw(@"<script>kendo_grid_init($(""\\\\#RolesGrid_#=Id#""));<\/script>")
+</script>
+
+<script>
+    $(document).ready(function () {
+        kendo_grid_init($("#ProcedureRolesGrid"));
+    });
+
+    function ProcedureRolesGridBound(e) {
+        this.expandRow(this.tbody.find("tr.k-master-row"));
+    }
+
+    var editGrid = null;
+    function OnRoleSave(e) {
+        var parentData = $("#ProcedureRolesGrid").data("kendoGrid").dataItem(e.sender.element.closest("tr").prev());
+        var trialData = GetTrialCode();
+        e.model.TrialCode = trialData.TrialCode;
+        e.model.TrialVersionId = trialData.TrialVersionId;
+        e.model.ProcedureCode = parentData.ProcedureCode;
+    }
+
+    function OnRoleEdit(e) {
+        editGrid = e.sender.element;
+        kendo_grid_resizeColumn(editGrid, 0, "75px");
+
+        e.container.find("a.k-grid-delete").closest("td").html('<a class="k-button k-button-icontext k-primary k-grid-update td-grid-button" href="#" title="Обновить"><span class="k-icon k-update td-grid-button-image"></span></a>' +
+                    '<a class="k-button k-button-icontext k-grid-cancel td-grid-button" href="#" title="Отмена"><span class="k-icon k-cancel td-grid-button-image"></span></a>');
+    }
+
+    function OnRoleCancel(e) {
+        kendo_grid_resizeColumn(editGrid, 0, "50px");
+        editGrid = null;
+    }
+
+    function OnRoleRequestEnd(e) {
+        if (e.type === "update" || e.type === "create") {
+            kendo_grid_resizeColumn(editGrid, 0, "50px");
+            editGrid = null;
+        }        
+    }
 </script>

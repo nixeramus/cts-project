@@ -13,8 +13,8 @@ namespace TD.CTS.WebUI.Controllers
         public ActionResult Login(string returnUrl)
         {
             ViewBag.ReturnUrl = returnUrl;
-            //return View(new Credentials { Username = "cts", Password = "cts_" });
-            return View();
+            return View(new Credentials { Username = "cts", Password = "cts_" });
+            //return View();
         }
 
         [HttpPost]
@@ -88,6 +88,7 @@ namespace TD.CTS.WebUI.Controllers
 
         private ActionResult RedirectToLocal(string returnUrl)
         {
+            returnUrl = returnUrl.Replace("&amp;", "&");
             if (Url.IsLocalUrl(returnUrl))
             {
                 return Redirect(returnUrl);

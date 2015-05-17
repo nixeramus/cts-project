@@ -6,6 +6,8 @@
     var isNew = ViewBag.IsNew;
 }
 
+@Html.Hidden("Code", Model)
+
 @(Html.Kendo().Grid<TD.CTS.Data.Entities.TrialMaterial>()
     .Init("MaterialsGrid")
     .Editable()
@@ -31,3 +33,13 @@
     .Events(events => events.Edit("kendo_grid_onrowedit"))
     .AutoBind(!isNew)
 )
+
+<script>
+    function GetTrialCode() {
+        return { TrialCode: $("#Code").val() };
+    }
+
+    $(document).ready(function () {
+        kendo_grid_init($("#MaterialsGrid"));
+    });
+</script>

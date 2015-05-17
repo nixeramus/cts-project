@@ -126,5 +126,11 @@ namespace TD.CTS.MockData
 
             SerializeHelper.Serialize(FileName, repositories);
         }
+
+
+        public void Update(Trial entity)
+        {
+            dataProvider.Update(entity);
+        }
     }
 }

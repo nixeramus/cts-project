@@ -163,6 +163,7 @@
     <Compile Include="Models\TaskSchedulerEvent.cs" />
     <Compile Include="Models\TaskViewModel.cs" />
     <Compile Include="Models\TrialProcedureViewModel.cs" />
+    <Compile Include="Models\TrialTabs.cs" />
     <Compile Include="Models\TrialVisitMaterialViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -773,6 +774,7 @@
     <Content Include="Views\Shared\EditorTemplates\Readonly.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Home\UnderConstruction.cshtml" />
+    <Content Include="Views\Trials\EditorTemplates\TrialVersionEditor.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

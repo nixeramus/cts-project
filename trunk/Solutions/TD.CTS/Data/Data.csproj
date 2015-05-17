@@ -47,6 +47,10 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="TD.Common.Data, Version=1.0.0.0, Culture=neutral, PublicKeyToken=e50fa27a826e9f4b, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Windows\Microsoft.NET\assembly\GAC_MSIL\TD.Common.Data\v4.0_1.0.0.0__e50fa27a826e9f4b\TD.Common.Data.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <None Include="Entities\Material.cs" />
@@ -77,6 +81,7 @@
     <Compile Include="Entities\User.cs" />
     <Compile Include="Entities\TrialVisit.cs" />
     <None Include="Filters\MaterialDataFilter.cs" />
+    <Compile Include="Enums\TrialStatus.cs" />
     <Compile Include="Filters\ProcedureDataFilter.cs" />
     <Compile Include="Filters\PatientDataFilter.cs" />
     <Compile Include="Filters\ScheduleEmployeeDataFilter.cs" />

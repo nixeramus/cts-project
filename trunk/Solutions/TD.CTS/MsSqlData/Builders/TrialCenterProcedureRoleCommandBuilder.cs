@@ -46,19 +46,6 @@ namespace TD.CTS.MsSqlData.Builders
         public override SqlCommand CreateUpdateCommand(SqlConnection connection, TrialCenterProcedureRole entity)
         {
             throw new NotSupportedException();
-
-            //var command = new SqlCommand("TrialCenterUpd", connection)
-            //{
-            //    CommandType = System.Data.CommandType.StoredProcedure,
-            //    CommandTimeout = Settings.CommandTimeout
-            //};
-
-            //command.Parameters.AddWithValue("@TrialCenterID", entity.Id);
-            //command.Parameters.AddWithValue("@TrialCenterName", entity.Number);
-            //command.Parameters.AddWithValue("@PISystemLogin", entity.AnatomistLogin);
-            //command.Parameters.AddWithValue("@COSystemLogin", entity.CoordinatorLogin.GetNullableParameterValue());
-            
-            //return command;
         }
 
         public override SqlCommand CreateDeleteCommand(SqlConnection connection, TrialCenterProcedureRole entity)

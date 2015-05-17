@@ -1,4 +1,5 @@
 ﻿@using TD.Common.Kendo.Mvc5.Grid
+@using TD.CTS.WebUI.Models
 
 @model TD.CTS.Data.Entities.Trial
 
@@ -18,46 +19,109 @@
 
 @{
     var isNew = ViewBag.IsNew;
+    var tab = ViewBag.Tab == null ? TrialTab.Main : (TrialTab)ViewBag.Tab;
 }
 
-@(Html.Kendo().TabStrip()
-    .Name("TabStrip")
-    .Animation(false)
-    .Events(events => events.Show("ShowTab"))
-    .Items(tabs =>
+@if (isNew)
+{
+    <div id="MainContent" style="overflow:auto;" class="k-content k-state-active">
+        @Html.Partial("EditorTemplates/MainEditor")
+    </div>
+    <script>
+        $(document).ready(function () {
+            SetContentBlock($("#MainContent"));
+        });
+
+        $(window).bind("resize", function () {
+            SetContentBlock($("#MainContent"));
+        });
+    </script>
+}
+else
+{ 
+    @(Html.Kendo().TabStrip()
+        .Name("TabStrip")
+        .Animation(false)
+        //.Events(events => events.Show("ShowTab"))
+        .Items(tabs =>
+            {
+                var trialCode = Model.Code ?? "";
+                var tabBuilder = tabs.Add().Text("Основное");
+                if (tab == TrialTab.Main)
                 {
-                    var trialCode = Model.Code ?? "";
-                    //tabs.Add().Text("Назад").Action("Index", "Trials");
-                    tabs.Add().Text("Основное")
-                        .Selected(true)
-                        .Content(@<text>@Html.Partial("EditorTemplates/MainEditor")</text>);
-                    tabs.Add().Text("Материалы")
-                        .ContentHtmlAttributes(new { style = "padding:0;" })
-                        .Content(@<text>@Html.Partial("EditorTemplates/MaterialsEditor", trialCode)</text>)
-                        .Enabled(!isNew);
-                    tabs.Add().Text("Визиты")
-                        .ContentHtmlAttributes(new { style = "padding:0;" })
-                        .Content(@<text>@Html.Partial("EditorTemplates/ProceduresEditor")</text>)
-                        .Enabled(!isNew);
-                    @*tabs.Add().Text("Роли")
-                        .ContentHtmlAttributes(new { style = "padding:0;" })
-                        .Content(@<text>@Html.Partial("EditorTemplates/RolesEditor", trialCode)</text>)
-                        .Enabled(!isNew);
-                    tabs.Add().Text("Стоимость визитов")
-                        .ContentHtmlAttributes(new { style = "padding:0;" })
-                        .Content(@<text>@Html.Partial("EditorTemplates/VisitCostsEditor", trialCode)</text>)
-                        .Enabled(!isNew);
-                    tabs.Add().Text("Статьи доходов")
-                        .ContentHtmlAttributes(new { style = "padding:0;" })
-                        .Content(@<text>@Html.Partial("EditorTemplates/IncomeArticlesEditor", trialCode)</text>)
-                        .Enabled(!isNew);*@
+                    tabBuilder.Selected(true).Content(@<text>@Html.Partial("EditorTemplates/MainEditor")</text>);
                 }
+                else
+                    tabBuilder.Action("Edit", "Trials", new { Id = Model.Code, VersionId = Model.Version, Tab = TrialTab.Main });
+
+                tabBuilder = tabs.Add().Text("Материалы");
+                if (tab == TrialTab.Materials)
+                {
+                    tabBuilder.Selected(true).ContentHtmlAttributes(new { style = "padding:0;" })
+                    .Content(@<text>@Html.Partial("EditorTemplates/MaterialsEditor", trialCode)</text>);
+                }
+                else
+                    tabBuilder.Action("Edit", "Trials", new { Id = Model.Code, VersionId = Model.Version, Tab = TrialTab.Materials });
+
+                tabBuilder = tabs.Add().Text("Визиты");
+                if (tab == TrialTab.Visits)
+                {
+                    tabBuilder.Selected(true).ContentHtmlAttributes(new { style = "padding:0;" })
+                    .Content(@<text>@Html.Partial("EditorTemplates/ProceduresEditor", Model)</text>);
+                }
+                else
+                    tabBuilder.Action("Edit", "Trials", new { Id = Model.Code, VersionId = Model.Version, Tab = TrialTab.Visits });
+
+                tabBuilder = tabs.Add().Text("Роли");
+                if (tab == TrialTab.Roles)
+                {
+                    tabBuilder.Selected(true).ContentHtmlAttributes(new { style = "padding:0;" })
+                    .Content(@<text>@Html.Partial("EditorTemplates/RolesEditor", Model)</text>);
+                }
+                else
+                    tabBuilder.Action("Edit", "Trials", new { Id = Model.Code, VersionId = Model.Version, Tab = TrialTab.Roles });
+                    
+                @*tabs.Add().Text("Стоимость визитов")
+                    .ContentHtmlAttributes(new { style = "padding:0;" })
+                    .Content(@<text>@Html.Partial("EditorTemplates/VisitCostsEditor", trialCode)</text>)
+                    .Enabled(!isNew);
+                tabs.Add().Text("Статьи доходов")
+                    .ContentHtmlAttributes(new { style = "padding:0;" })
+                    .Content(@<text>@Html.Partial("EditorTemplates/IncomeArticlesEditor", trialCode)</text>)
+                    .Enabled(!isNew);*@
+            }
+        )
     )
-)
+
+    @(Html.Kendo().Notification()
+        .Name("SaveNotification")
+        .Position(p => p.Pinned(true).Top(115).Right(30))
+        .Width(150)
+    )
+
+    <script>
+        $(document).ready(function () {
+            SetContentBlock($("#TabStrip .k-content"));
+        });
+
+        $(window).bind("resize", function () {
+            var tabStrip = $("#TabStrip").data("kendoTabStrip");
+            var tab = tabStrip.select();
+            var index = tab.index();
+            if (index === 1) {
+                var conteiner = tabStrip.contentElements[0];
+                StretchGrid($(conteiner), $(conteiner).find(".k-grid"));
+            }
+        });
+    </script>
+}
+
+
+
 
 
 @* Main *@
-<script>
+@*<script>
     var validator = $("#trialForm").kendoValidator().data("kendoValidator");
     var isNew = @isNew.ToString().ToLower();
 
@@ -90,9 +154,7 @@
         }
     });
 
-    function GetTrialCode(){
-        return { TrialCode: $("#Code").val(), TrialVersionId: $("#Version").data("kendoDropDownList").value() };
-    }
+    
 
     function SaveTrial() {
         if (validator.validate()) {
@@ -138,10 +200,10 @@
 
         StretchGrid($(e.contentElement), $(e.contentElement.firstElementChild));
     }
-</script>
+</script>*@
 
 @* TrialCenter *@
-<script>
+@*<script>
     function OnCenterSave(e){
         e.model.TrialCode = $("#Code").val();
     }
@@ -152,10 +214,10 @@
             e.container.find("#HospitalId").data("kendoDropDownList").enable(false);
         }
     }
-</script>
+</script>*@
 
 @* Procedures *@
-<script>
+@*<script>
     var isProcedureEdit = false;
     function RequestEnd(e){
         if(e.type === "update" || e.type === "create"){
@@ -170,11 +232,6 @@
     }
 
     function OnProcedureEdit(e){
-        //if(!Update(true)){
-        //    e.preventDefault();
-        //    return;
-        //}
-
         isProcedureEdit = true;
         ClearSelection();
 
@@ -208,8 +265,7 @@
             return;
         }
 
-        //if(Update())
-            OnSelect($("#ProceduresGrid").data("kendoGrid"));
+        OnSelect($("#ProceduresGrid").data("kendoGrid"));
     }
 
     function GetTrialProcedureId(){
@@ -219,10 +275,10 @@
         return { trialProcedureId: data.Id };
     }
 
-</script>
+</script>*@
 
 @* Visits *@
-<script>
+@*<script>
     function LoadVisitEdit(id){
         var window = $("#VisitEdit").data("kendoWindow");
         window.refresh({
@@ -277,10 +333,10 @@
             });
         }
     }
-</script>
+</script>*@
 
 @* Checkboxes *@
-<script>
+@*<script>
     var selectedCell;
 
     function SelectedVisit(visitId, data){
@@ -411,10 +467,10 @@
         if (!Update())
             $(this).attr("checked", !($(this).is(":checked")));
     });
-</script>
+</script>*@
 
 @* VisitMaterials *@
-<script>
+@*<script>
     var visitMaterialsData = null;
     function UpdateVisitMaterials(){
         var div = $("#VisitMaterials");
@@ -468,6 +524,6 @@
             kendo_grid_resizeColumn($('#VisitMaterialsGrid'), 0, "50px");
         }
     }
-</script>
+</script>*@
 
 
