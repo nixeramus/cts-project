@@ -45,6 +45,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes\EnumDescriptionAttribute.cs" />
+    <Compile Include="Entities\KeyValue.cs" />
+    <Compile Include="EnumExtensions.cs" />
     <Compile Include="Exceptions\DataException.cs" />
     <Compile Include="Exceptions\IExceptionManager.cs" />
     <Compile Include="LinqExtensions.cs" />
