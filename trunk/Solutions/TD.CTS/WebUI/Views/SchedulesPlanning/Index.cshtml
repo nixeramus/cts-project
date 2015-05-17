@@ -40,7 +40,7 @@
                   .Format("MMMM yyyy")
                     //.Value("November 2011")
                   .Value(dt)
-                  .HtmlAttributes(new { style = "width:150px" }))
+                  .HtmlAttributes(new { style = "width:150px", @onkeydown = "javascript:return false;" }))
 
         </td>
         <td style="width:250px;">
@@ -125,10 +125,13 @@
     var urlDelVisit = "@Url.Action("DeleteScheduleVisit", "SchedulesPlanning")";
     var grid;
     $(document).ready(function () {
+        //$('#monthpicker').attr("readonly", "readonly");
         grid = $("#SchedulePlaningVisitsGrid");
         var headStr = "<tr id='trParentHeader' class='parentHeaderCol'>";
-        grid.data("kendoGrid").thead.find('.dayOfWeek').each(function (index) {
-            if ($(this).text() == 'Пн') { headStr += "<th colspan='7' class='k-header'>" + $(this).attr('title') + "</th>"; }
+        grid.data("kendoGrid").thead.find('.dayOfWeek').each(function(index) {
+            if ($(this).text() == 'Пн') {
+                headStr += "<th colspan='7' class='k-header'>" + $(this).attr('title') + "</th>";
+            }
             //} else {
             //    headStr += "<th  class='k-header'></th>";
             //}
@@ -143,7 +146,7 @@
         //}
 
         kendo_grid_init(grid, true);
-        grid.on("change", "input:checkbox", function () {
+        grid.on("change", "input:checkbox", function() {
             if ($(this).is(":checked")) {
                 grid.find('input:checkbox').not(this).prop('checked', false);
 
@@ -171,9 +174,12 @@
                 //model.dirty = true;
                 SaveScheduleVisit(model, urlSaveVisit);
                 //после вставки вычитать грид для обновления айдишки
-                if (model.Id == null)
-                { kendo_grid_reload(grid); }
-            } else { alert('Дата не изменилась'); }
+                if (model.Id == null) {
+                    kendo_grid_reload(grid);
+                }
+            } else {
+                alert('Дата не изменилась');
+            }
         } else {
             //Если галка не выбрана
             if (model.Id != null) {
@@ -189,7 +195,7 @@
 
 
             } else {
-                
+
                 alert("Выберите дату");
             }
 
@@ -197,14 +203,11 @@
     }
 
 
-
     function OnSchedulesPlanningCancel(arg) {
         arg.preventDefault();
         kendo_grid_reload(grid);
         // $("#SchedulePlaningVisitsGrid").data("kendoGrid").cancelRow();
     }
-
-
 
 
     function SaveScheduleVisit(data, url) {
@@ -223,14 +226,12 @@
         };
 
 
-
-
         $.ajax({
             type: "POST",
             url: url,
             data: sendData,
             async: false,
-            success: function (newVisit) {
+            success: function(newVisit) {
                 //alert(newVisit);
                 //if (checked) {
                 //    rowData.Visits.push(newVisit);
@@ -240,7 +241,7 @@
                 //grid.dataSource.pushUpdate(rowData);
                 //selectedCell.html(SelectedVisit(visitId, rowData));
             },
-            error: function (error) {
+            error: function(error) {
                 //result = false;
                 AjaxError(error);
                 //NotChange = true;
@@ -272,19 +273,20 @@
         return retStr;
 
     }
+
     function onDataBound(arg) {
         $('.timewindow').parents('td').addClass("timewindow-color");
         var grid = $("#SchedulePlaningVisitsGrid").data("kendoGrid");
         var data = grid.dataSource.data();
 
-        $.each(data, function (i, row) {
+        $.each(data, function(i, row) {
             var status = row.RankState;
 
             if (status == 1) {
                 $('tr[data-uid="' + row.uid + '"] ').css("color", "orange"); //green
             }
             if (status == 2) {
-                $('tr[data-uid="' + row.uid + '"] ').css("color", "red");  //yellow
+                $('tr[data-uid="' + row.uid + '"] ').css("color", "red"); //yellow
             }
         });
     }
@@ -299,16 +301,22 @@
         kendo_grid_onrowedit(e);
     }
 
+    var validator = $("#scheduleForm").kendoValidator().data("kendoValidator");
+
     function ShowReport() {
+        //if (validator.validate()) {
         var monthControl = $("#monthpicker").data("kendoDatePicker");
         var monthControlVal = monthControl.value();
-        var data =
-        {
-            year: monthControlVal.getFullYear(),
-            month: monthControlVal.getMonth() + 1
-        };
+        if (monthControlVal != null) {
+            var data =
+            {
+                year: monthControlVal.getFullYear(),
+                month: monthControlVal.getMonth() + 1
+            };
 
-        $().redirect("@Url.Action("Index", "SchedulesPlanning")", data);
+            $().redirect("@Url.Action("Index", "SchedulesPlanning")", data);
+            }
+          //  }
     }
 
 
