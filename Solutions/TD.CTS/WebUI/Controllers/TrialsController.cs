@@ -8,6 +8,8 @@ using System.Web.Mvc;
 using TD.CTS.Data.Entities;
 using TD.CTS.Data.Filters;
 using TD.CTS.WebUI.Common;
+using TD.CTS.Data.Enums;
+using TD.Common.Data;
 
 namespace TD.CTS.WebUI.Controllers
 {
@@ -18,6 +20,8 @@ namespace TD.CTS.WebUI.Controllers
             ViewBag.Title = "Исследования";
 
             ViewBag.Users = DataProvider.GetList(new UserDataFilter());
+
+            ViewBag.Statuses = EnumExtensions.GetDictionary(typeof(TrialStatus));
 
             return View();
         }

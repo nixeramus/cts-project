@@ -22,5 +22,7 @@ namespace TD.CTS.Data
         void Update<TEntity>(TEntity entity) where TEntity : Entity;
 
         void Delete<TEntity>(TEntity entity) where TEntity : Entity;
+
+        void Update(Trial entity);
     }
 }

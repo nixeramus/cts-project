@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Data.SqlClient;
+using TD.Common.Data;
 using TD.CTS.Data.Entities;
+using TD.CTS.Data.Enums;
 using TD.CTS.Data.Filters;
 
 namespace TD.CTS.MsSqlData.Builders
@@ -80,7 +82,8 @@ namespace TD.CTS.MsSqlData.Builders
             entity.AdministratorLogin = reader.GetString("AdministratorLogin");
             entity.AuthorLogin = reader.GetString("AuthorLogin");
             entity.CreateDate = reader.GetValue<DateTime>("CreateDate");
-            entity.Status = reader.GetString("TrialStatus");
+            entity.Status = EnumExtensions.GetByDescription<TrialStatus>(reader.GetString("TrialStatus"));
+            entity.OriginalStatus = entity.Status;
             entity.TaxiBooking = reader.GetValue<bool>("TaxiBooking");
             entity.TaxiService = reader.GetNullableString("TaxiService");
             entity.Version = reader.GetValue<int>("TrialVersionNo");

@@ -9,43 +9,60 @@ using TD.CTS.Data.Entities;
 using TD.CTS.Data.Filters;
 using TD.CTS.WebUI.Common;
 using TD.CTS.WebUI.Models;
+using TD.Common.Data;
+using TD.CTS.Data.Enums;
 
 namespace TD.CTS.WebUI.Controllers
 {
     public partial class TrialsController
     {
-        public ActionResult Edit(string id)
+        public ActionResult Edit(string id, int? versionId, TrialTab? tab)
         {
-            ViewBag.Title = "Описание исследования";
+            ViewBag.Tab = tab;
 
             Trial trial;
             if (string.IsNullOrEmpty(id))
             {
                 ViewBag.IsNew = true;
                 trial = new Trial { Version = 1 };
-
-                ViewBag.Versions = new[] { new { Id = 1, Name = "1 (Новая)" } };
+                //ViewBag.Versions = new[] { new { Id = 1, Name = "1 (Новая)" } };
+                ViewBag.Title = "Создание исследования";
             }
             else
             {
                 trial = DataProvider.GetItem(new TrialDataFilter { Code = id });
+                trial.Version = versionId.HasValue ? versionId.Value : 1;
                 if (trial == null)
                     throw new ApplicationException("Исследование с кодом '" + id + "' не найдено");
                 ViewBag.IsNew = false;
-
-                ViewBag.Versions = DataProvider.GetList(new TrialVersionDataFilter()).Select(v => new { Id = v.Id, Name = string.Format("{0} ({1})", v.Id, v.VersionStatus) });
+                //ViewBag.Versions = DataProvider.GetList(new TrialVersionDataFilter()).Select(v => new { Id = v.Id, Name = string.Format("{0} ({1})", v.Id, v.VersionStatus) });
+                ViewBag.Versions = new[] { new { Id = 1, Name = "1 (Новая)" } };
+                ViewBag.Title = "Описание исследования";
             }
 
-            var users = DataProvider.GetList(new UserDataFilter());
-
-            ViewBag.Users = users;
-            ViewBag.AdministratorLogin_Data = new SelectList(users, "Login", "FullName");
-
-            ViewBag.Hospitals = DataProvider.GetList(new HospitalDataFilter());
-
-            ViewBag.Procedures = DataProvider.GetList(new ProcedureDataFilter());
-
-            ViewBag.Visits = DataProvider.GetList(new TrialVisitDataFilter { TrialCode = id }).OrderBy(v => v.Days);
+            switch (tab)
+            {
+                case TrialTab.Main:
+                case null:
+                    ViewBag.Statuses = EnumExtensions.GetDictionary(typeof(TrialStatus)).Where(x => x.Key >= (int)trial.Status);
+                    
+                    var users = DataProvider.GetList(new UserDataFilter());
+                    ViewBag.Users = users;
+                    ViewBag.AdministratorLogin_Data = new SelectList(users, "Login", "FullName");
+                    ViewBag.Hospitals = DataProvider.GetList(new HospitalDataFilter());
+                    break;
+                case TrialTab.Visits:
+                    ViewBag.Procedures = DataProvider.GetList(new ProcedureDataFilter());
+                    ViewBag.Visits = DataProvider
+                        .GetList(new TrialVisitDataFilter { TrialCode = trial.Code, TrialVersionId = trial.Version  })
+                        .OrderBy(v => v.Days);
+                    break;
+                case TrialTab.Roles:
+                    ViewBag.Procedures = DataProvider.GetList(new ProcedureDataFilter());
+                    ViewBag.TrialCenters = DataProvider.GetList(new TrialCenterDataFilter { TrialCode = id });
+                    ViewBag.Roles = DataProvider.GetList(new RoleDataFilter());
+                    break;
+            }
 
             return View(trial);
         }
@@ -175,12 +192,14 @@ namespace TD.CTS.WebUI.Controllers
 
         public ActionResult GetProceduresEditor(string trialCode, int trialVersionId)
         {
+            ViewBag.Versions = new[] { new { Id = 1, Name = "1 (Новая)" } };
+            
             ViewBag.Procedures = DataProvider.GetList(new ProcedureDataFilter());
 
             ViewBag.Visits = DataProvider.GetList(new TrialVisitDataFilter { TrialCode = trialCode, TrialVersionId = trialVersionId })
                 .OrderBy(v => v.Days);
 
-            return PartialView("EditorTemplates/ProceduresEditor");
+            return PartialView("EditorTemplates/ProceduresEditor", new Trial { Code = trialCode, Version = trialVersionId });
         }
 
         public JsonResult GetProcedures(TrialProcedureDataFilter dataFilter)

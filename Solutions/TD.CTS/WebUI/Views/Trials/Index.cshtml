@@ -23,9 +23,9 @@
             buttons.Custom().Tag(ButtonTag.a).Url(Url.Action("Edit", "Trials") + "/#:Code#").Title("Изменить").ImageCssClass("k-edit");
             buttons.Delete();
             //buttons.Custom().Tag(ButtonTag.a).Url(Url.Action("RolesEdit", "Trials") + "/#:Code#").Title("Роли и стоимость").ImageCssClass("k-i-custom");
-        }, filterRow).Width(80);//110);
+        }, filterRow).Width(80);
         columns.Bound(e => e.Name, filterRow).Width(200).Title("Наименование");
-        columns.Bound(e => e.Status).Width(100).Title("Статус");
+        columns.ForeignKey(e => e.Status, (System.Collections.IEnumerable)ViewBag.Statuses, "Key", "Value").Width(100).Title("Статус");
         filterRow.AddCell(new EmptyFilterCell());
         columns.Bound(e => e.CreateDate).Width(265).Title("Дата создания").Format("{0:dd.MM.yyyy HH:mm}");
         filterRow.AddCell(new DateRangeFilterCell("CreateDate"));

@@ -7,19 +7,22 @@
 }
 
 <table id="trialForm" class="td-formTable" style="width:auto;margin-bottom:20px;">
+    @*@Html.Partial("EditorTemplates/TrialVersionEditor", Model)*@
     <tr>
         <td class="td-formTable-caption" colspan="2" style="width:250px;">Код исследования</td>
         <td>
             @Html.EditorFor(model => model.Code)
         </td>
     </tr>
-    <tr id="VersionRow" style="display:none;">
-        <td class="td-formTable-caption" colspan="2" style="width:250px;">Версия исследования</td>
+    <tr id="StatusRow" style="display:none;">
+        <td class="td-formTable-caption" colspan="2" style="width:250px;">Статус исследования</td>
         <td>
-            @(Html.Kendo().DropDownListFor(model => model.Version)
-                .BindTo((System.Collections.IEnumerable)ViewBag.Versions)
-                .DataTextField("Name")
-                .DataValueField("Id")
+            @(Html.Kendo().DropDownList()
+                .Name("Status")
+                .BindTo((System.Collections.IEnumerable)ViewBag.Statuses)
+                .DataTextField("Value")
+                .DataValueField("Key")
+                .Value(((int)Model.Status).ToString())
             )
         </td>
     </tr>
@@ -48,10 +51,8 @@
         </td>
     </tr>
     <tr>
-        <td class="td-formTable-caption">Утверждено</td>
-        <td>
-            @Html.EditorFor(model => model.Approved)
-        </td>
+        <td class="td-formTable-caption"></td>
+        <td></td>
         <td>
             @(Html.Kendo().Button()
                 .Name("SaveButton")
@@ -67,12 +68,6 @@
         <td colspan="3"></td>
     </tr>
 </table>
-
-@(Html.Kendo().Notification()
-    .Name("SaveNotification")
-    .Position(p => p.Pinned(true).Top(115).Right(30))
-    .Width(150)
-)
 
 @(Html.Kendo().Grid<TD.CTS.Data.Entities.TrialCenter>()
     .Init("CentersGrid")
@@ -103,3 +98,58 @@
          .AutoBind(!isNew)
 )
 
+<script>
+    function GetTrialCode() {
+        return { TrialCode: $("#Code").val() };
+    }
+
+    var validator = $("#trialForm").kendoValidator().data("kendoValidator");
+    var isNew = @isNew.ToString().ToLower();
+
+    $(document).ready(function () {
+        kendo_grid_init($("#CentersGrid"));
+
+        if(!isNew){
+            $("#Code").attr("readonly", true);
+            $("#StatusRow").css("display", "table-row");
+        }
+    });
+
+    function SaveTrial() {
+        if (validator.validate()) {
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action(isNew ? "AddTrial" : "UpdateTrial", "Trials")",
+                data: {
+                    Code: $("#Code").val(),
+                    Name: $("#Name").val(),
+                    AdministratorLogin: $("#AdministratorLogin").val(),
+                    TaxiBooking: $("#TaxiBooking").is(":checked"),
+                    TaxiService: $("#TaxiService").val(),
+                    Status: $("#Status").data("kendoDropDownList").value()
+                },
+                success: function (result) {
+                    if(isNew) {
+                        window.location.replace("@Url.Action("Edit", "Trials")" + "/" + $("#Code").val());
+                        return;
+                    }
+
+                    var saveNotification = $("#SaveNotification").data("kendoNotification");
+                    saveNotification.show("Сохранено", "success");
+                },
+                error: AjaxError
+            });
+        }
+    }
+
+    function OnCenterSave(e){
+        e.model.TrialCode = $("#Code").val();
+    }
+
+    function OnCenterEdit(e) {
+        kendo_grid_onrowedit(e);
+        if (e.model.isNew() == false) {
+            e.container.find("#HospitalId").data("kendoDropDownList").enable(false);
+        }
+    }
+</script>

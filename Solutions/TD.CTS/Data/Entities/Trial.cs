@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TD.CTS.Data.Enums;
 
 namespace TD.CTS.Data.Entities
 {
@@ -17,7 +18,7 @@ namespace TD.CTS.Data.Entities
         [Required(ErrorMessage = "Наименование не задано")]
         public string Name { get; set; }
 
-        public string Status { get; set; }
+        public TrialStatus Status { get; set; }
 
         public DateTime CreateDate { get; set; }
 
@@ -33,6 +34,6 @@ namespace TD.CTS.Data.Entities
 
         public string VersionStatus { get; set; }
 
-        public bool Approved { get; set; }
+        public TrialStatus OriginalStatus { get; set; }
     }
 }

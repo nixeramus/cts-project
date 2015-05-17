@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Reflection;
 using TD.Common.Data.Exceptions;
+using TD.Common.Data;
 using TD.CTS.Data;
 using TD.CTS.Data.Entities;
 using TD.CTS.Data.Filters;
@@ -49,6 +50,59 @@ namespace TD.CTS.MsSqlData
             this.connectionString = connectionString;
 
             this.exceptionManager = exceptionManager ?? new MsSqlExceptionManager();
+        }
+
+        public void Update(Trial entity)
+        {
+            dynamic builder = builders[typeof(Trial)];
+
+            var connection = new SqlConnection(connectionString);
+
+            SqlCommand command = builder.CreateUpdateCommand(connection, entity);
+
+            SqlCommand statusCommand = null;
+            SqlTransaction tran = null;
+            if (entity.OriginalStatus != entity.Status)
+            {
+                statusCommand = new SqlCommand("TrialChangeStatus", connection)
+                {
+                    CommandType = System.Data.CommandType.StoredProcedure,
+                    CommandTimeout = Settings.CommandTimeout
+                };
+
+                statusCommand.Parameters.AddWithValue("@TrialCode", entity.Code);
+                statusCommand.Parameters.AddWithValue("@NewTrialStatus", entity.Status.GetDescription());
+            }
+
+            try
+            {
+                connection.Open();
+                if (statusCommand == null)
+                {
+                    command.ExecuteNonQuery();
+                }
+                else
+                {
+                    tran = connection.BeginTransaction();
+                    command.Transaction = tran;
+                    statusCommand.Transaction = tran;
+                    command.ExecuteNonQuery();
+                    statusCommand.ExecuteNonQuery();
+
+                    tran.Commit();
+                }
+            }
+            catch (Exception ex)
+            {
+                if (tran != null)
+                    tran.Rollback();
+
+                throw LogException(MethodBase.GetCurrentMethod().Name, typeof(Trial), ex);
+            }
+            finally
+            {
+                connection.Close();
+            }
         }
 
         public List<TEntity> GetList<TEntity>(DataFilter<TEntity> filter)
@@ -278,5 +332,7 @@ namespace TD.CTS.MsSqlData
 
             return true;
         }
+
+        
     }
 }

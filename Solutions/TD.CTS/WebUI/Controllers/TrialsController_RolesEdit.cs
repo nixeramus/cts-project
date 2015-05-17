@@ -21,14 +21,14 @@ namespace TD.CTS.WebUI.Controllers
             ViewBag.TrialCenters = DataProvider.GetList(new TrialCenterDataFilter { TrialCode = id });
             ViewBag.Roles = DataProvider.GetList(new RoleDataFilter());
 
-            return View((object)id);
+            return View(new Trial { Code = id, Version = 1 });
         }
 
         #region TrialCenterProcedureRole
 
-        public ActionResult GetTrialCenterProcedureRoles([DataSourceRequest]DataSourceRequest request, TrialCenterProcedureRoleDataFilter filter)
+        public ActionResult GetTrialCenterProcedureRoles([DataSourceRequest]DataSourceRequest request, TrialCenterProcedureRoleDataFilter dataFilter)
         {
-            var response = DataProvider.GetList(filter);//new TrialCenterProcedureRoleDataFilter { ProcedureCode = trialProcedureId });
+            var response = DataProvider.GetList(dataFilter);//new TrialCenterProcedureRoleDataFilter { ProcedureCode = trialProcedureId });
 
             return Json(response.ToDataSourceResult(request));
         }
@@ -44,17 +44,6 @@ namespace TD.CTS.WebUI.Controllers
 
             return Json(new[] { role }.ToDataSourceResult(request, ModelState));
         }
-
-        //[AcceptVerbs(HttpVerbs.Post)]
-        //public ActionResult UpdateTrialCenterProcedureRole([DataSourceRequest] DataSourceRequest request, TrialCenterProcedureRole role)
-        //{
-        //    if (role != null && ModelState.IsValid)
-        //    {
-        //        DataProvider.Update(role);
-        //    }
-
-        //    return Json(new[] { role }.ToDataSourceResult(request, ModelState));
-        //}
 
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult DeleteTrialCenterProcedureRole([DataSourceRequest] DataSourceRequest request, TrialCenterProcedureRole role)

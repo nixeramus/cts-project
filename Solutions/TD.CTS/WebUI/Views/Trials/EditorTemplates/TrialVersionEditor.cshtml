@@ -1,0 +1,37 @@
+﻿@using TD.Common.Kendo.Mvc5.Grid
+
+@model TD.CTS.Data.Entities.Trial
+
+@{
+    var isNew = ViewBag.IsNew;
+}
+
+<table id="trialForm" class="td-formTable" style="width:auto;margin:0;">
+    <tr>
+        <td class="td-formTable-caption" colspan="2">Код исследования</td>
+        <td>
+            @Html.EditorFor(model => model.Code)
+        </td>
+        <td class="td-formTable-caption" colspan="2" style="width:150px;">Версия исследования</td>
+        <td>
+            @(Html.Kendo().DropDownListFor(model => model.Version)
+                .BindTo((System.Collections.IEnumerable)ViewBag.Versions)
+                .DataTextField("Name")
+                .DataValueField("Id")
+            )
+            @Html.Kendo().Button().Name("NewVersionButton").Content("Создать версию")
+            @Html.Kendo().Button().Name("ActivateVersionButton").Content("Сделать активной")
+        </td>
+    </tr>
+</table>
+
+<script>
+    function GetTrialCode() {
+        return { TrialCode: $("#Code").val(), TrialVersionId: $("#Version").data("kendoDropDownList").value() };
+    }
+
+    $(document).ready(function () {
+        $("#Code").attr("readonly", true).css("width", "100px");
+    });
+</script>
+
