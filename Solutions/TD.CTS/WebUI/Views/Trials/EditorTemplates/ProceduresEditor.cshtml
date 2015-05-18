@@ -7,7 +7,7 @@
 @(Html.Kendo().Grid<TD.CTS.WebUI.Models.TrialProcedureViewModel>()
     .Name("ProceduresGrid")
     .Selectable(select => select.Type(GridSelectionType.Cell))
-    .Editable()
+    .Editable(edit => edit.CreateAt(GridInsertRowPosition.Bottom))
     .Columns(columns =>
     {
         columns.Buttons(buttons => { buttons.Add(); buttons.Delete(); })
@@ -44,8 +44,9 @@
        .Read(read => read.Action("GetTrialProcedures", "Trials").Data("GetTrialCode"))
        .Create(create => create.Action("AddTrialProcedure", "Trials"))
        .Destroy(destroy => destroy.Action("DeleteTrialProcedure", "Trials"))
+       .Sort(sort => sort.Add(e => e.Id))
        .Events(events => events
-           .Error("kendo_grid_error_handler").RequestEnd("RequestEnd"))
+           .Error("OnProcedureError").RequestEnd("RequestEnd"))
     )
     .Events(events => events
         .Edit("OnProcedureEdit")
@@ -212,6 +213,11 @@
         var grid = jGrid.data("kendoGrid");
         var data = grid.dataItem(jGrid.find(".k-grid-edit-row"));
         return { trialProcedureId: data.Id };
+    }
+
+    function OnProcedureError(e) {
+        $('#ProceduresGrid').data("kendoGrid").cancelChanges();
+        kendo_grid_error_handler(e);
     }
 
 </script>

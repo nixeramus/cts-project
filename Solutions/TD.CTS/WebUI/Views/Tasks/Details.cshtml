@@ -71,14 +71,14 @@
                 )
             </td>
             <td>
-                @(Html.Kendo().Grid<TD.CTS.Data.Entities.TrialVisitMaterial>()
+                @(Html.Kendo().Grid<TD.CTS.WebUI.Models.TrialVisitMaterialViewModel>()
                     .Name("MaterialsGrid")
                     .HtmlAttributes(new { style = "width:400px;" })
                     .Scrollable()
                     .Columns(columns =>
                     {
                         columns.Bound(e => e.MaterialName).Width(250).Title("Материал");
-                        columns.Bound(e => e.Quantity).Width("100%").Title("Количество");
+                        //columns.Bound(e => e.Quantity).Width("100%").Title("Количество");
                     })
                     .DataSource(dataSource => dataSource
                        .Ajax()
