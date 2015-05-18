@@ -66,6 +66,7 @@
     <Compile Include="Entities\ProcedureEmployee.cs" />
     <Compile Include="Entities\ScheduleStatus.cs" />
     <Compile Include="Entities\SchedulePlaningVisit.cs" />
+    <Compile Include="Entities\ScheduleVisitEmployee.cs" />
     <Compile Include="Entities\ScheduleVisitProcedure.cs" />
     <Compile Include="Entities\Task.cs" />
     <Compile Include="Entities\Trial.cs" />
