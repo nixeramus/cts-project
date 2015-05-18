@@ -93,14 +93,20 @@
             $(window).bind("resize", function () {
                 mainWindow.center();
             });
+
+            $('input').on('keypress', function (e) {
+                if (e.which == 13) {
+                    $('#LoginButton').trigger('click');
+                }
+            });
         });
 
         function Login() {
             if (validator.validate()) {
                 $().redirect("@Url.Action("Login", "Auth")", {
-                    "Username": $("#Username").val(),
-                    "Password": $("#Password").val(),
-                    "returnUrl": "@ViewBag.ReturnUrl"
+                    Username: $("#Username").val(),
+                    Password: $("#Password").val(),
+                    returnUrl: "@ViewBag.ReturnUrl"
                 });
             }
         }
