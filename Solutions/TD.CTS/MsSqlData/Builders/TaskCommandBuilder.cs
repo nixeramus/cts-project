@@ -60,6 +60,8 @@ namespace TD.CTS.MsSqlData.Builders
             entity.VisitDate = reader.GetValue<DateTime>("ScheduleDate");
             entity.ScheduleId = reader.GetValue<int>("ScheduleID");
             entity.TrialVisitId = reader.GetValue<int>("TrialVisitID");
+            entity.TrialVersion = reader.GetValue<int>("TrialVersionNo");
+            entity.TrialVisitProcedureId = reader.GetValue<int>("TrialVisitProcedureID");
        }
 
         public override void LoadNewEntityAttributes(SqlDataReader reader, Task entity)

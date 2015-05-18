@@ -189,7 +189,7 @@
         e.model.dirty = true;
         if (e.model.isNew()) {
             e.model.TrialCode = $("#Code").val();
-            e.model.TrialVersionId = $("#Version").data("kendoDropDownList").value();
+            e.model.TrialVersion = $("#Version").data("kendoDropDownList").value();
         }
     }
 
@@ -228,7 +228,7 @@
         var window = $("#VisitEdit").data("kendoWindow");
         window.refresh({
             url: "@Url.Action("GetVisitEditor", "Trials")",
-            data: { Id: id, TrialCode: $("#Code").val(), TrialVersionId: $("#Version").data("kendoDropDownList").value() }
+            data: { Id: id, TrialCode: $("#Code").val(), TrialVersion: $("#Version").data("kendoDropDownList").value() }
         });
     }
 
@@ -251,7 +251,7 @@
                         Id: form.find("#Id").val(),
                         Name: form.find("#Name").val(),
                         TrialCode: form.find("#TrialCode").val(),
-                        TrialVersionId: form.find("#TrialVersionId").val(),
+                        TrialVersion: form.find("#TrialVersion").val(),
                         Days: form.find("#Days").val(),
                         Punctuality: form.find("#Punctuality").val()
                     },
@@ -270,7 +270,7 @@
             $.ajax({
                 type: "POST",
                 url: "@Url.Action("DeleteTrailVisit", "Trials")",
-                data: { Id: id, TrialCode: $("#Code").val(), TrialVersionId: $("#Version").data("kendoDropDownList").value() },
+                data: { Id: id, TrialCode: $("#Code").val(), TrialVersion: $("#Version").data("kendoDropDownList").value() },
                 success: function (result) {
                     $("#TabStrip-1").html(result);
                 },
@@ -326,7 +326,7 @@
                     TrialVisitId: visitId,
                     ProcedureCode: rowData.ProcedureCode,
                     TrialCode: rowData.TrialCode,
-                    TrialVersionId: rowData.TrialVersionId
+                    TrialVersion: rowData.TrialVersion
                 };
                 url = "@Url.Action("AddTrialProcedureVisit", "Trials")";
             } else {

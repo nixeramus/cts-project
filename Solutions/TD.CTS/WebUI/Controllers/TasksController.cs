@@ -42,21 +42,7 @@ namespace TD.CTS.WebUI.Controllers
             ViewBag.Roles = DataProvider.GetList(new RoleDataFilter());
             ViewBag.Users = DataProvider.GetList(new UserDataFilter());
 
-            return View(new TaskViewModel 
-            { 
-                Id = task.Id,
-                IsDone = task.IsDone,
-                PatientFullName = task.PatientFullName,
-                PatientId = task.PatientId,
-                PatientShortName = task.PatientShortName,
-                ProcedureCode = task.ProcedureCode,
-                ProcedureName = procedure.Name,
-                TrialCode = task.TrialCode,
-                TrialName = trial.Name,
-                VisitDate = task.VisitDate,
-                ScheduleId = task.ScheduleId,
-                TrialVisitId = task.TrialVisitId
-            });
+            return View(TaskViewModel.Create(task, trial.Name, procedure.Name));
         }
 
         [HttpPost]

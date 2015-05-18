@@ -9,8 +9,7 @@
 <div class="k-widget k-content k-state-active">
     @Html.HiddenFor(model => model.Id)
     @Html.HiddenFor(model => model.ScheduleId)
-    @Html.HiddenFor(model => model.ProcedureCode)
-    @Html.HiddenFor(model => model.TrialVisitId)
+    @Html.HiddenFor(model => model.TrialVisitProcedureId)
     <table id="trialForm" class="td-formTable" style="width:auto;margin-bottom:20px;font-weight:500;margin-left:10px">
         <tr>
             <td class="td-formTable-caption">Исследование:</td>
@@ -133,7 +132,7 @@
     }
 
     function MaterialsData(){
-        return { ProcedureCode: $("#ProcedureCode").val(), TrialVisitId: $("#TrialVisitId").val() };
+        return { TrialVisitProcedureId: $("#TrialVisitProcedureId").val() };
     }
 
 </script>
