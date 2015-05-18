@@ -54,7 +54,7 @@ namespace TD.CTS.WebUI.Controllers
                 case TrialTab.Visits:
                     ViewBag.Procedures = DataProvider.GetList(new ProcedureDataFilter());
                     ViewBag.Visits = DataProvider
-                        .GetList(new TrialVisitDataFilter { TrialCode = trial.Code, TrialVersionId = trial.Version  })
+                        .GetList(new TrialVisitDataFilter { TrialCode = trial.Code, TrialVersion = trial.Version  })
                         .OrderBy(v => v.Days);
                     break;
                 case TrialTab.Roles:
@@ -161,7 +161,7 @@ namespace TD.CTS.WebUI.Controllers
             var visits = DataProvider.GetList(new TrialProcedureVisitDataFilter 
             { 
                 TrialCode = dataFilter.TrialCode, 
-                TrialVersionId = dataFilter.TrialVersionId 
+                TrialVersion = dataFilter.TrialVersion 
             });
             var response = DataProvider.GetList(dataFilter).Select(p => TrialProcedureViewModel.Create(p, visits));
 
@@ -190,16 +190,16 @@ namespace TD.CTS.WebUI.Controllers
             return Json(new[] { trialProcedure }.ToDataSourceResult(request, ModelState));
         }
 
-        public ActionResult GetProceduresEditor(string trialCode, int trialVersionId)
+        public ActionResult GetProceduresEditor(string trialCode, int trialVersion)
         {
             ViewBag.Versions = new[] { new { Id = 1, Name = "1 (Новая)" } };
             
             ViewBag.Procedures = DataProvider.GetList(new ProcedureDataFilter());
 
-            ViewBag.Visits = DataProvider.GetList(new TrialVisitDataFilter { TrialCode = trialCode, TrialVersionId = trialVersionId })
+            ViewBag.Visits = DataProvider.GetList(new TrialVisitDataFilter { TrialCode = trialCode, TrialVersion = trialVersion })
                 .OrderBy(v => v.Days);
 
-            return PartialView("EditorTemplates/ProceduresEditor", new Trial { Code = trialCode, Version = trialVersionId });
+            return PartialView("EditorTemplates/ProceduresEditor", new Trial { Code = trialCode, Version = trialVersion });
         }
 
         public JsonResult GetProcedures(TrialProcedureDataFilter dataFilter)
@@ -218,7 +218,7 @@ namespace TD.CTS.WebUI.Controllers
 
         #region TrialVisits
 
-        public ActionResult GetVisitEditor(int? id, string trialCode, int trialVersionId)
+        public ActionResult GetVisitEditor(int? id, string trialCode, int trialVersion)
         {
             TrialVisit visit;
             if (id.HasValue)
@@ -230,7 +230,7 @@ namespace TD.CTS.WebUI.Controllers
             }
             else
             {
-                visit = new TrialVisit { TrialCode = trialCode, TrialVersionId = trialVersionId };
+                visit = new TrialVisit { TrialCode = trialCode, TrialVersion = trialVersion };
                 ViewBag.IsNew = true;
             }
 
@@ -245,7 +245,7 @@ namespace TD.CTS.WebUI.Controllers
                 DataProvider.Add(trialVisit);
             }
 
-            return GetProceduresEditor(trialVisit.TrialCode, trialVisit.TrialVersionId);
+            return GetProceduresEditor(trialVisit.TrialCode, trialVisit.TrialVersion);
         }
 
         [AcceptVerbs(HttpVerbs.Post)]
@@ -256,7 +256,7 @@ namespace TD.CTS.WebUI.Controllers
                 DataProvider.Update(trialVisit);
             }
 
-            return GetProceduresEditor(trialVisit.TrialCode, trialVisit.TrialVersionId);
+            return GetProceduresEditor(trialVisit.TrialCode, trialVisit.TrialVersion);
         }
 
         [AcceptVerbs(HttpVerbs.Post)]
@@ -264,7 +264,7 @@ namespace TD.CTS.WebUI.Controllers
         {
             DataProvider.Delete(trialVisit);
 
-            return GetProceduresEditor(trialVisit.TrialCode, trialVisit.TrialVersionId);
+            return GetProceduresEditor(trialVisit.TrialCode, trialVisit.TrialVersion);
         }
 
         public ActionResult GetTrialVisits([DataSourceRequest]DataSourceRequest request, TrialVisitDataFilter dataFilter)

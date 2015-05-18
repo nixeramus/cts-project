@@ -74,7 +74,7 @@
         var parentData = $("#ProcedureRolesGrid").data("kendoGrid").dataItem(e.sender.element.closest("tr").prev());
         var trialData = GetTrialCode();
         e.model.TrialCode = trialData.TrialCode;
-        e.model.TrialVersionId = trialData.TrialVersionId;
+        e.model.TrialVersion = trialData.TrialVersion;
         e.model.ProcedureCode = parentData.ProcedureCode;
     }
 

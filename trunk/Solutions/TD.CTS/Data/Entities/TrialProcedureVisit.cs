@@ -17,7 +17,7 @@ namespace TD.CTS.Data.Entities
         [Required(ErrorMessage = "Нет привязки к визиту")]
         public int TrialVisitId { get; set; }
 
-        public int TrialVersionId { get; set; }
+        public int TrialVersion { get; set; }
 
         public string TrialCode { get; set; }
     }

@@ -18,7 +18,7 @@ namespace TD.CTS.MsSqlData.Builders
 
             command.Parameters.AddWithValue("@TrialVisitID", entityFilter.Id.GetNullableParameterValue());
             command.Parameters.AddWithValue("@TrialCode", entityFilter.TrialCode.GetNullableParameterValue());
-            command.Parameters.AddWithValue("@TrialVersionNo", entityFilter.TrialVersionId.GetNullableParameterValue());
+            command.Parameters.AddWithValue("@TrialVersionNo", entityFilter.TrialVersion.GetNullableParameterValue());
                         
             return command;
         }
@@ -32,7 +32,7 @@ namespace TD.CTS.MsSqlData.Builders
             };
 
             command.Parameters.AddWithValue("@TrialCode", entity.TrialCode);
-            command.Parameters.AddWithValue("@TrialVersionNo", entity.TrialVersionId);
+            command.Parameters.AddWithValue("@TrialVersionNo", entity.TrialVersion);
             command.Parameters.AddWithValue("@TrialVisitName", entity.Name);
             command.Parameters.AddWithValue("@BaseDay", entity.Days);
             command.Parameters.AddWithValue("@Limit", entity.Punctuality);
@@ -75,7 +75,7 @@ namespace TD.CTS.MsSqlData.Builders
         {
             entity.Id = reader.GetValue<int>("TrialVisitID");
             entity.TrialCode = reader.GetString("TrialCode").TrimEnd();
-            entity.TrialVersionId = reader.GetValue<int>("TrialVersionNo");
+            entity.TrialVersion = reader.GetValue<int>("TrialVersionNo");
             entity.Name = reader.GetString("TrialVisitName");
             entity.Days = reader.GetValue<int>("BaseDay");
             entity.Punctuality = reader.GetValue<int>("Limit");

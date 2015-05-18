@@ -13,7 +13,7 @@ namespace TD.CTS.WebUI.Models
                 Id = trialProcedure.Id,
                 ProcedureCode = trialProcedure.ProcedureCode,
                 TrialCode = trialProcedure.TrialCode,
-                TrialVersionId = trialProcedure.TrialVersionId,
+                TrialVersion = trialProcedure.TrialVersion,
                 Visits = visits.Where(v => v.ProcedureCode == trialProcedure.ProcedureCode)
             };
         }

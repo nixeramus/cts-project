@@ -6,46 +6,31 @@ using TD.CTS.Data.Entities;
 
 namespace TD.CTS.WebUI.Models
 {
-    public class TaskViewModel
+    public class TaskViewModel : Task
     {
-        public int Id { get; set; }
-
-        public string TrialCode {get;set;}
-
-        public string TrialName {get;set;}
-
-        public DateTime VisitDate{get;set;}
-
-        public string ProcedureCode { get; set; }
-
-        public string ProcedureName { get; set; }
-
-        public int PatientId { get; set; }
-
-        public string PatientFullName { get; set; }
-
-        public string PatientShortName { get; set; }
-
-        public bool IsDone { get; set; }
-
-        public int ScheduleId { get; set; }
-
-        public int TrialVisitId { get; set; }
-
-        public Task ToTask()
+        public static TaskViewModel Create(Task task, string trialName, string procedureName)
         {
-            return new Task
+            return new TaskViewModel
             {
-                Id = Id,
-                IsDone = IsDone,
-                PatientId = PatientId,
-                PatientFullName = PatientFullName,
-                ProcedureCode = ProcedureCode,
-                TrialCode = TrialCode,
-                VisitDate = VisitDate,
-                ScheduleId = ScheduleId,
-                TrialVisitId = TrialVisitId
+                Id = task.Id,
+                IsDone = task.IsDone,
+                PatientFullName = task.PatientFullName,
+                PatientId = task.PatientId,
+                PatientShortName = task.PatientShortName,
+                ProcedureCode = task.ProcedureCode,
+                ProcedureName = procedureName,
+                TrialCode = task.TrialCode,
+                TrialName = trialName,
+                VisitDate = task.VisitDate,
+                ScheduleId = task.ScheduleId,
+                TrialVisitId = task.TrialVisitId,
+                TrialVersion = task.TrialVersion,
+                TrialVisitProcedureId = task.TrialVisitProcedureId
             };
         }
+
+        public string TrialName { get; set; }
+
+        public string ProcedureName { get; set; }
     }
 }

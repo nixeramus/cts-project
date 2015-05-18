@@ -20,7 +20,7 @@ namespace TD.CTS.MsSqlData.Builders
             command.Parameters.AddWithValue("@TrialVisitProcedureID", entityFilter.Id.GetNullableParameterValue());
             command.Parameters.AddWithValue("@TrialVisitID", entityFilter.TrialVisitId.GetNullableParameterValue());
             command.Parameters.AddWithValue("@TrialCode", entityFilter.TrialCode.GetNullableParameterValue());
-            command.Parameters.AddWithValue("@TrialVersionNo", entityFilter.TrialVersionId.GetNullableParameterValue());
+            command.Parameters.AddWithValue("@TrialVersionNo", entityFilter.TrialVersion.GetNullableParameterValue());
                         
             return command;
         }
@@ -36,7 +36,7 @@ namespace TD.CTS.MsSqlData.Builders
             command.Parameters.AddWithValue("@TrialVisitID", entity.TrialVisitId);
             command.Parameters.AddWithValue("@ProcedureCode", entity.ProcedureCode);
             command.Parameters.AddWithValue("@TrialCode", entity.TrialCode);
-            command.Parameters.AddWithValue("@TrialVersionNo", entity.TrialVersionId);
+            command.Parameters.AddWithValue("@TrialVersionNo", entity.TrialVersion);
             
             return command;
         }
@@ -65,7 +65,7 @@ namespace TD.CTS.MsSqlData.Builders
             entity.TrialVisitId = reader.GetValue<int>("TrialVisitID");
             entity.ProcedureCode = reader.GetString("ProcedureCode").TrimEnd();
             entity.TrialCode = reader.GetString("TrialCode").TrimEnd();
-            entity.TrialVersionId = reader.GetValue<int>("TrialVersionNo");
+            entity.TrialVersion = reader.GetValue<int>("TrialVersionNo");
         }
 
         public override void LoadNewEntityAttributes(SqlDataReader reader, TrialProcedureVisit entity)
