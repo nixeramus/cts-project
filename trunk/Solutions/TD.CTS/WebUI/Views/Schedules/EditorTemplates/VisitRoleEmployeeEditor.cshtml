@@ -33,8 +33,7 @@
 <script>
     function OnSaveVisitRoleEmployee(e) {
         var visitId=$("#VisitRoleEmployeeWindow").find("input:hidden#VisitRoleEmployeeWindow_VisitId").val();
-        alert(visitId);
-
+        e.model.ScheduleVisitId = visitId;
     }
 
 </script>
