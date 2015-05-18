@@ -292,6 +292,26 @@ namespace TD.CTS.WebUI.Controllers
 
             return Json(new[] { scheduleEmployee }.ToDataSourceResult(request, ModelState));
         }
+
+        #endregion
+
+
+        #region ScheduleVisitEmployee
+
+
+        /// <summary>
+        /// Изменение сотрудника в визите для роли из расписания
+        /// </summary>
+        public ActionResult UpdateScheduleVisitEmployee([DataSourceRequest] DataSourceRequest request, ScheduleEmployee scheduleEmployee, int ScheduleVisitId)
+        {
+            if (scheduleEmployee != null && ModelState.IsValid)
+            {
+                DataProvider.Update(scheduleEmployee);
+                
+            }
+
+            return Json(new[] { scheduleEmployee }.ToDataSourceResult(request, ModelState));
+        }
         #endregion
 
         #region ProcedureEmployees
