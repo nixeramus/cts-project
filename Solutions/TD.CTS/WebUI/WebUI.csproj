@@ -775,6 +775,7 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Home\UnderConstruction.cshtml" />
     <Content Include="Views\Trials\EditorTemplates\TrialVersionEditor.cshtml" />
+    <Content Include="Views\Schedules\EditorTemplates\VisitRoleEmployeeEditor.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
