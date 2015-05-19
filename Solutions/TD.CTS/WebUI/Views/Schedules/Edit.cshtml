@@ -90,7 +90,7 @@
                                               buttons.Delete();
                                               
                                           }).Width(80);
-                                          columns.Bound(e => e.SystemRoleCode).Width(100).Title("Код роли");
+                                          //columns.Bound(e => e.SystemRoleCode).Width(100).Title("Код роли");
                                           columns.ForeignKey(e => e.SystemRoleCode, (System.Collections.IEnumerable)ViewBag.SystemRoles, "Code", "Name").Width(300).Title("Роль");
                                           columns.ForeignKey(e => e.SystemLogin, (System.Collections.IEnumerable)ViewBag.Users, "Login", "FullName").Width(200).Title("Сотрудник").EditorTemplateName("GridNullableForeignKey");
                                           //columns.Bound(e => e.SystemLogin).Width(100).Title("Сотрудник");
