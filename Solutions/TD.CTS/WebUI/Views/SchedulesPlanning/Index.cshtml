@@ -169,14 +169,14 @@
             var selectedDate = kendo.parseDate(rowCb.val(), "dd.MM.yyyy");
 
             //Если они отличаются
-            if (!scheddate || scheddate.getTime() != selectedDate.getTime()) {
+            if (!scheddate || !scheddate.sameDay(selectedDate)) {
                 model.ScheduleDate = selectedDate;
                 //model.dirty = true;
                 SaveScheduleVisit(model, urlSaveVisit);
                 //после вставки вычитать грид для обновления айдишки
-                if (model.Id == null) {
+                //if (model.Id == null) {
                     kendo_grid_reload(grid);
-                }
+                //}
             } else {
                 alert('Дата не изменилась');
             }
@@ -254,21 +254,21 @@
 
     function SelectedVisit(calendDateStr, data) {
         var calendDate = kendo.parseDate(calendDateStr, "dd.MM.yyyy");
-        var retStr = "";
-        //var checkBox = "";
-        //Проверяем входит ли заданная дата из колонки в окнео визита
+        var retStr = '';
+        var div = $('<div>');
+        //Проверяем входит ли заданная дата из колонки в окно визита
         if (calendDate >= data.MinDate && calendDate <= data.MaxDate) {
-            //retStr = "<div class='timewindow'>{0}</div>";
-
-            //
-            if (data.ScheduleDate != null && calendDate.getTime() == data.ScheduleDate.getTime()) {
-                retStr = "<div class='timewindow'><input type=\"checkbox\" class=\"k-checkbox\" checked value=\"" + calendDateStr + "\" style=\"margin:0;display:none;\" /><span class=\"k-icon k-i-tick\"></span></div>";
-
-            } else {
-                retStr = "<div class='timewindow'><input type=\"checkbox\" class=\"k-checkbox\"  value=\"" + calendDateStr + "\" style=\"margin:0;display:none;\" /></div>";
-            }
-
+            div.addClass('timewindow');
         }
+        //добавляем инпут к каждой ячейке
+        var input = $('<input type=\"checkbox\" class=\"k-checkbox\" style=\"margin:0;display:none;\" />').val(calendDateStr);
+        //если дата календаря равна дате визита
+        if (data.ScheduleDate != null && calendDate.sameDay(data.ScheduleDate)) {
+            input.attr('checked', 'checked');
+            div.append('<span class=\"k-icon k-i-tick td-activeTick\"></span>');
+        } 
+        div.append(input);
+        retStr = div[0].outerHTML;
 
         return retStr;
 
@@ -379,6 +379,16 @@
     return result;
         }*@
 
-
+    //------------------------Сравниваем даты по дню---------------------------------------
+    Date.prototype.sameDay = function (d) {
+        return this.getFullYear() === d.getFullYear()
+            && this.getDate() === d.getDate()
+            && this.getMonth() === d.getMonth();
+    };
+    Date.prototype.withoutTime = function() {
+        var d = new Date(this);
+        d.setHours(0, 0, 0, 0, 0);
+        return d;
+    };
 
 </script>
