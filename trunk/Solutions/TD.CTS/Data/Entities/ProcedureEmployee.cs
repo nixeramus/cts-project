@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace TD.CTS.Data.Entities
+﻿namespace TD.CTS.Data.Entities
 {
     public class ProcedureEmployee : Entity
     
@@ -11,7 +9,9 @@ namespace TD.CTS.Data.Entities
         public int TrialCenterID { get; set; }
         public int TrialVersionNo { get; set; }
         public string ProcedureCode { get; set; }
+        public string TrialCode { get; set; }
         public string SystemRoleCode { get; set; }
         public string ExecutorLogin { get; set; }
+
     }
 }
