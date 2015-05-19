@@ -2,47 +2,37 @@
 @using TD.CTS.Data.Entities
 
 @model Schedule
-@(Html.Kendo().TabStrip()
-        .Name("ProcedureEmployeesEditorStrip")
-    //.Events(events => events.Show("ShowTab"))
-    .Animation(false)
-    .Items(visittabs =>
-    {
-        visittabs.Add()
-            //.Text("Краткая информация")
-            .Selected(true)
-            .Content(@<text>
-                          @(Html.Kendo().Grid<ProcedureEmployee>().Init("ProcedureEmployeesEditorGrid").Editable()
-                                .Columns(columns =>
-                                {
-                                    columns.Buttons(buttons => buttons.Edit()).Width(80);
-                                    columns.ForeignKey(e => e.SystemRoleCode, (System.Collections.IEnumerable)ViewBag.SystemRoles, "Code", "Name").Width(200).Title("Роль");
-                                    columns.ForeignKey(e => e.ExecutorLogin, (System.Collections.IEnumerable) ViewBag.Users, "Login", "FullName").Width(250).Title("Исполнитель");
-                                    columns.Template(e => { }).ClientTemplate(" ").Width("100%").HtmlAttributes(new { @class = "k-group-cell" });
-                                })
-                                .DataSource(dataSource => dataSource
-                                    .Ajax()
-                                    .Model(model =>
-                                    {
-                                       model.Id(e => e.Id);
-                                       model.Field(e => e.SystemRoleCode).Editable(false);
-                                       model.Field(e => e.ExecutorLogin).Editable(true);
-                                    })
-                                    .Read(read => read.Action("GetProcedureEmployees", "Schedules", new {ScheduleID = Model.Id, TrialCenterID = Model.TrialCenterID, TrialVersionNo = Model.TrialVersionNo}))
-                                    .Update(update => update.Action("UpdateProcedureEmployee", "Schedules"))
-                                    .Events(events => events.Error("kendo_grid_error_handler") /*.RequestEnd("RequestEnd")*/)
-                                            ).Events(e => e.Edit("kendo_grid_onrowedit"))
+ @(Html.Kendo().Grid<ProcedureEmployee>()
+ .Init("ProcedureEmployeesEditorGrid")
+ .Editable()
+ .AutoBind(false)
+ .Columns(columns =>
+ {
+     columns.Buttons(buttons => buttons.Edit()).Width(80);
+     columns.ForeignKey(e => e.SystemRoleCode, (System.Collections.IEnumerable)ViewBag.SystemRoles, "Code", "Name").Width(300).Title("Роль");
+     columns.ForeignKey(e => e.ExecutorLogin, (System.Collections.IEnumerable) ViewBag.Users, "Login", "FullName").Width(250).Title("Исполнитель");
+     columns.Template(e => { }).ClientTemplate(" ").Width("100%").HtmlAttributes(new { @class = "k-group-cell" });
+ })
+ .DataSource(dataSource => dataSource
+     .Ajax()
+     .Model(model =>
+     {
+         model.Id(e => e.Id);
+         model.Field(e => e.SystemRoleCode).Editable(false);
+         model.Field(e => e.ExecutorLogin).Editable(true);
+     })
+     .Read(read => read.Action("GetProcedureEmployees", "Schedules", new {ScheduleID = Model.Id, TrialCenterID = Model.TrialCenterID, TrialVersionNo = Model.TrialVersionNo , TrialCode=Model.TrialCode}))
+     .Update(update => update.Action("UpdateProcedureEmployee", "Schedules"))
+     .Events(events => events.Error("kendo_grid_error_handler") /*.RequestEnd("RequestEnd")*/)
+     ).Events(e => e.Edit("kendo_grid_onrowedit"))
    
-                                )
-                      </text>);
-    }
-    )
-    )
+)
+                     
 <script>
 
 
 
-    kendo_grid_init($("#ProcedureEmployeesEditorGrid"));
+  
 
     
 

@@ -2,13 +2,9 @@
 @using TD.CTS.WebUI.Models
 
 @model Schedule
-@*@{
-    var isNew = ViewBag.IsNew;
-}*@
 @(Html.Kendo().Grid<ScheduleProcedure>()
     .Name("ProceduresGrid")
     .Selectable(select => select.Type(GridSelectionType.Cell))
-    //.HtmlAttributes(new { style = "display:" + (isNew ? "none" : "block") })
     //.Editable()
     .Columns(columns =>
     {
@@ -33,8 +29,6 @@
                 .HtmlAttributes(new { style = "text-align:center;" })
                 .Width(100);
 
-//            //buttonsRow.Append(@"<th style='text-align:center; style='text-align:right;><a class='k-button k-button-icontext k-grid-edit td-grid-button' href='\#' title='Изменить визит'><span class='k-icon k-edit td-grid-button-image'></span></a>");
-//            //buttonsRow.Append(@"<a class='k-button k-button-icontext k-grid-delete td-grid-button' href='\#' title='Удалить визит'><span class='k-icon k-delete td-grid-button-image'></span></a></th>");
         }
         columns.Template(e => { }).ClientTemplate(" ").Width("100%").HtmlAttributes(new { @class = "k-group-cell" });
 
@@ -52,17 +46,8 @@
            model.Field(e => e.VisitIds).DefaultValue(new List<int>());
        })
        .Read(read => read.Action("GetScheduleProcedures", "Schedules", new { ScheduleID = Model.Id })/*.Data("ProceduresGetDataRead")*/)
-       //.Create(create => create.Action("AddTrialProcedure", "Trials"))
-       //.Update(update => update.Action("UpdateTrialProcedure", "Trials"))
-       //.Destroy(destroy => destroy.Action("DeleteTrialProcedure", "Trials"))
        .Events(events => events.Error("kendo_grid_error_handler")/*.RequestEnd("RequestEnd")*/)
     )
-    //.Events(events => events
-        //.Edit("OnProcedureEdit")
-        //.Change("OnChange")
-        //.Save("OnProcedureSave")
-        //.Cancel("OnProcedureCancel")
-   //     )
 )
 
 <script>
@@ -74,10 +59,11 @@
    // }
     
     function SelectedVisit(visitId, data) {
-        var btn = String.format("<button onclick=\"OpenProceduereEmployeeWindow(\'" + visitId + "','" + data.ProcedureCode+"')\" style=\"color:{0}; border:none; background-color:transparent;\" >{1}</button>", 'green', 'v');
+        //var btn = String.format("<button onclick=\"OpenProceduereEmployeeWindow(\'" + visitId + "','" + data.ProcedureCode+"')\" style=\"color:{0}; border:none; background-color:transparent;\" >{1}</button>", 'green', 'v');
         if ($.inArray(visitId, data.VisitIds) !== -1) {
           
-            return btn;
+            return "<span class=\"k-icon k-i-tick td-activeTick\" visitId=\"" + visitId + "\" procedureCode=\"" + data.ProcedureCode + "\" title=\"Список сотрудников\"></span>";
+            //return btn;
             //return "<span style='color:green;'>V</span>"; //"<input type=\"checkbox\" value=\"" + visitId + "\" checked style=\"display:none;margin:0;\" /><span class=\"k-icon k-i-tick\"></span>";
         }
         return "";
@@ -90,25 +76,8 @@
 
 
     kendo_grid_init($("#ProceduresGrid"));
-    //var procGrid = $("#ProceduresGrid");
-    //$("#ProceduresGrid .k-grid-add.td-grid-button").click(function () {
-    //procGrid.on("click", ".k-grid-add.td-grid-button", function () {
-    //    ClearSelection();
-    //    kendo_grid_createrow(procGrid);
-    //    isProcedureEdit = true;
-    //});
-
-    //$("#ProceduresGrid .k-grid-addcolumn.td-grid-button").click(function () {
-    //procGrid.on("click", ".k-grid-addcolumn.td-grid-button", function () {
-    //    ClearSelection();
-    //    LoadVisitEdit();
-    //    //AddColumn(15);
-    //});
-
-    //procGrid.on("click", ".td-grid-editcolumn.td-grid-button", function () {
-    //    ClearSelection();
-    //    var id = $(this).find("input").val();
-    //    LoadVisitEdit(id);
-    //    //AddColumn(15);
-    //});
+    $("#ProceduresGrid").on("click", ".td-activeTick", function () {
+        var tick = $(this);
+        OpenProceduereEmployeeWindow(tick.attr("visitId"), tick.attr("procedureCode"));
+    });
 </script>
