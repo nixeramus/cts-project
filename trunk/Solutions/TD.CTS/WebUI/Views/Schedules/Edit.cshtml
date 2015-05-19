@@ -1,4 +1,5 @@
-﻿@using TD.Common.Kendo.Mvc5.Grid
+﻿@using TD.Common.Kendo.Mvc5.Common
+@using TD.Common.Kendo.Mvc5.Grid
 
 @model TD.CTS.Data.Entities.Schedule
 
@@ -18,15 +19,12 @@
     var isNew = ViewBag.IsNew;
     //var buttonsRow = new System.Text.StringBuilder(@"<tr class='k-filter-row'><th/><th style='text-align:right;'><a class='k-button k-button-icontext k-grid-add td-grid-button' title='Добавить визит' href='javascript: void(0)'><span class='k-icon k-add td-grid-button-image'></span></a></th>");
 }
-@*@(Html.Kendo().TabStrip()
-    .Name("HeaderTabStrip")
-    .Animation(false)
-    .Items(tabs =>{tabs.Add().Text("Основное").Selected(true).Content(@<text>@Html.Partial("EditorTemplates/MainEditor")@RenderFooter(isNew)</text>);})
-)*@
+
 @Html.Partial("EditorTemplates/MainEditor")@RenderFooter(isNew)
 
 @*@Html.RenderPartial(@Html.Partial("EditorTemplates/ScheduleDetailEditor", Model))*@
-@(Html.Kendo().Window().Name("ProcedureEmployeeWindow").Width(700).Height(350).Draggable().Resizable().Title("Сотрудники").Content(@<text>@Html.Partial("EditorTemplates/ProcedureEmployeeEditor", Model)</text>).Visible(false).Modal(false)/*.HtmlAttributes(new { @class = "k-popup-edit-form" })*/)
+@(Html.Kendo().Window().Name("ProcedureEmployeeWindow").Width(700).Height(450).Draggable().Resizable(e=>e.Enabled(false)).Title("Сотрудники").Content(@<text>@Html.Partial("EditorTemplates/ProcedureEmployeeEditor", Model)</text>).Visible(false).Modal(true)/*.HtmlAttributes(new { @class = "k-popup-edit-form" })*/)
+@*@(Html.Kendo().Window().Name("VisitRoleEmployeeWindow").Width(700).Height(400).Draggable().Resizable().Title("Сотрудники для визита ").Content(@<text>@Html.Partial("EditorTemplates/VisitRoleEmployeeEditor", Model)</text>).Visible(false).Modal(true))*@
 
 @helper RenderFooter(bool isNew)
 {
@@ -43,14 +41,14 @@
                           @(Html.Kendo().Grid<TD.CTS.Data.Entities.ScheduleVisit>()
                                       .Init("VisitsGrid")
                                       .Editable()
-                                      //.HtmlAttributes(new {style = "display:" + (isNew ? "none" : "block")})
                                       .Columns(columns =>
                                       {
                                           columns.Buttons(buttons =>
                                           {
                                               buttons.Edit();
                                               buttons.Delete();
-                                          }).Width(80); //buttons.Delete();
+                                              //buttons.Custom().Tag(ButtonTag.a).Title("Изменить сотрудников").HtmlAttributes(new { onclick = "OpenVisitRoleEmployeeWindow(#=Id#,'#=TrialVisitName#')" }).ImageCssClass("k-i-custom");
+                                          }).Width(80); 
                                           columns.Bound(e => e.TrialVisitName).Width(200).Title("Наименование");
                                           columns.Bound(e => e.BaseDay).Width(150).Title("Смещение").ClientTemplate("#=BaseDay#&nbsp;&plusmn;&nbsp;#=Limit#");
                                           columns.Bound(e => e.ScheduleDate).Width(200).EditorTemplateName("Date").Format("{0:dd.MM.yyyy}").Title("Назначенная дата");
@@ -62,7 +60,7 @@
                                           .Model(model =>
                                           {
                                               model.Id(e => e.Id);
-                                              model.Id(e => e.ScheduleID); //(e => e.Id);
+                                              model.Id(e => e.ScheduleID); 
                                               model.Id(e => e.TrialVisitID); 
                                               model.Field(e => e.TrialCode).DefaultValue(Model.TrialCode);
                                               model.Field(e => e.TrialCenterID).DefaultValue(Model.TrialCenterID);
@@ -74,7 +72,7 @@
                                           .Destroy(destroy => destroy.Action("DeleteScheduleVisit", "Schedules"))
                                           .Events(events => events.Error("kendo_grid_error_handler").RequestEnd("VisitsRequestEnd"))
                                       )
-                                         .Events(events => events.Edit("OnVisitsEdit")/*.Edit("kendo_grid_onrowedit")*//*.DataBinding("VisitsOnDataBinding")*/)
+                                         .Events(events => events.Edit("OnVisitsEdit")/*.DataBinding("VisitsOnDataBinding")*/)
                                       )
                       </text>);
         visittabs.Add()
@@ -84,7 +82,6 @@
                 @(Html.Kendo().Grid<TD.CTS.Data.Entities.ScheduleEmployee>()
                              .Init("EmployeeGrid")
                                       .Editable()
-                                      //.HtmlAttributes(new { style = "display:" + (isNew ? "none" : "block") })
                                       .Columns(columns =>
                                       {
                                           columns.Buttons(buttons =>
@@ -109,11 +106,10 @@
                                               model.Field(e => e.SystemRoleCode).Editable(false);
 
                                           })
-                                          .Read(read => read.Action("GetScheduleEmployees", "Schedules", new { ScheduleID = Model.Id })/*.Data("EmployeesGetDataRead")*/)
-                                          //.Create(create => create.Action("AddTrialCenter", "Trials"))
+                                           .Read(read => read.Action("GetScheduleEmployees", "Schedules", new { ScheduleID = Model.Id })/*.Data("EmployeesGetDataRead")*/)
                                            .Update(update => update.Action("UpdateScheduleEmployee", "Schedules"))
                                            .Destroy(destroy => destroy.Action("DeleteScheduleEmployee", "Schedules"))
-                                                   .Events(events => events.Error("kendo_grid_error_handler").RequestEnd("EmployeesRequestEnd"))
+                                           .Events(events => events.Error("kendo_grid_error_handler").RequestEnd("EmployeesRequestEnd"))
                                       )
                                       .Events(events => events.Edit("kendo_grid_onrowedit"))
                 )
@@ -136,8 +132,9 @@
 
 <script>
     var validator = $("#scheduleForm").kendoValidator().data("kendoValidator");
-    
+
     var isNew = @isNew.ToString().ToLower();
+
     function SaveSchedule() {
         if (validator.validate()) {
             $.ajax({
@@ -162,18 +159,13 @@
         });
     }
     }
-    
-
-
-    
-
 //------------------------------Визиты-----------------------------------------------------------------------
 
     //Изменение визита
     function OnVisitsEdit(e) {
         var datePickerInRow = $(e.container).find('#ScheduleDate').data("kendoDatePicker");
-        datePickerInRow.min(e.model.MinDate);
-        datePickerInRow.max(e.model.MaxDate);
+        //datePickerInRow.min(e.model.MinDate);
+        //datePickerInRow.max(e.model.MaxDate);
         //Вызываем базовое редактирование
         kendo_grid_onrowedit(e);
     }
@@ -197,37 +189,45 @@
                 kendo_grid_reload($("#EmployeeGrid"));
             }
     }
-    //--------------------------------------------------------------------------------------------------------------
+    //------------------------Сотрудники для визита (Не используется)--------------------------------------------------------------------------------------
 
-
+    function OpenVisitRoleEmployeeWindow(scheduleVisitId,scheduleVisitName) {
+        var windowJs = $("#VisitRoleEmployeeWindow");
+        var windowK = windowJs.data("kendoWindow");
+        windowK.title('Изменение ролей сотрудников для визита '+scheduleVisitName);
+        windowK.center().open();
+        windowJs.find("input:hidden#VisitRoleEmployeeWindow_VisitId").val(scheduleVisitId);
+        //var filter = { ScheduleVisitID :17};
+        kendo_grid_reload($("#VisitRoleEmployeeGrid"));
+    
+    }
+    //----------------------Сотрудники в процедурах визита (ProcedureEmployee)------------------------------------------------------------------------------------------------------------------
     function OpenProceduereEmployeeWindow(trialvisitid,procedurecode) {
-        var window = $("#ProcedureEmployeeWindow").data("kendoWindow");
-        window.center().open();
+        var grid = $("#ProcedureEmployeesEditorGrid");
+        var window = $("#ProcedureEmployeeWindow");
+        window.data("kendoWindow").center().open();
         var filter = {        
             //ScheduleID :17,
-            TrialVisitID:trialvisitid/*1*/,
-            ProcedureCode:procedurecode/*'ОВ'*///,
+            TrialVisitID:trialvisitid,
+            ProcedureCode:procedurecode,
             //TrialVersionNo :1//,
             //SystemRoleCode:'DO',
             //TrialCenterID :2
         };
-        
-        //kendo_grid_init($("#ProcedureEmployeesEditorGrid"));
-        kendo_grid_reload($("#ProcedureEmployeesEditorGrid"));
-        //var tabgrid = $('#ProcedureEmployeesEditorGrid').data("kendoGrid");
-        //tabgrid.dataSource.read(filter);
-        //tabgrid.refresh();
+        //Растягиваем грид в размер окна
+        StretchGrid(window,grid);
+        //Обновляем грид в зависимости от выбранного визита и процедуры
+        kendo_grid_reload(grid,filter);
     }
-
+    //-------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
     $(document).ready(function () {
         SetContentBlock($("#VisitsStrip .k-content"));
-
-        //kendo_grid_init($("#ScheduleEmployeeGrid"));
-
+        kendo_grid_init($("#ProcedureEmployeesEditorGrid"));
+        //StretchGrid($("#VisitRoleEmployeeWindow"),$("#VisitRoleEmployeeGrid"))
+        
         kendo_grid_init($("#VisitsGrid"));
-
         $(window).bind("resize", function () {
             var tabStrip = $("#VisitsStrip").data("kendoTabStrip");
             var tab = tabStrip.select();
