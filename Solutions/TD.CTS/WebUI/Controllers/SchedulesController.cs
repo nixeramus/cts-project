@@ -227,27 +227,14 @@ namespace TD.CTS.WebUI.Controllers
           ViewBag.Visits = DataProvider.GetList(new ScheduleVisitDataFilter { ScheduleID = ScheduleID }).Where(e=>e.ScheduleDate.HasValue).ToList();
           return PartialView("EditorTemplates/ScheduleDetailEditor", schedule);
         }
+
+        //Для гида процедур/визитов
         public ActionResult GetScheduleProcedures([DataSourceRequest]DataSourceRequest request, int ScheduleId)
         {
+            //Получаем из базы визиты в процедурах
             var procedureVisit = DataProvider.GetList(new ScheduleVisitProcedureDataFilter { ScheduleID = ScheduleId });
 
-
-         
-                //var list = new List<ScheduleProcedure>();
-            //var result =
-            //    from proc in procedureVisit
-            //    select
-            //        new ScheduleProcedure
-            //        {
-            //            ProcedureCode = proc.ProcedureCode,
-            //            TrialCenterId = proc.TrialCenterID,
-            //            ScheduleID = proc.ScheduleID,
-            //            TrialCode = proc.TrialCode,
-            //            TrialVersionNo = proc.TrialVersionNo,
-            //            VisitIds = procedureVisit.Select(e => e.TrialVisitID).ToList()
-            //        };
-
-
+            //групируем по процедурам
             var result = procedureVisit.GroupBy(x => new
             {
                 x.ProcedureCode,
