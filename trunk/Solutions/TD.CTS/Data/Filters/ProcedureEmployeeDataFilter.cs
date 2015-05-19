@@ -8,6 +8,7 @@ namespace TD.CTS.Data.Filters
         public int? TrialVisitID { get; set; }
         public int? TrialCenterID { get; set; }
         public int? TrialVersionNo { get; set; }
+        public string TrialCode { get; set; }
         public string ProcedureCode { get; set; }
         public string SystemRoleCode { get; set; }
     }
