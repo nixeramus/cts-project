@@ -234,22 +234,36 @@ namespace TD.CTS.WebUI.Controllers
 
          
                 //var list = new List<ScheduleProcedure>();
-            var result =
-                from proc in procedureVisit
-                select
-                    new ScheduleProcedure
-                    {
-                        ProcedureCode = proc.ProcedureCode,
-                        TrialCenterId = proc.TrialCenterID,
-                        ScheduleID = proc.ScheduleID,
-                        TrialCode = proc.TrialCode,
-                        TrialVersionNo = proc.TrialVersionNo,
-                        VisitIds = procedureVisit.Select(e => e.TrialVisitID).ToList()
-                    };
+            //var result =
+            //    from proc in procedureVisit
+            //    select
+            //        new ScheduleProcedure
+            //        {
+            //            ProcedureCode = proc.ProcedureCode,
+            //            TrialCenterId = proc.TrialCenterID,
+            //            ScheduleID = proc.ScheduleID,
+            //            TrialCode = proc.TrialCode,
+            //            TrialVersionNo = proc.TrialVersionNo,
+            //            VisitIds = procedureVisit.Select(e => e.TrialVisitID).ToList()
+            //        };
 
-                //var groupedCustomerList = procedureVisit.GroupBy(c => new { c.ProcedureCode, c.ScheduleID, c.TrialCenterID, c.TrialCode, c.TrialVersionNo,}).
-                //    .ToList();
 
+            var result = procedureVisit.GroupBy(x => new
+            {
+                x.ProcedureCode,
+                x.TrialCenterID,
+                x.ScheduleID,
+                x.TrialCode,
+                x.TrialVersionNo
+            }).Select(x => new ScheduleProcedure
+            {
+                ProcedureCode = x.Key.ProcedureCode,
+                TrialCenterId = x.Key.TrialCenterID,
+                ScheduleID = x.Key.ScheduleID,
+                TrialCode = x.Key.TrialCode,
+                TrialVersionNo = x.Key.TrialVersionNo,
+                VisitIds = x.Select(v => v.TrialVisitID).ToList()
+            });
 
             var response = result.ToList();
 
