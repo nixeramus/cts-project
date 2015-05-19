@@ -41,6 +41,7 @@
                           @(Html.Kendo().Grid<TD.CTS.Data.Entities.ScheduleVisit>()
                                       .Init("VisitsGrid")
                                       .Editable()
+                                      .Reorderable(conf=>conf.Columns(false))
                                       .Columns(columns =>
                                       {
                                           columns.Buttons(buttons =>
@@ -82,6 +83,7 @@
                 @(Html.Kendo().Grid<TD.CTS.Data.Entities.ScheduleEmployee>()
                              .Init("EmployeeGrid")
                                       .Editable()
+                                      .Reorderable(conf=>conf.Columns(false))
                                       .Columns(columns =>
                                       {
                                           columns.Buttons(buttons =>
@@ -91,8 +93,8 @@
                                               
                                           }).Width(80);
                                           //columns.Bound(e => e.SystemRoleCode).Width(100).Title("Код роли");
-                                          columns.ForeignKey(e => e.SystemRoleCode, (System.Collections.IEnumerable)ViewBag.SystemRoles, "Code", "Name").Width(300).Title("Роль");
-                                          columns.ForeignKey(e => e.SystemLogin, (System.Collections.IEnumerable)ViewBag.Users, "Login", "FullName").Width(200).Title("Сотрудник").EditorTemplateName("GridNullableForeignKey");
+                                          columns.ForeignKey(e => e.SystemRoleCode, (System.Collections.IEnumerable)ViewBag.SystemRoles, "Code", "Name").Width(300).Title("Роль").Sortable(false);
+                                          columns.ForeignKey(e => e.SystemLogin, (System.Collections.IEnumerable)ViewBag.Users, "Login", "FullName").Width(200).Title("Сотрудник").Sortable(false).EditorTemplateName("GridNullableForeignKey");
                                           //columns.Bound(e => e.SystemLogin).Width(100).Title("Сотрудник");
                                           columns.Template(e => { }).ClientTemplate(" ").Width("100%").HtmlAttributes(new { @class = "k-group-cell" });
                                       })

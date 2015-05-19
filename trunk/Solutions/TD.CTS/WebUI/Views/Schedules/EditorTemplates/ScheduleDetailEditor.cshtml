@@ -5,28 +5,21 @@
 @(Html.Kendo().Grid<ScheduleProcedure>()
     .Name("ProceduresGrid")
     .Selectable(select => select.Type(GridSelectionType.Cell))
-    //.Editable()
     .Columns(columns =>
     {
-        //columns.Bound(e => e.ProcedureCode).Title("Код");
-        //columns.ButtonsCrud()
-        //    .Width(80)
-        //    .HeaderHtmlAttributes(new { style = "min-width:60px;vertical-align:bottom;text-align:right;" })
-        //    .HtmlAttributes(new { @class = "k-group-cell" });
         columns.ForeignKey(e => e.ProcedureCode, (System.Collections.IEnumerable)ViewBag.Procedures, "Code", "Name")
             .Width(400)
             .Filterable(false)
-            .HeaderTemplate(@"<div style=""text-align:right;width:200px;""></div><div style=""text-align:right;width:200px;"">Визиты</div><div>Процедуры</div>")
+            .HeaderTemplate(@"<span class='k-link' style='text-align:right;width:200px;'>Визиты</span><span class='k-link'>Процедуры</span>")
             .HtmlAttributes(new { @class = "k-group-cell" });
 
         var visits = (List<ScheduleVisit>)ViewBag.Visits;
         foreach (var visit in visits)
         {
             columns.Template(e => { })
-                .ClientTemplate(/*"<span style='color:red;'>!</span>"*/"#= SelectedVisit(" + visit.TrialVisitID + ", data) #")
-                .HeaderTemplate(string.Format(@"<div style='text-align:center;'></span><input type='hidden' value='{2}'/></div>
-<div style=""text-align:center;"">{0}</div><div style=""text-align:center;"">{1}</div>", visit.TrialVisitName, visit.ScheduleDate.HasValue ? visit.ScheduleDate.Value.Date.ToString("dd.MM.yyyy"):"", visit.TrialVisitID))
-                .HtmlAttributes(new { style = "text-align:center;" })
+                .ClientTemplate("#= SelectedVisit(" + visit.TrialVisitID + ", data) #")
+                .HeaderTemplate(string.Format(@"<input type='hidden' value='{2}'/><span class='k-link'>{0}</span><span class='k-link'>{1}</span>", visit.TrialVisitName, visit.ScheduleDate.HasValue ? visit.ScheduleDate.Value.Date.ToString("dd.MM.yyyy") : "", visit.TrialVisitID))
+                .HtmlAttributes(new { style = "text-align:center;" }).HeaderHtmlAttributes(new { style = "text-align:center;" })
                 .Width(100);
 
         }
@@ -51,26 +44,11 @@
 )
 
 <script>
-    //var isProcedureEdit = false;
-    //function RequestEnd(e) {
-    //    if (e.type === "update" || e.type === "create") {
-    //        isProcedureEdit = false;
-    //    }
-   // }
-    
     function SelectedVisit(visitId, data) {
-        //var btn = String.format("<button onclick=\"OpenProceduereEmployeeWindow(\'" + visitId + "','" + data.ProcedureCode+"')\" style=\"color:{0}; border:none; background-color:transparent;\" >{1}</button>", 'green', 'v');
         if ($.inArray(visitId, data.VisitIds) !== -1) {
-          
-            return "<span class=\"k-icon k-i-tick td-activeTick\" visitId=\"" + visitId + "\" procedureCode=\"" + data.ProcedureCode + "\" title=\"Список сотрудников\"></span>";
-            //return btn;
-            //return "<span style='color:green;'>V</span>"; //"<input type=\"checkbox\" value=\"" + visitId + "\" checked style=\"display:none;margin:0;\" /><span class=\"k-icon k-i-tick\"></span>";
+            return "<span class=\"k-icon td-i-tick td-activeTick\" visitId=\"" + visitId + "\" procedureCode=\"" + data.ProcedureCode + "\" title=\"Список сотрудников\"></span>";
         }
         return "";
-        //return "<button onclick='OpenProceduereEmployeeWindow()' style='color:red; border:none; background-color:transperent;' >!</button>";
-        //return "<span style='color:red;'>!</span>";//<input type=\"checkbox\" value=\"" + visitId + "\" style=\"display:none;margin:0;\" />
-        // return "<input class=\"td-visit-checkbox\" type=\"checkbox\" value=\"" + visitId + "\" checked style=\"display:none;margin:0;\" /><span class=\"k-icon k-i-tick\"></span>";
-
     }
 
 
