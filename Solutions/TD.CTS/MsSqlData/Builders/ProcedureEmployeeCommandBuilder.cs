@@ -20,10 +20,9 @@ namespace TD.CTS.MsSqlData.Builders
             command.Parameters.AddWithValue("@ScheduleID", entityFilter.ScheduleID.GetNullableParameterValue());
             command.Parameters.AddWithValue("@TrialVisitID", entityFilter.TrialVisitID.GetNullableParameterValue());
             command.Parameters.AddWithValue("@ProcedureCode", entityFilter.ProcedureCode.GetNullableParameterValue());
-
+            command.Parameters.AddWithValue("@TrialCode", entityFilter.TrialCode.GetNullableParameterValue());
             command.Parameters.AddWithValue("@TrialCenterID", entityFilter.TrialCenterID.GetNullableParameterValue());
             command.Parameters.AddWithValue("@TrialVersionNo", entityFilter.TrialVersionNo.GetNullableParameterValue());
-           
             command.Parameters.AddWithValue("@SystemRoleCode", entityFilter.SystemRoleCode.GetNullableParameterValue());
 
             return command;
@@ -66,6 +65,7 @@ namespace TD.CTS.MsSqlData.Builders
             entity.TrialVersionNo = reader.GetValue<int>("TrialVersionNo");
             entity.ProcedureCode = reader.GetString("ProcedureCode").Trim();
             entity.SystemRoleCode = reader.GetString("SystemRoleCode").Trim();
+            entity.TrialCode = reader.GetString("TrialCode").Trim();
             entity.TrialCenterID = reader.GetValue<int>("TrialCenterID");
             entity.ExecutorLogin = reader.GetNullableString("ExecutorLogin");
         }
