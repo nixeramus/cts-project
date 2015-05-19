@@ -27,7 +27,10 @@ function kendo_grid_reload(grid) {
     kgrid = grid.data("kendoGrid");
     kgrid.dataSource.read();
 }
-
+function kendo_grid_reload(grid,filter) {
+    kgrid = grid.data("kendoGrid");
+    kgrid.dataSource.read(filter);
+}
 function kendo_grid_clearfilters(grid) {
     grid.find(".k-filter-row .k-textbox.td-filter-input").val("");
     grid.find(".k-filter-row .k-datepicker .k-input").val("");
