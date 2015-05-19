@@ -425,6 +425,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Images\accent.png" />
     <Content Include="Images\bullet.png" />
+    <Content Include="Images\employees.jpg" />
     <Content Include="Images\heroAccent.png" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
