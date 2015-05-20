@@ -211,7 +211,8 @@
 
 
     function SaveScheduleVisit(data, url) {
-        //alert(visit);
+       //Модифицируем дату чтобы правильно конвертилась в джейсон
+       data.ScheduleDate.setHours(data.ScheduleDate.getHours() - data.ScheduleDate.getTimezoneOffset() / 60);
 
         var sendData =
         {
@@ -221,7 +222,7 @@
             "TrialCenterID": data.TrialCenterID,
             "TrialCode": data.TrialCode,
             "TrialVersionNo": data.TrialVersionNo,
-            "ScheduleDate": data.ScheduleDate.toISOString(),
+            "ScheduleDate": data.ScheduleDate.toJSON(),
             "ActualDate": data.ActualDate
         };
 
