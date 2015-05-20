@@ -46,7 +46,7 @@
 <script>
     function SelectedVisit(visitId, data) {
         if ($.inArray(visitId, data.VisitIds) !== -1) {
-            return "<span class=\"k-icon td-i-tick td-activeTick\" visitId=\"" + visitId + "\" procedureCode=\"" + data.ProcedureCode + "\" title=\"Список сотрудников\"></span>";
+            return "<span class=\"k-icon k-i-tick td-activeTick\" visitId=\"" + visitId + "\" procedureCode=\"" + data.ProcedureCode + "\" title=\"Список сотрудников\"></span>";
         }
         return "";
     }
