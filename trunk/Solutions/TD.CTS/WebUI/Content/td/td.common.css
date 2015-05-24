@@ -54,8 +54,15 @@ input[type="checkbox"]{
 
 #ErrorWindow td{
     padding: 0.25em;
+<<<<<<< .mine
+}
+
+.td-activeTick{
+    cursor: pointer;
+=======
 }
 
 .td-i-employee {
     background: url(../../Images/employees.jpg) no-repeat;
+>>>>>>> .r182
 }

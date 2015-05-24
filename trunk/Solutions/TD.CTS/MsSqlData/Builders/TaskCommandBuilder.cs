@@ -20,6 +20,7 @@ namespace TD.CTS.MsSqlData.Builders
             command.Parameters.AddWithValue("@ScheduleVisitProcedureID", entityFilter.Id.GetNullableParameterValue());
             command.Parameters.AddWithValue("@ScheduleDateBegin", entityFilter.VisitDateBegin.GetNullableParameterValue());
             command.Parameters.AddWithValue("@ScheduleDateEnd", entityFilter.VisitDateEnd.GetNullableParameterValue());
+            command.Parameters.AddWithValue("@AllUsers", entityFilter.AllUsers);
             
             return command;
         }

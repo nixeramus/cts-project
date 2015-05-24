@@ -1,0 +1,72 @@
+﻿@using TD.Common.Kendo.Mvc5.Scheduler
+
+@(Html.Kendo().Scheduler<TD.CTS.WebUI.Models.TaskSchedulerEvent>()
+    .Month("TasksScheduler")
+    .EventTemplate(@"<div><pre>#= title #</pre></div>")
+    .DataSource(source => source
+        .Read(read => read.Action("GetTasks", "Monitoring").Data("GetDates"))
+        .ServerOperation(true)
+    )
+    .Events(events => events.DataBound("DataBound"))
+)
+
+<script>
+    var viewMode = "visit";
+    $(document).ready(function () {
+        $(".k-scheduler-views").html('<li class="k-state-default td-view" view-mode="visit">' +
+            '<a role="button" href="#" class="k-link">По визитам</a></li>' +
+            '<li class="k-state-default  td-view" view-mode="procedure"><a role="button" href="#" class="k-link">По процедурам</a></li>');
+
+        $(".k-scheduler-views .td-view").click(function () {
+            viewMode = $(this).attr("view-mode");
+            var scheduler = $("#TasksScheduler").data("kendoScheduler");
+            scheduler.dataSource.read();
+        });
+
+        SetContentBlock($("#TasksScheduler"));
+    });
+
+    function GetDates() {
+        var view = $("#TasksScheduler").data("kendoScheduler").view();
+
+        return {
+            visitDateBegin: view.startDate().toISOString(),
+            visitDateEnd: view.endDate().toISOString(),
+            viewMode: viewMode
+        };
+    }
+
+    function DataBound(e) {
+        $(".k-scheduler-views .td-view[view-mode='" + viewMode + "']").addClass("k-state-selected");
+        @*$("#TasksScheduler").find(".td-task").each(function () {
+            var id = $(this).attr("href");
+            $(this).attr("href", "@Url.Action("Details", "Tasks")" + id);
+        });*@
+    }
+</script>
+
+<style>
+    .k-event {
+        height: 60px !important;
+        overflow-y: auto;
+        overflow-x: hidden;
+        background: transparent;
+        border-style: none;
+    }
+
+    .td-task-undone {
+        color: blue !important;
+    }
+
+    .td-task-done {
+        color: green !important;
+    }
+
+    .td-task-overdue {
+        color: red !important;
+    }
+
+    pre {
+        font-size: 1.2em;
+    }
+</style>

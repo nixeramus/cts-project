@@ -52,6 +52,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Builders\ProcedureCountCommandBuilder.cs" />
     <Compile Include="Builders\TaskCommandBuilder.cs" />
     <Compile Include="Builders\ProcedureEmployeeCommandBuilder.cs" />
     <Compile Include="Builders\ScheduleCommandBuilder.cs" />

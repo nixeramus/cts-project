@@ -141,6 +141,7 @@
     <Compile Include="Common\Theme.cs" />
     <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\MonitoringController.cs" />
     <Compile Include="Controllers\TasksController.cs" />
     <Compile Include="Controllers\TrialsController_RolesEdit.cs" />
     <Compile Include="Controllers\TrialsController_Edit.cs" />
@@ -160,6 +161,7 @@
     </Compile>
     <Compile Include="Models\ScheduleCalend.cs" />
     <Compile Include="Models\ScheduleProcedure.cs" />
+    <Compile Include="Models\ProcedureCountSchedulerEvent.cs" />
     <Compile Include="Models\TaskSchedulerEvent.cs" />
     <Compile Include="Models\TaskViewModel.cs" />
     <Compile Include="Models\TrialProcedureViewModel.cs" />
@@ -777,8 +779,12 @@
     <Content Include="Views\Home\UnderConstruction.cshtml" />
     <Content Include="Views\Trials\EditorTemplates\TrialVersionEditor.cshtml" />
     <Content Include="Views\Schedules\EditorTemplates\VisitRoleEmployeeEditor.cshtml" />
+    <Content Include="Views\Monitoring\SchedulerState.cshtml" />
+    <Content Include="Views\Trials\EditorTemplates\VisitBaseDay.cshtml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Views\Report\" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
   </ItemGroup>
