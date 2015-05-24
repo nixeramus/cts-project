@@ -9,7 +9,34 @@
     .Columns(columns =>
     {
         columns.ForeignKey(e => e.ProcedureCode, (System.Collections.IEnumerable)ViewBag.Procedures, "Code", "Name")
-            .Width("100%").Title("Процедура");
+            .Width(250).Title("Процедура").HtmlAttributes(new { @class = "k-group-cell k-header" });
+        var roles = (IEnumerable<TD.CTS.Data.Entities.Role>)ViewBag.Roles;
+        foreach (var role in roles)
+        {
+            columns.Template(e => { })
+                .ClientTemplate("#= SelectedRole('" + role.Code + "', data) #")
+                .Title(role.Name)
+                .HeaderTemplate("<span class='rotate k-link'>" + role.Name + "</div>")
+                .HtmlAttributes(new { @class = "td-role-cell", style = "text-align:center;" })
+                .Width(80);
+
+        }
+        columns.Template(e => { }).ClientTemplate(" ").Width("100%").HtmlAttributes(new { @class = "k-group-cell" });
+    })
+    .ToolBar(toolbar =>
+    {
+        toolbar.Template(@<text>
+            <div>
+                <label style="display: inline-block;padding: 3px 5px 5px 5px;">Исследовательский центр:</label>
+                @(Html.Kendo().DropDownList()
+                    .HtmlAttributes(new { style="margin-bottom: 2px;" })
+                    .Name("TrialCenterId")
+                    .BindTo((System.Collections.IEnumerable)ViewBag.TrialCenters)
+                    .DataTextField("Number")
+                    .DataValueField("Id")
+                )
+            </div>
+        </text>);
     })
     .DataSource(dataSource => dataSource
        .Ajax()
@@ -18,83 +45,115 @@
        {
            model.Id(e => e.Id);
        })
-       .Read(read => read.Action("GetTrialProcedures", "Trials").Data("GetTrialCode"))
+       .Read(read => read.Action("GetTrialCenterProcedureRoles", "Trials").Data("GetParameters"))
+       .Events(events => events.Error("kendo_grid_error_handler"))
     )
-    .Events(events => events.DataBound("ProcedureRolesGridBound"))
-    .ClientDetailTemplateId("RolesTemplate")
+    .Scrollable(scroll => scroll.Height("auto"))
 )
-
-<script id="RolesTemplate" type="text/kendo-tmpl">
-    @(Html.Kendo().Grid<TD.CTS.Data.Entities.TrialCenterProcedureRole>()
-        .Name("RolesGrid_#=Id#")
-        .Columns(columns =>
-        {
-            columns.Buttons(buttons => { buttons.Add(); buttons.Delete(); }).Width(50);
-            columns.ForeignKey(e => e.TrialCenterId, (System.Collections.IEnumerable)ViewBag.TrialCenters, "Id", "Number")
-                .Width(200).Title("Исл. центр");
-            columns.ForeignKey(e => e.RoleCode, (System.Collections.IEnumerable)ViewBag.Roles, "Code", "Name")
-                .Width("100%").Title("Роль");
-        })
-        .DataSource(dataSource => dataSource
-            .Ajax()
-            .PageSize(20)
-            .Model(model =>
-            {
-                model.Id(e => e.Id);
-            })
-            .Read(read => read.Action("GetTrialCenterProcedureRoles", "Trials", new { ProcedureCode = "#=ProcedureCode#" }).Data("GetTrialCode"))
-            .Create(create => create.Action("AddTrialCenterProcedureRole", "Trials"))
-            .Update(update => update.Action("UpdateTrialCenterProcedureRole", "Trials"))
-            .Destroy(update => update.Action("DeleteTrialCenterProcedureRole", "Trials"))
-            .Events(events => events.Error("kendo_grid_error_handler").RequestEnd("OnRoleRequestEnd"))
-        )
-        .Events(events => events
-            .Edit("OnRoleEdit")
-            .Save("OnRoleSave")
-            .Cancel("OnRoleCancel")
-        )
-        .Scrollable(scroll => scroll.Height("auto"))
-        .Editable()
-        .ToClientTemplate()
-    )
-    @Html.Raw(@"<script>kendo_grid_init($(""\\\\#RolesGrid_#=Id#""));<\/script>")
-</script>
 
 <script>
     $(document).ready(function () {
         kendo_grid_init($("#ProcedureRolesGrid"));
     });
 
-    function ProcedureRolesGridBound(e) {
-        this.expandRow(this.tbody.find("tr.k-master-row"));
+    $("#ProcedureRolesGrid").on("click", ".td-role-cell", function () {
+        Update($(this));
+    });
+
+    function GetParameters() {
+        return {
+            TrialCode: $("#Code").val(),
+            TrialVersion: $("#Version").data("kendoDropDownList").value(),
+            TrialCenterId: $("#TrialCenterId").data("kendoDropDownList").value()
+        };
     }
 
-    var editGrid = null;
-    function OnRoleSave(e) {
-        var parentData = $("#ProcedureRolesGrid").data("kendoGrid").dataItem(e.sender.element.closest("tr").prev());
-        var trialData = GetTrialCode();
-        e.model.TrialCode = trialData.TrialCode;
-        e.model.TrialVersion = trialData.TrialVersion;
-        e.model.ProcedureCode = parentData.ProcedureCode;
+    function SelectedRole(roleCode, data) {
+        var index = GetRoleIndex(roleCode, data.Roles);
+        var html = "<input type=\"hidden\" value=\"" + roleCode + "\" />";
+        if (index !== -1)
+            return html + "<span dataId=\"" + data.Roles[index].Id + "\" class=\"k-icon k-i-tick\"></span>";
+
+        return html;
     }
 
-    function OnRoleEdit(e) {
-        editGrid = e.sender.element;
-        kendo_grid_resizeColumn(editGrid, 0, "75px");
-
-        e.container.find("a.k-grid-delete").closest("td").html('<a class="k-button k-button-icontext k-primary k-grid-update td-grid-button" href="#" title="Обновить"><span class="k-icon k-update td-grid-button-image"></span></a>' +
-                    '<a class="k-button k-button-icontext k-grid-cancel td-grid-button" href="#" title="Отмена"><span class="k-icon k-cancel td-grid-button-image"></span></a>');
+    function GetRoleIndex(roleCode, roles) {
+        if (!roles)
+            return -1;
+        for (var i = 0, len = roles.length; i < len; i++) {
+            if (roles[i].RoleCode === roleCode)
+                return i;
+        }
+        return -1;
     }
 
-    function OnRoleCancel(e) {
-        kendo_grid_resizeColumn(editGrid, 0, "50px");
-        editGrid = null;
-    }
+    function Update(cell) {
+        var span = cell.find("span");
+        var row = cell.closest("tr");
+        var grid = $("#ProcedureRolesGrid").data("kendoGrid");
+        var rowData = grid.dataItem(row);
 
-    function OnRoleRequestEnd(e) {
-        if (e.type === "update" || e.type === "create") {
-            kendo_grid_resizeColumn(editGrid, 0, "50px");
-            editGrid = null;
-        }        
+        var data;
+        var url;
+        var roleExists = span.length > 0;
+        if (roleExists) {
+            data = { Id: span.attr("dataId") };
+            url = "@Url.Action("DeleteTrialCenterProcedureRole", "Trials")";
+        } else {
+            data = {
+                TrialCenterId: $("#TrialCenterId").data("kendoDropDownList").value(),
+                ProcedureCode: rowData.ProcedureCode,
+                TrialCode: rowData.TrialCode,
+                TrialVersion: rowData.TrialVersion,
+                RoleCode: cell.find("input").val()
+            };
+            url = "@Url.Action("AddTrialCenterProcedureRole", "Trials")";
+        };
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: data,
+            async: false,
+            success: function (trialRole) {
+                if (roleExists) {
+                    var index = GetRoleIndex(cell.find("input").val(), rowData.Roles);
+                    rowData.Roles.splice(index, 1);
+                } else {
+                    rowData.Roles.push(trialRole);
+                }
+                grid.dataSource.pushUpdate(rowData);
+
+                var saveNotification = $("#SaveNotification").data("kendoNotification");
+                saveNotification.show("Сохранено", "success");
+            },
+            error: function (error) {
+                AjaxError(error);
+            }
+        });
     }
 </script>
+
+<style>
+    .rotate {
+        padding-bottom: 100px !important;
+        width: 150px;
+        overflow: visible !important;
+        white-space: normal !important;
+        word-wrap:break-word;
+        -webkit-transform: rotate(-90deg);
+        -moz-transform: rotate(-90deg);
+        -ms-transform: rotate(-90deg);
+        -o-transform: rotate(-90deg);
+        transform: rotate(-90deg);
+    }
+
+    #ProcedureRolesGrid .k-grid-header .k-header {
+      height: 150px;
+      text-align: center;
+    }
+
+    #ProcedureRolesGrid tr td {
+        border-width: 0 0 1px 1px;
+    }
+</style >

@@ -8,6 +8,7 @@ using System.Web.Mvc;
 using TD.CTS.Data.Entities;
 using TD.CTS.Data.Filters;
 using TD.CTS.WebUI.Common;
+using TD.CTS.WebUI.Models;
 
 namespace TD.CTS.WebUI.Controllers
 {
@@ -17,32 +18,36 @@ namespace TD.CTS.WebUI.Controllers
         {
             ViewBag.Title = "Роли исследования";
 
-            ViewBag.Procedures = DataProvider.GetList(new ProcedureDataFilter());
             ViewBag.TrialCenters = DataProvider.GetList(new TrialCenterDataFilter { TrialCode = id });
             ViewBag.Roles = DataProvider.GetList(new RoleDataFilter());
 
             return View(new Trial { Code = id, Version = 1 });
         }
-
+        
         #region TrialCenterProcedureRole
 
         public ActionResult GetTrialCenterProcedureRoles([DataSourceRequest]DataSourceRequest request, TrialCenterProcedureRoleDataFilter dataFilter)
         {
-            var response = DataProvider.GetList(dataFilter);//new TrialCenterProcedureRoleDataFilter { ProcedureCode = trialProcedureId });
+            var trialRoles = DataProvider.GetList(dataFilter);
+            var response = DataProvider.GetList(new TrialProcedureDataFilter
+            {
+                TrialCode = dataFilter.TrialCode,
+                TrialVersion = dataFilter.TrialVersion
+            })
+                .Select(p => TrialProcedureRolesViewModel.Create(p, trialRoles));
 
             return Json(response.ToDataSourceResult(request));
         }
 
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult AddTrialCenterProcedureRole([DataSourceRequest] DataSourceRequest request, TrialCenterProcedureRole role)//, int procedureId)
+        public ActionResult AddTrialCenterProcedureRole([DataSourceRequest] DataSourceRequest request, TrialCenterProcedureRole role)
         {
-            //role.TrialProcedureId = procedureId;
             if (role != null && ModelState.IsValid)
             {
                 DataProvider.Add(role);
             }
 
-            return Json(new[] { role }.ToDataSourceResult(request, ModelState));
+            return Json(role);
         }
 
         [AcceptVerbs(HttpVerbs.Post)]
@@ -53,7 +58,7 @@ namespace TD.CTS.WebUI.Controllers
                 DataProvider.Delete(role);
             }
 
-            return Json(new[] { role }.ToDataSourceResult(request, ModelState));
+            return Json(role);
         }
 
         #endregion
