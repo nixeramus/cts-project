@@ -53,6 +53,7 @@
                                           columns.Bound(e => e.TrialVisitName).Width(200).Title("Наименование");
                                           columns.Bound(e => e.BaseDay).Width(150).Title("Смещение").ClientTemplate("#=BaseDay#&nbsp;&plusmn;&nbsp;#=Limit#");
                                           columns.Bound(e => e.ScheduleDate).Width(200).EditorTemplateName("Date").Format("{0:dd.MM.yyyy}").Title("Назначенная дата");
+                                          columns.Bound(e => e.Canceled).Width(100).Title("Отменен").ClientTemplate("#= Canceled ? '<span  class=\"k-icon k-i-tick\"></span>' : '' #").HtmlAttributes(new { style = "text-align:center;" });
                                           columns.Template(e => { }).ClientTemplate(" ").Width("100%").HtmlAttributes(new { @class = "k-group-cell" });
                                       })
                                       .DataSource(dataSource => dataSource
@@ -71,7 +72,7 @@
                                           .Read(read => read.Action("GetScheduleVisits", "Schedules", new { ScheduleID = Model.Id })/*.Data("VisitsGetDataRead")*/)
                                           .Update(update => update.Action("UpdateScheduleVisit", "Schedules"))
                                           .Destroy(destroy => destroy.Action("DeleteScheduleVisit", "Schedules"))
-                                          .Events(events => events.Error("kendo_grid_error_handler").RequestEnd("VisitsRequestEnd"))
+                                          .Events(events => events.Error("OnVisitsError").RequestEnd("VisitsRequestEnd"))
                                       )
                                          .Events(events => events.Edit("OnVisitsEdit")/*.DataBinding("VisitsOnDataBinding")*/)
                                       )
@@ -163,9 +164,26 @@
     }
 //------------------------------Визиты-----------------------------------------------------------------------
 
+    //var validatorRules = {
+    //    rules: {
+    //        // This rule is executed when leaving a cell but the return value of false doesn't display any error message or prevent leaving the cell 
+    //        customRule1: function (input) {
+    //            // OpCode must not be empty
+    //            if (input.attr("name") == "ScheduleDate") {
+    //                return $.trim(input.val()) !== "" && !$('#Canceled')[0].checked;
+    //            }
+    //            return true;
+    //        }
+    //    },
+    //    messages: {
+    //        customRule1: "All fields are required"
+    //    }
+    //};
+
+
     //Изменение визита
     function OnVisitsEdit(e) {
-        var datePickerInRow = $(e.container).find('#ScheduleDate').data("kendoDatePicker");
+        //var datePickerInRow = $(e.container).find('#ScheduleDate').data("kendoDatePicker");
         //datePickerInRow.min(e.model.MinDate);
         //datePickerInRow.max(e.model.MaxDate);
         //Вызываем базовое редактирование
@@ -183,6 +201,43 @@
                 kendo_grid_reload($("#VisitsGrid"));
             }
         }
+    }
+    
+    //Ошибка в визите
+    function OnVisitsError(e) {
+        if (e.errors && e.status == 'customerror') {
+            var grid = $('#VisitsGrid').data('kendoGrid');
+            var gridElement = grid.editable.element;
+            var validationMessageTemplate = kendo.template(
+                "<div id='#=field#_validationMessage' " +
+                    "class='k-widget k-tooltip k-tooltip-validation " +
+                    "k-invalid-msg field-validation-error' " +
+                    "style='margin: 0.5em;' data-for='#=field#' " +
+                    "data-val-msg-for='#=field#' role='alert'>" +
+                    "<span class='k-icon k-warning'></span>" +
+                    "#=message#" +
+                    "<div class='k-callout k-callout-n'></div>" +
+                    "</div>");
+
+            $.each(e.errors, function(key, value) {
+                if (value.errors) {
+                    gridElement.find("[data-valmsg-for=" + key + "],[data-val-msg-for=" + key + "]")
+                        .replaceWith(validationMessageTemplate({ field: key, message: value.errors[0] }));
+                    gridElement.find("input[name=" + key + "]").focus();
+                }
+            });
+            grid.one("dataBinding", function(e) {
+                e.preventDefault(); // cancel grid rebind
+            });
+        } else {
+            kendo_grid_error_handler(e);
+        }
+        //
+        //var datePickerInRow = $(e.container).find('#ScheduleDate').data("kendoDatePicker");
+        //datePickerInRow.min(e.model.MinDate);
+        //datePickerInRow.max(e.model.MaxDate);
+        //Вызываем базовое редактирование
+        //kendo_grid_onrowedit(e);
     }
     //-------------------------Сотрудники по умолчанию-------------------------------------------------------------------------------------
     function EmployeesRequestEnd(e) {
@@ -230,6 +285,7 @@
         //StretchGrid($("#VisitRoleEmployeeWindow"),$("#VisitRoleEmployeeGrid"))
         
         kendo_grid_init($("#VisitsGrid"));
+        //$("#VisitsGrid").kendoValidator(validatorRules);
         $(window).bind("resize", function () {
             var tabStrip = $("#VisitsStrip").data("kendoTabStrip");
             var tab = tabStrip.select();
