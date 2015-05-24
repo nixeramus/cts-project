@@ -186,6 +186,14 @@ namespace TD.CTS.WebUI.Controllers
         }
         public ActionResult UpdateScheduleVisit([DataSourceRequest] DataSourceRequest request, ScheduleVisit scheduleVisit)
         {
+            //если дата не выбрана и не отменен визит
+            if (!scheduleVisit.ScheduleDate.HasValue && !scheduleVisit.Canceled)
+            {
+                ModelState.AddModelError("ScheduleDate", "Дата не введена");
+            }
+
+
+
             if (scheduleVisit != null && ModelState.IsValid)
             {
                 if (scheduleVisit.Id.HasValue)
