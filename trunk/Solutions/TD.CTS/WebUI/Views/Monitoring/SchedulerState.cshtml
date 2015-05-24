@@ -15,7 +15,7 @@
     $(document).ready(function () {
         $(".k-scheduler-views").html('<li class="k-state-default td-view" view-mode="visit">' +
             '<a role="button" href="#" class="k-link">По визитам</a></li>' +
-            '<li class="k-state-default  td-view" view-mode="procedure"><a role="button" href="#" class="k-link">По процедурам</a></li>');
+            '<li class="k-state-default td-view" view-mode="procedure"><a role="button" href="#" class="k-link">По процедурам</a></li>');
 
         $(".k-scheduler-views .td-view").click(function () {
             viewMode = $(this).attr("view-mode");
@@ -37,6 +37,7 @@
     }
 
     function DataBound(e) {
+        $(".k-scheduler-views .td-view").removeClass("k-state-selected");
         $(".k-scheduler-views .td-view[view-mode='" + viewMode + "']").addClass("k-state-selected");
         @*$("#TasksScheduler").find(".td-task").each(function () {
             var id = $(this).attr("href");
