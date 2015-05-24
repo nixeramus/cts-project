@@ -80,9 +80,11 @@
     <Compile Include="Entities\TrialIncomeArticle.cs" />
     <Compile Include="Entities\TrialProcedureVisit.cs" />
     <Compile Include="Entities\TrialVisitMaterial.cs" />
+    <Compile Include="Entities\TrialVisitProcedureReport.cs" />
     <Compile Include="Entities\User.cs" />
     <Compile Include="Entities\TrialVisit.cs" />
     <None Include="Filters\MaterialDataFilter.cs" />
+    <Compile Include="Entities\TrialVisitReport.cs" />
     <Compile Include="Enums\TrialStatus.cs" />
     <Compile Include="Filters\ProcedureDataFilter.cs" />
     <Compile Include="Filters\PatientDataFilter.cs" />
@@ -108,6 +110,7 @@
     <Compile Include="Filters\TrialMaterialDataFilter.cs" />
     <Compile Include="Filters\TrialCenterDataFilter.cs" />
     <Compile Include="Filters\TrialDataFilter.cs" />
+    <Compile Include="Filters\TrialVisitReportDataFilter.cs" />
     <Compile Include="Filters\UserDataFilter.cs" />
     <Compile Include="Filters\DataFilter.cs" />
     <Compile Include="Helpers\SerializeHelper.cs" />
