@@ -59,6 +59,10 @@
                             items.Add().Text("Расписания").Action("Index", "Schedules").Items(i => i.Add().Text("Планирование визитов").Action("Index", "SchedulesPlanning"));
                             items.Add().Text("Процедуры").Action("Index", "Tasks");
                             items.Add().Text("Мониторинг").Action("UnderConstruction", "Home");
+                            //items.Add().Text("Мониторинг").Items(i =>
+                            //{
+                            //    i.Add().Text("Oбщее состояние расписаний").Action("SchedulerState", "Monitoring");
+                            //});
                             items.Add().Text("Правила").Action("UnderConstruction", "Home");
                             items.Add().Text("Материалы").Action("UnderConstruction", "Home");
                             items.Add().Text(currentUser.FullName)

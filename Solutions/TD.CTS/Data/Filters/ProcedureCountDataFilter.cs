@@ -6,14 +6,10 @@ using TD.CTS.Data.Entities;
 
 namespace TD.CTS.Data.Filters
 {
-    public class TaskDataFilter : DataFilter<Task>
+    public class ProcedureCountDataFilter : DataFilter<ProcedureCount>
     {
-        public int? Id { get; set; }
-
         public DateTime? VisitDateBegin { get; set; }
 
         public DateTime? VisitDateEnd { get; set; }
-
-        public bool AllUsers { get; set; }
     }
 }

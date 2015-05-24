@@ -16,7 +16,7 @@
         <tr>
             <td class="td-formTable-caption">Смещение</td>
             <td>
-                @Html.EditorFor(model => model.Days, "VisitShift")&nbsp;&plusmn;&nbsp;@Html.EditorFor(model => model.Punctuality, "VisitShift")
+                @Html.EditorFor(model => model.Days, "VisitBaseDay")&nbsp;&plusmn;&nbsp;@Html.EditorFor(model => model.Punctuality, "VisitShift")
                 @Html.ValidationMessageFor(model => model.Days)
                 @Html.ValidationMessageFor(model => model.Punctuality)
             </td>
