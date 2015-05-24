@@ -37,6 +37,7 @@ namespace TD.CTS.MsSqlData.Builders
             command.Parameters.AddWithValue("@TrialVersionNo", entity.TrialVersionNo);
             command.Parameters.AddWithValue("@ScheduleDate", entity.ScheduleDate.GetNullableParameterValue());
             command.Parameters.AddWithValue("@ActualDate", entity.ActualDate.GetNullableParameterValue());
+            command.Parameters.AddWithValue("@Canceled", entity.Canceled);
             return command;
         }
 
@@ -52,8 +53,8 @@ namespace TD.CTS.MsSqlData.Builders
             command.Parameters.AddWithValue("@ScheduleVisitID", entity.Id.GetNullableParameterValue());
             command.Parameters.AddWithValue("@ScheduleDate", entity.ScheduleDate.GetNullableParameterValue());
             command.Parameters.AddWithValue("@ActualDate", entity.ActualDate.GetNullableParameterValue());
+            command.Parameters.AddWithValue("@Canceled", entity.Canceled.GetNullableParameterValue());
             
-
             return command;
         }
 
@@ -89,9 +90,9 @@ namespace TD.CTS.MsSqlData.Builders
             entity.BaseDay = reader.GetValue<int>("BaseDay");
             entity.Limit = reader.GetValue<int>("Limit");
             entity.Id = reader.GetNullableValue<int>("ScheduleVisitID");
-
             entity.MinDate = reader.GetNullableValue<DateTime>("MinDate");
             entity.MaxDate = reader.GetNullableValue<DateTime>("MaxDate");
+            entity.Canceled = reader.GetValue<bool>("Canceled");
         }
 
         public override void LoadNewEntityAttributes(SqlDataReader reader, ScheduleVisit entity)

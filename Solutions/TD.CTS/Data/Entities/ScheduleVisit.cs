@@ -12,7 +12,7 @@ namespace TD.CTS.Data.Entities
         public int TrialCenterID { get; set; }
         public string TrialCode { get; set; }
         public int TrialVersionNo { get; set; }
-        [Required(ErrorMessage = "Дата не задана")]
+        //[Required(ErrorMessage = "Дата не задана")]
         public DateTime? ScheduleDate { get; set; }
         public DateTime? ActualDate { get; set; }
         public string TrialVisitName { get; set; }
@@ -22,6 +22,8 @@ namespace TD.CTS.Data.Entities
 
         public DateTime? MinDate { get; set; }
         public DateTime? MaxDate { get; set; }
+
+        public bool Canceled { get; set; }
         
     }
 }
