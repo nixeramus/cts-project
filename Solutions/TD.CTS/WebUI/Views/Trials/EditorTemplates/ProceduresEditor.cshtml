@@ -17,7 +17,7 @@
             .Width(400)
             .Filterable(false)
             .HeaderTemplate(@"<div style=""text-align:right;width:200px;""><a class='k-button k-button-icontext k-grid-addcolumn td-grid-button' title='Добавить визит' href='javascript: void(0)'><span class='k-icon k-add td-grid-button-image'></span></a></div><div style=""text-align:right;width:200px;"">Визиты</div><div>Процедуры</div>")
-            .HtmlAttributes(new { @class = "k-group-cell" });
+            .HtmlAttributes(new { @class = "k-group-cell k-header" });
 
         var visits = (IEnumerable<TD.CTS.Data.Entities.TrialVisit>)ViewBag.Visits;
         foreach (var visit in visits)

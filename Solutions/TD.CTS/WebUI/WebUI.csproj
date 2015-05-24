@@ -164,6 +164,7 @@
     <Compile Include="Models\ProcedureCountSchedulerEvent.cs" />
     <Compile Include="Models\TaskSchedulerEvent.cs" />
     <Compile Include="Models\TaskViewModel.cs" />
+    <Compile Include="Models\TrialProcedureRolesViewModel.cs" />
     <Compile Include="Models\TrialProcedureViewModel.cs" />
     <Compile Include="Models\TrialTabs.cs" />
     <Compile Include="Models\TrialVisitMaterialViewModel.cs" />
