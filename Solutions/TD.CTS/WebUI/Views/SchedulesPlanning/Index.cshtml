@@ -73,7 +73,7 @@
         {
             columns.Template(e => { })
                 .ClientTemplate("#= SelectedVisit(" + "\"" + calendDate.CalendDate.ToString("dd.MM.yyyy") + "\"" + ", data) #")
-                .HeaderTemplate(string.Format(@"<span class='dayOfWeek' style='text-align:center;' title='{1}'><input type='hidden' value='{1}'/>{0}</span>", calendDate.CalendDate.ToString("ddd"), calendDate.CalendDate.ToString("dd.MM.yyyy"), calendDate.CalendDate.ToString("dd")))
+                .HeaderTemplate(string.Format(@"<span class='dayOfWeek' style='text-align:center;' title='{1}'><input type='hidden' value='{1}'/>{0}</span>", calendDate.CalendDate.ToString("ddd"), calendDate.CalendDate.ToString("dd.MM.yyyy")))
                 .HeaderHtmlAttributes(new { @class = (calendDate.LastDayInWeek) ? "lwd-day-hdr" : "day-hdr" })
                 .Width(40)
                 .HtmlAttributes(new {@style = "text-align:center;",@class=(calendDate.LastDayInWeek)?"lwd-day":""});
