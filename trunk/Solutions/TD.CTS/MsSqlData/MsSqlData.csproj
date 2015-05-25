@@ -73,6 +73,8 @@
     <Compile Include="Builders\CityCommandBuilder.cs" />
     <Compile Include="Builders\RoleCommandBuilder.cs" />
     <Compile Include="Builders\HospitalCommandBuilder.cs" />
+    <Compile Include="Builders\TrialVisitProcedureReportCommandBuilder.cs" />
+    <Compile Include="Builders\TrialVisitReportCommandBuilder.cs" />
     <Compile Include="Builders\UserCommandBuilder.cs" />
     <Compile Include="ChangePasswordException.cs" />
     <Compile Include="LoginFailedException.cs" />
