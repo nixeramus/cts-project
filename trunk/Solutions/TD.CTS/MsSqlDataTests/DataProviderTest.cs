@@ -13,8 +13,8 @@ namespace MsSqlDataTests
     [TestClass]
     public class DataProviderTest
     {
+        //private IDataProvider provider = new MsSqlDataProvider("Data Source=.;Initial Catalog=CTSDB7;UID=cts;PWD=cts_");
         private IDataProvider provider = new MsSqlDataProvider("Data Source=.;Initial Catalog=CTSDB;UID=sa;PWD=admin");
-
         [TestMethod]
         public void RoleTest()
         {
@@ -233,5 +233,30 @@ namespace MsSqlDataTests
         {
             
         }
+
+
+        [TestMethod]
+        public void VisitMonitoringTest()
+        {
+          var visits=  provider.GetList(new TrialVisitReportDataFilter
+          {
+                DateBegin = DateTime.Today.AddDays(-100),
+                DateEnd = DateTime.Today.AddDays(100)
+            });
+
+          Assert.IsNotNull(visits);
+
+          var procedures = provider.GetList(new TrialVisitProcedureReportDataFilter
+          {
+              ScheduleVisitID = visits[0].ScheduleVisitID
+          });
+
+          Assert.IsNotNull(procedures);
+
+           
+
+        }
+
+
     }
 }
