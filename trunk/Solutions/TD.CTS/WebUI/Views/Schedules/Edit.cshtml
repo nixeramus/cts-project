@@ -186,9 +186,9 @@
 
     //Изменение визита
     function OnVisitsEdit(e) {
-        //var datePickerInRow = $(e.container).find('#ScheduleDate').data("kendoDatePicker");
-        //datePickerInRow.min(e.model.MinDate);
-        //datePickerInRow.max(e.model.MaxDate);
+        var datePickerInRow = $(e.container).find('#ScheduleDate').data("kendoDatePicker");
+        datePickerInRow.min(e.model.MinDate);
+        datePickerInRow.max(e.model.MaxDate);
         //Вызываем базовое редактирование
         kendo_grid_onrowedit(e);
     }
