@@ -98,7 +98,7 @@
                                           }).Width(80);
                                           //columns.Bound(e => e.SystemRoleCode).Width(100).Title("Код роли");
                                           columns.ForeignKey(e => e.SystemRoleCode, (System.Collections.IEnumerable)ViewBag.SystemRoles, "Code", "Name").Width(300).Title("Роль").Sortable(false);
-                                          columns.ForeignKey(e => e.SystemLogin, (System.Collections.IEnumerable)ViewBag.Users, "Login", "FullName").Width(200).Title("Сотрудник").Sortable(false).EditorTemplateName("GridNullableForeignKey");
+                                          columns.ForeignKey(e => e.SystemLogin, (System.Collections.IEnumerable)ViewBag.Users, "Login", "FullName").Width(250).Title("Сотрудник").Sortable(false).EditorTemplateName("GridNullableForeignKey");
                                           //columns.Bound(e => e.SystemLogin).Width(100).Title("Сотрудник");
                                           columns.Template(e => { }).ClientTemplate(" ").Width("100%").HtmlAttributes(new { @class = "k-group-cell" });
                                       })
