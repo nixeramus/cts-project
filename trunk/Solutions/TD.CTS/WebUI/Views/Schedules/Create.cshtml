@@ -14,9 +14,9 @@
         }
     </style>
 }
-@{
+@*@{
     var isNew = true;
-}
+}*@
 @(Html.Kendo().TabStrip()
     .Name("TabStrip")
     .Animation(false)
@@ -40,27 +40,9 @@
                     "Comment": $("#Comment").val()
                 },
                 success: function (result) {
-                    //if(isNew) {
-                    //    //Если создание - то проставляем кодрасписания
-                    //    $("#Id").val(result.Data[0].Id);
-                    //    $("#VisitsGrid").css("display", "block");
-                    //    $("#EmployeeGrid").css("display", "block");
-                    //    $("#ProceduresGrid").css("display", "block");
-
-                    //    //var tabStrip = $("#TabStrip").data("kendoTabStrip");
-                    //    //var tabs = tabStrip.tabGroup.children();
-                    //    //tabStrip.enable(tabs.eq(1), true);
-                    //    //tabStrip.enable(tabs.eq(2), true);
-
-                    //    kendo_grid_reload($("#VisitsGrid"));
-                    //    kendo_grid_reload($("#EmployeeGrid"));
-
-                    //    isNew = false;
-                    //}
                     $("#SaveButton").attr("disabled", "disabled");
                     var saveNotification = $("#SaveNotification").data("kendoNotification");
                     saveNotification.show("Сохранено", "success");
-                    
                     var url = "@Url.Action("Edit", "Schedules")";
                     url = url + "/" + result.Data[0].Id;
                     window.location.replace(url);

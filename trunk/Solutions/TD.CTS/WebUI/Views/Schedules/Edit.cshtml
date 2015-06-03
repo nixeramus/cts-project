@@ -19,17 +19,17 @@
     </style>
 }
 @{
-    var isNew = ViewBag.IsNew;
+    //var isNew = ViewBag.IsNew;
     //var buttonsRow = new System.Text.StringBuilder(@"<tr class='k-filter-row'><th/><th style='text-align:right;'><a class='k-button k-button-icontext k-grid-add td-grid-button' title='Добавить визит' href='javascript: void(0)'><span class='k-icon k-add td-grid-button-image'></span></a></th>");
 }
 
-@Html.Partial("EditorTemplates/MainEditor")@RenderFooter(isNew)
+@Html.Partial("EditorTemplates/MainEditor")@RenderFooter()
 
 @*@Html.RenderPartial(@Html.Partial("EditorTemplates/ScheduleDetailEditor", Model))*@
 @(Html.Kendo().Window().Name("ProcedureEmployeeWindow").Width(700).Height(450).Draggable().Resizable(e=>e.Enabled(false)).Title("Сотрудники").Content(@<text>@Html.Partial("EditorTemplates/ProcedureEmployeeEditor", Model)</text>).Visible(false).Modal(true)/*.HtmlAttributes(new { @class = "k-popup-edit-form" })*/)
 @*@(Html.Kendo().Window().Name("VisitRoleEmployeeWindow").Width(700).Height(400).Draggable().Resizable().Title("Сотрудники для визита ").Content(@<text>@Html.Partial("EditorTemplates/VisitRoleEmployeeEditor", Model)</text>).Visible(false).Modal(true))*@
 
-@helper RenderFooter(bool isNew)
+@helper RenderFooter()
 {
     @(Html.Kendo().TabStrip()
     .Name("VisitsStrip")
@@ -122,7 +122,6 @@
             </text>);
         visittabs.Add()
             .Text("Подробная информация")
-            //.Enabled(!isNew)
             .Selected(false)
             .ContentHtmlAttributes(new {style = "padding:0;"})
             .LoadContentFrom("GetScheduleDetailContent", "Schedules", new { ScheduleID = Model.Id });
@@ -138,14 +137,12 @@
 
 <script>
     var validator = $("#scheduleForm").kendoValidator().data("kendoValidator");
-
-    var isNew = @isNew.ToString().ToLower();
-
+    /*--------------------------------Расписание------------------------------------------------------------*/
     function SaveSchedule() {
         if (validator.validate()) {
             $.ajax({
                 type: "POST",
-                url: "@Url.Action(isNew ? "AddSchedule" : "UpdateSchedule", "Schedules")",
+                url: "@Url.Action("UpdateSchedule", "Schedules")",
                 data: {
                     "Id": $("#Id").val(),
                     //"BeginDate": $("#BeginDate").val(),
@@ -165,11 +162,26 @@
         });
     }
     }
+
+    function CalcSchedule() {
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("CalcSchedule", "Schedules")",
+                data: {"Id": @Model.Id},
+                success: function (result) {
+                    kendo_grid_reload($("#VisitsGrid"));
+                    $('#VisitsStrip').data().kendoTabStrip.reload($('#VisitsStrip .k-item:nth-child(3)'));
+                    $("#SaveNotification").data("kendoNotification").show("Выполнено", "success");
+            },
+            error: AjaxError
+        });
+    }
+
 //------------------------------Визиты-----------------------------------------------------------------------
 
     //var validatorRules = {
     //    rules: {
-    //        // This rule is executed when leaving a cell but the return value of false doesn't display any error message or prevent leaving the cell 
+    //        // This rule is executed when leaving a cell but the return value of false doesn't display any error message or prevent leaving the cell
     //        customRule1: function (input) {
     //            // OpCode must not be empty
     //            if (input.attr("name") == "ScheduleDate") {
@@ -205,7 +217,7 @@
             }
         }
     }
-    
+
     //Ошибка в визите
     function OnVisitsError(e) {
         if (e.errors && e.status == 'customerror') {
@@ -250,7 +262,6 @@
             }
     }
     //------------------------Сотрудники для визита (Не используется)--------------------------------------------------------------------------------------
-
     function OpenVisitRoleEmployeeWindow(scheduleVisitId,scheduleVisitName) {
         var windowJs = $("#VisitRoleEmployeeWindow");
         var windowK = windowJs.data("kendoWindow");
@@ -259,14 +270,14 @@
         windowJs.find("input:hidden#VisitRoleEmployeeWindow_VisitId").val(scheduleVisitId);
         //var filter = { ScheduleVisitID :17};
         kendo_grid_reload($("#VisitRoleEmployeeGrid"));
-    
+
     }
     //----------------------Сотрудники в процедурах визита (ProcedureEmployee)------------------------------------------------------------------------------------------------------------------
     function OpenProceduereEmployeeWindow(trialvisitid,procedurecode) {
         var grid = $("#ProcedureEmployeesEditorGrid");
         var window = $("#ProcedureEmployeeWindow");
         window.data("kendoWindow").center().open();
-        var filter = {        
+        var filter = {
             //ScheduleID :17,
             TrialVisitID:trialvisitid,
             ProcedureCode:procedurecode,
@@ -286,7 +297,7 @@
         SetContentBlock($("#VisitsStrip .k-content"));
         kendo_grid_init($("#ProcedureEmployeesEditorGrid"));
         //StretchGrid($("#VisitRoleEmployeeWindow"),$("#VisitRoleEmployeeGrid"))
-        
+
         kendo_grid_init($("#VisitsGrid"));
         //$("#VisitsGrid").kendoValidator(validatorRules);
         $(window).bind("resize", function () {
