@@ -132,5 +132,10 @@ namespace TD.CTS.MockData
         {
             dataProvider.Update(entity);
         }
+
+        public void Calc(Schedule schedule)
+        {
+            dataProvider.Calc(schedule);
+        }
     }
 }

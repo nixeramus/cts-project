@@ -1,9 +1,5 @@
 ﻿using TD.CTS.Data.Entities;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TD.CTS.Data.Filters;
 
 namespace TD.CTS.Data
@@ -24,5 +20,7 @@ namespace TD.CTS.Data
         void Delete<TEntity>(TEntity entity) where TEntity : Entity;
 
         void Update(Trial entity);
+
+        void Calc(Schedule schedule);
     }
 }
