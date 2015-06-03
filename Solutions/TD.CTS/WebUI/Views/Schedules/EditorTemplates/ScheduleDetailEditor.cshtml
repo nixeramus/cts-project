@@ -10,7 +10,7 @@
         columns.ForeignKey(e => e.ProcedureCode, (System.Collections.IEnumerable)ViewBag.Procedures, "Code", "Name")
             .Width(400)
             .Filterable(false)
-            .HeaderTemplate(@"<span class='k-link' style='text-align:right;width:350px;'>Визиты</span><span class='k-link'>Процедуры</span>")
+            .HeaderTemplate(@"<span class='k-link' style='text-align:right;width:250px;'>Визиты</span><span class='k-link'>Процедуры</span>")
             .HtmlAttributes(new { @class = "k-group-cell" });
 
         var visits = (List<ScheduleVisit>)ViewBag.Visits;
