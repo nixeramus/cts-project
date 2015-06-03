@@ -53,16 +53,14 @@ namespace TD.CTS.WebUI.Controllers
 
         public ActionResult Edit(int? id)
         {
-            //var isNew = !id.HasValue;
-            ViewBag.Title = "Управление расписанием";
-            //ViewBag.IsNew = isNew;
-
             if (!id.HasValue)
             {
                 return RedirectToAction("Index", "Schedules");
             }
+            ViewBag.Title = "Управление расписанием";
+            ViewBag.IsNew = false;
            
-             var schedule = DataProvider.GetItem(new ScheduleDataFilter { ScheduleID = id });
+            var schedule = DataProvider.GetItem(new ScheduleDataFilter { ScheduleID = id });
             if (schedule == null)
                     throw new ApplicationException("Расписание с кодом '" + id + "' не найдено");
             
