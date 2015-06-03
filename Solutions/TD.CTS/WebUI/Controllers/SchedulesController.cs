@@ -42,40 +42,20 @@ namespace TD.CTS.WebUI.Controllers
 
         public ActionResult Create()
         {
-            //TODO:Можно переделать на EDIT сразу, но не нашел как таб
             ViewBag.Title = "Создание расписания";
             ViewBag.IsNew = true;
             var schedule = new Schedule {BeginDate = DateTime.Today};
-
-
-            //получаем список пользователей
-            //var users = DataProvider.GetList(new UserDataFilter());
-            //Получаем список пациентов
-            //var patients = DataProvider.GetList(new PatientDataFilter());
-            //Получаем список исследований
-            //var trials = DataProvider.GetList(new TrialDataFilter());
-            //Получаем список исследовательских центров
-            //var trialCenters = ;
-            //получаем список ролей
-            //var systemRoles = DataProvider.GetList(new RoleDataFilter());
-            //ViewBag.Users = users;
             ViewBag.PatientCode_Data = new SelectList(DataProvider.GetList(new PatientDataFilter()), "Id", "FullName");
             ViewBag.TrialCenterID_Data = new SelectList(DataProvider.GetList(new TrialCenterDataFilter()), "Id", "Number");
-            //ViewBag.SystemRoles = systemRoles;
             ViewBag.ScheduleStatuses = ScheduleStatus.GetScheduleStatuses();
-            //ViewBag.Procedures = DataProvider.GetList(new ProcedureDataFilter());
-            //ViewBag.Visits = DataProvider.GetList(new ScheduleVisitDataFilter { ScheduleID = id });
             return View(schedule);
         }
 
-
-
-
         public ActionResult Edit(int? id)
         {
-            var isNew = !id.HasValue;
+            //var isNew = !id.HasValue;
             ViewBag.Title = "Управление расписанием";
-            ViewBag.IsNew = isNew;
+            //ViewBag.IsNew = isNew;
 
             if (!id.HasValue)
             {
@@ -111,46 +91,6 @@ namespace TD.CTS.WebUI.Controllers
 
 
 
-        //public ActionResult Edit(int? id)
-        //{
-        //    var isNew = !id.HasValue;
-        //    //ViewBag.Title = isNew ? "Создание расписания" : "Управление расписанием";
-        //    ViewBag.Title = "Управление расписанием";
-        //    ViewBag.IsNew = isNew;
-
-        //    Schedule schedule;
-        //    if (isNew)
-        //    {
-        //        schedule = new Schedule {BeginDate = DateTime.Today};
-        //    }
-        //    else
-        //    {
-        //        schedule = DataProvider.GetItem(new ScheduleDataFilter {ScheduleID = id});
-        //        if (schedule == null)
-        //            throw new ApplicationException("Расписание с кодом '" + id + "' не найдено");
-        //    }
-
-        //    //получаем список пользователей
-        //    var users = DataProvider.GetList(new UserDataFilter());
-        //    //Получаем список пациентов
-        //    var patients = DataProvider.GetList(new PatientDataFilter());
-        //    //Получаем список исследований
-        //    //var trials = DataProvider.GetList(new TrialDataFilter());
-        //    //Получаем список исследовательских центров
-        //    var trialCenters = DataProvider.GetList(new TrialCenterDataFilter());
-        //    //получаем список ролей
-        //    var systemRoles = DataProvider.GetList(new RoleDataFilter());
-        //    ViewBag.Users = users;
-        //    ViewBag.PatientCode_Data = new SelectList(patients, "Id", "FullName");
-        //    ViewBag.TrialCenterID_Data = new SelectList(trialCenters, "Id", "Number");
-        //    ViewBag.SystemRoles = systemRoles;
-        //    ViewBag.ScheduleStatuses = ScheduleStatus.GetScheduleStatuses();
-        //    //-------------------
-        //    //ViewBag.Procedures = DataProvider.GetList(new ProcedureDataFilter());
-        //    ViewBag.Visits = DataProvider.GetList(new ScheduleVisitDataFilter {ScheduleID = id});
-        //    //----------------
-        //    return View(schedule);
-        //}
 
 
 
@@ -175,6 +115,20 @@ namespace TD.CTS.WebUI.Controllers
 
             return Json(new[] { schedule }.ToDataSourceResult(request, ModelState));
         }
+
+
+
+
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult CalcSchedule(Schedule schedule)
+        {
+           DataProvider.Calc(schedule);
+           return Json(new[] { schedule });
+        }
+
+
+
+
         #endregion
 
         #region ScheduleVist
@@ -192,9 +146,7 @@ namespace TD.CTS.WebUI.Controllers
                 ModelState.AddModelError("ScheduleDate", "Дата не введена");
             }
 
-
-
-            if (scheduleVisit != null && ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 if (scheduleVisit.Id.HasValue)
                 {
@@ -309,7 +261,7 @@ namespace TD.CTS.WebUI.Controllers
 
 
         /// <summary>
-        /// Изменение сотрудника в визите для роли из расписания
+        /// Изменение сотрудника в визите для роли из расписания (НЕ ИСПОЛЬЗУЕТСЯ)
         /// </summary>
         public ActionResult UpdateScheduleVisitEmployee([DataSourceRequest] DataSourceRequest request, ScheduleEmployee scheduleEmployee, int ScheduleVisitId)
         {
