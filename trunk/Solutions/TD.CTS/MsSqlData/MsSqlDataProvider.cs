@@ -66,7 +66,7 @@ namespace TD.CTS.MsSqlData
             {
                 statusCommand = new SqlCommand("TrialChangeStatus", connection)
                 {
-                    CommandType = System.Data.CommandType.StoredProcedure,
+                    CommandType = CommandType.StoredProcedure,
                     CommandTimeout = Settings.CommandTimeout
                 };
 
@@ -98,6 +98,32 @@ namespace TD.CTS.MsSqlData
                     tran.Rollback();
 
                 throw LogException(MethodBase.GetCurrentMethod().Name, typeof(Trial), ex);
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
+
+        public void Calc(Schedule schedule)
+        {
+            var connection = new SqlConnection(connectionString);
+            var calcCommand = new SqlCommand("ScheduleCalc", connection)
+            {
+                CommandType = CommandType.StoredProcedure,
+                CommandTimeout = Settings.CommandTimeout
+            };
+
+            calcCommand.Parameters.AddWithValue("@ScheduleID", schedule.Id);
+
+            try
+            {
+                connection.Open();
+                calcCommand.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                throw LogException(MethodBase.GetCurrentMethod().Name, typeof(Schedule), ex);
             }
             finally
             {
