@@ -7,17 +7,15 @@ using System.Threading.Tasks;
 
 namespace TD.CTS.Data.Entities
 {
-    public class Procedure : Entity
+    public class ProcedureGroup : Entity
     {
-        [Required(ErrorMessage = "Код не задан")]
-        public string Code { get; set; }
+        public int Id { get; set; }
 
         [Required(ErrorMessage = "Наименование не задано")]
         public string Name { get; set; }
 
-        [Required(ErrorMessage = "Группа не выбрана")]
-        public int ProcedureGroupId { get; set; }
-
-        public int ProcedureGroupPriority { get; set; }
+        [Required(ErrorMessage = "Приоритет не задан")]
+        [Range(1, int.MaxValue, ErrorMessage = "Приоритет должен быть больше 0")]
+        public int Priority { get; set; }
     }
 }

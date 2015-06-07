@@ -17,6 +17,8 @@ namespace TD.CTS.WebUI.Controllers
         {
             ViewBag.Title = "Процедуры";
 
+            ViewBag.ProcedureGroups = DataProvider.GetList(new ProcedureGroupDataFilter());
+
             return View();
         }
 

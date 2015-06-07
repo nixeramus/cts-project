@@ -1,0 +1,103 @@
+﻿@using TD.Common.Kendo.Mvc5.Grid
+
+@{
+    System.Collections.IEnumerable procedureGroups = ViewBag.ProcedureGroups;
+    var filterRow = new TD.Common.Kendo.Mvc5.Grid.Filters.FilterRow(Html);
+}
+
+<div class="k-edit-form-container" style="width:600px;">
+    @(Html.Kendo().Grid<TD.CTS.WebUI.Models.ProcedureSelectModel>()
+        .Name("SelectProceduresGrid")
+        .AutoBind(false)
+        .Scrollable(s => s.Height(350))
+        .Sortable()
+        .Columns(columns =>
+        {
+            filterRow.AddCell(new TD.Common.Kendo.Mvc5.Grid.Filters.EmptyFilterCell());
+            columns.Template(e => { }).ClientTemplate("<input class='td-procSelect-checkbox' type=\"checkbox\" value=\"#= Code #\" #: Selected ? \"checked\" : \"\" # />").Width(50);
+            columns.Bound(e => e.Name, filterRow).Title("Наименование процедуры").Width(300);
+            columns.ForeignKey(e => e.ProcedureGroupId, procedureGroups, "Id", "Name", filterRow).Width("100%").Title("Группа");
+        })
+        .DataSource(dataSource => dataSource
+           .Ajax()
+           .Model(model =>
+           {
+               model.Id(e => e.Code);
+           })
+           .Read(read => read.Action("GetSelectProcedures", "Trials").Data("GetTrialCode"))
+           .Events(events => events.Error("kendo_grid_error_handler"))
+           .ServerOperation(false)
+        )
+    )
+    <div class="k-edit-buttons k-state-default">
+        <button id="saveSelectProcedure" class="k-button k-button-icontext"><span class="k-icon k-update"></span>Сохранить</button>
+        <button id="cancelSelectProcedure" class="k-button k-button-icontext"><span class="k-icon k-cancel"></span>Отменить</button>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        var jGrid = $("#SelectProceduresGrid");
+        kendo_grid_init(jGrid, false, '@Html.Raw(filterRow.HtmlFilterRow())');
+        jGrid.find("#NameFilter").on('input', FilterSelectProcedures);
+        jGrid.find("#ProcedureGroupIdFilter").change(FilterSelectProcedures);
+        //jGrid.find("#ProcedureGroupIdFilter").data("kendoDropDownList").bind("change", FilterSelectProcedures);
+    });
+
+    $("#SelectProceduresGrid").on("change", ".td-procSelect-checkbox", function () {
+        var checkbox = $(this);
+        var value = checkbox.val();
+        var grid = $("#SelectProceduresGrid").data("kendoGrid");
+        var rowData = grid.dataSource.get(value);
+
+        rowData.Selected = checkbox.is(':checked');
+        grid.dataSource.pushUpdate(rowData);
+    });
+
+    function FilterSelectProcedures() {
+        var jGrid = $("#SelectProceduresGrid");
+        var filters = [];
+        var name = jGrid.find("#NameFilter").val();
+        if (name)
+            filters.push({ field: "Name", operator: "contains", value: name });
+        var dropDown = jGrid.find("#ProcedureGroupIdFilter").data("kendoDropDownList");
+        if (dropDown.select() > 0)
+            filters.push({ field: "ProcedureGroupId", operator: "eq", value: parseInt(dropDown.value()) });
+
+        jGrid.data("kendoGrid").dataSource.filter(filters);
+    }
+
+    $("#saveSelectProcedure").click(function () {
+        var procedureCodes = [];
+        var data = $("#SelectProceduresGrid").data("kendoGrid").dataSource.data();
+
+        for (var i = 0; i < data.length; i++) {
+            if (data[i].Selected)
+                procedureCodes.push(data[i].Code);
+        }
+
+        //$("#SelectProceduresGrid :checked").each(function () {
+        //    if(this.Selected)
+        //        procedureCodes.push(this.Code);
+        //});
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("UpdateTrialProcedures", "Trials")",
+            data: {
+                ProcedureCodes: procedureCodes,
+                TrialCode: $("#Code").val(),
+                TrialVersion: $("#Version").data("kendoDropDownList").value()
+            },
+            success: function (result) {
+                $('#ProceduresGrid').data("kendoGrid").dataSource.read();
+                $("#ProceduresWindow").data("kendoWindow").close();
+            },
+            error: AjaxError
+        });
+    });
+
+    $("#cancelSelectProcedure").click(function () {
+        $("#ProceduresWindow").data("kendoWindow").close();
+    });
+</script>

@@ -54,6 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Entities\Material.cs" />
+    <Compile Include="Entities\ProcedureGroup.cs" />
     <Compile Include="Entities\Procedure.cs" />
     <Compile Include="Entities\Patient.cs" />
     <Compile Include="Entities\ScheduleEmployee.cs" />
@@ -86,6 +87,7 @@
     <None Include="Filters\MaterialDataFilter.cs" />
     <Compile Include="Entities\TrialVisitReport.cs" />
     <Compile Include="Enums\TrialStatus.cs" />
+    <Compile Include="Filters\ProcedureGroupDataFilter.cs" />
     <Compile Include="Filters\ProcedureDataFilter.cs" />
     <Compile Include="Filters\PatientDataFilter.cs" />
     <Compile Include="Filters\ScheduleEmployeeDataFilter.cs" />

@@ -44,5 +44,33 @@ namespace TD.CTS.WebUI.Controllers
 
             return Json(response.ToDataSourceResult(request));
         }
+
+        public ActionResult VisitList(TrialVisitReportDataFilter dataFilter)
+        {
+            ViewBag.Title = "Форма списка визитов";
+
+            return View(dataFilter ?? new TrialVisitReportDataFilter());
+        }
+
+        public ActionResult GetVisits([DataSourceRequest]DataSourceRequest request, TrialVisitReportDataFilter dataFilter)
+        {
+            //var response = DataProvider.GetList(dataFilter ?? new TrialVisitReportDataFilter());
+
+            var response = new List<TrialVisitReport> { 
+                new TrialVisitReport{
+                    Date = DateTime.Today,
+                    PatientId = 1,
+ PatientName = "Vasya",
+ Status = "Compl",
+ TrialCode = "T1",
+ TrialName = "Trial1",
+ TrialVersion = 1,
+ TrialVisitId = 1,
+ TrialVisitName = "V1"
+}
+            };
+            
+            return Json(response.ToDataSourceResult(request));
+        }
     }
 }

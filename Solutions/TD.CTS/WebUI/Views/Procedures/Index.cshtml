@@ -7,6 +7,7 @@
 }
 
 @{
+    System.Collections.IEnumerable procedureGroups = ViewBag.ProcedureGroups;
     var filterRow = new TD.Common.Kendo.Mvc5.Grid.Filters.FilterRow(Html);
 }
 
@@ -17,7 +18,8 @@
     {
         columns.ButtonsCrud(filterRow);
         columns.Bound(e => e.Code, filterRow).Width(100).Title("Код");
-        columns.Bound(e => e.Name, filterRow).Width("100%").Title("Наименование");
+        columns.Bound(e => e.Name, filterRow).Width(300).Title("Наименование");
+        columns.ForeignKey(e => e.ProcedureGroupId, procedureGroups, "Id", "Name", filterRow).Width("100%").Title("Группа");
     })
     .DataSource(dataSource => dataSource
         .Ajax()

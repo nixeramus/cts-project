@@ -7,12 +7,10 @@ using TD.CTS.Data.Entities;
 
 namespace TD.CTS.Data.Filters
 {
-    public class ProcedureDataFilter : DataFilter<Procedure>
+    public class ProcedureGroupDataFilter : DataFilter<ProcedureGroup>
     {
-        public string Code { get; set; }
+        public int? Id { get; set; }
 
         public string Name { get; set; }
-
-        public int? ProcedureGroupId { get; set; }
     }
 }
