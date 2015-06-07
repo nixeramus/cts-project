@@ -22,5 +22,7 @@ namespace TD.CTS.Data
         void Update(Trial entity);
 
         void Calc(Schedule schedule);
+
+        void MargeTrialProcedures(string trialCode, int trialVersion, string[] procedureCodes);
     }
 }

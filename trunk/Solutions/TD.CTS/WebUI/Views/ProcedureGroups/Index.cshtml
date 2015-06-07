@@ -1,0 +1,48 @@
+﻿@using TD.Common.Kendo.Mvc5.Grid
+
+@section head{
+    <link href="@Url.Content("~/Content/td/td.kendo.grid.css")" rel="stylesheet" type="text/css" />
+
+    <script src="@Url.Content("~/Scripts/td/td.kendo.grid.js")"></script>
+}
+
+@{
+    var filterRow = new TD.Common.Kendo.Mvc5.Grid.Filters.FilterRow(Html);
+}
+
+@(Html.Kendo().Grid<TD.CTS.Data.Entities.ProcedureGroup>()
+    .Init("Grid")
+    .Editable()
+    .Columns(columns =>
+    {
+        columns.ButtonsCrud(filterRow);
+        columns.Bound(e => e.Name, filterRow).Width(300).Title("Наименование");
+        columns.Bound(e => e.Priority).Width("100%").Title("Приоритет").EditorTemplateName("PriorityEditor");
+        filterRow.AddCell(new TD.Common.Kendo.Mvc5.Grid.Filters.EmptyFilterCell());
+    })
+
+    .DataSource(dataSource => dataSource
+        .Ajax()
+        .PageSize(20)
+        .Model(model =>
+        {
+            model.Id(e => e.Id);
+            model.Field(e => e.Priority).DefaultValue(1);
+        })
+        .Read(read => read.Action("GetProcedureGroups", "ProcedureGroups").Data("kendo_grid_getfilters"))
+        .Create(create => create.Action("AddProcedureGroup", "ProcedureGroups"))
+        .Update(update => update.Action("UpdateProcedureGroup", "ProcedureGroups"))
+        .Destroy(update => update.Action("DeleteProcedureGroup", "ProcedureGroups"))
+        .Events(events => events.Error("kendo_grid_error_handler"))
+     )
+     .Events(events => events.Edit("kendo_grid_onrowedit"))
+
+)
+
+<script>
+    $(document).ready(function () {
+        kendo_grid_init($("#Grid"), true, '@Html.Raw(filterRow.HtmlFilterRow())');
+    });
+
+</script>
+

@@ -137,5 +137,11 @@ namespace TD.CTS.MockData
         {
             dataProvider.Calc(schedule);
         }
+
+
+        public void MargeTrialProcedures(string trialCode, int trialVersion, string[] procedureCodes)
+        {
+            dataProvider.MargeTrialProcedures(trialCode, trialVersion, procedureCodes);
+        }
     }
 }

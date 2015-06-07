@@ -18,6 +18,7 @@ namespace TD.CTS.MsSqlData.Builders
 
             command.Parameters.AddWithValue("@ProcedureCode", entityFilter.Code.GetNullableParameterValue());
             command.Parameters.AddWithValue("@ProcedureName", entityFilter.Name.GetLikeParameterValue());
+            command.Parameters.AddWithValue("@ProcedureGroupID", entityFilter.ProcedureGroupId.GetNullableParameterValue());
             
             return command;
         }
@@ -32,6 +33,7 @@ namespace TD.CTS.MsSqlData.Builders
 
             command.Parameters.AddWithValue("@ProcedureCode", entity.Code);
             command.Parameters.AddWithValue("@ProcedureName", entity.Name);
+            command.Parameters.AddWithValue("@ProcedureGroupID", entity.ProcedureGroupId.GetNullableParameterValue());
             
             return command;
         }
@@ -46,6 +48,7 @@ namespace TD.CTS.MsSqlData.Builders
 
             command.Parameters.AddWithValue("@ProcedureCode", entity.Code);
             command.Parameters.AddWithValue("@ProcedureName", entity.Name);
+            command.Parameters.AddWithValue("@ProcedureGroupID", entity.ProcedureGroupId.GetNullableParameterValue());
             
             return command;
         }
@@ -67,6 +70,8 @@ namespace TD.CTS.MsSqlData.Builders
         {
             entity.Code = reader.GetString("ProcedureCode").Trim();
             entity.Name = reader.GetString("ProcedureName");
+            entity.ProcedureGroupId = reader.GetNullableValue<int>("ProcedureGroupID") ?? 0;
+            entity.ProcedureGroupPriority = reader.GetNullableValue<int>("Priority") ?? int.MaxValue;
        }
 
         public override void LoadNewEntityAttributes(SqlDataReader reader, Procedure entity)

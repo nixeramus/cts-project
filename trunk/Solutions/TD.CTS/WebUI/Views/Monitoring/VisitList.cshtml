@@ -1,0 +1,57 @@
+﻿@model TD.CTS.Data.Filters.TrialVisitReportDataFilter
+
+@section head{
+    <link href="@Url.Content("~/Content/td/td.kendo.grid.css")" rel="stylesheet" type="text/css" />
+    
+    <script src="@Url.Content("~/Scripts/td/td.kendo.grid.js")"></script>
+}
+
+@(Html.Kendo().Grid<TD.CTS.Data.Entities.TrialVisitReport>()
+    .Name("VisitsGrid")
+    .Columns(columns =>
+    {
+        columns.Bound(e => e.TrialCode).Width(90).Title("Код иссл.");
+        columns.Bound(e => e.TrialName).Width(250).Title("Наименование исследования");
+        columns.Bound(e => e.TrialVisitName).Width(150).Title("Визит");
+        columns.Bound(e => e.Date).Width(150).Title("Дата").Format("{0:dd.MM.yyyy}");
+        columns.Bound(e => e.PatientName).Width(200).Title("ФИО пациента");
+        columns.Bound(e => e.Status).Width(125).Title("Статус визита");
+        columns.Template(e => { }).ClientTemplate(" ").Width("100%").HtmlAttributes(new { @class = "k-group-cell" });
+    })
+    .ToolBar(toolbar =>
+    {
+        toolbar.Template(@<text>
+            <div>
+                <label style="display: inline-block;padding: 3px 5px 5px 5px;">Начальная дата:</label>
+                @(Html.Kendo().DatePickerFor(m => m.DateBegin)
+                    .HtmlAttributes(new { style = "margin-bottom: 2px;" })
+                )
+                <label style="display: inline-block;padding: 3px 5px 5px 5px;">Конечная дата:</label>
+                @(Html.Kendo().DatePickerFor(m => m.DateEnd)
+                    .HtmlAttributes(new { style = "margin-bottom: 2px;" })
+                )
+            </div>
+        </text>);
+    })
+    .DataSource(dataSource => dataSource
+       .Ajax()
+       .PageSize(50)
+       .Read(read => read.Action("GetVisits", "Monitoring").Data("GetParameters"))
+       .Events(events => events.Error("kendo_grid_error_handler"))
+    )
+    .Scrollable()
+    .Pageable()
+)
+
+<script>
+    $(document).ready(function () {
+        kendo_grid_init($("#VisitsGrid"), true);
+    });
+
+    function GetParameters() {
+        return {
+            DateBegin: $("#DateBegin").data("kendoDatePicker").value(),
+            DateEnd: $("#DateEnd").data("kendoDatePicker").value()
+        };
+    }
+</script>

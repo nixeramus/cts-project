@@ -51,6 +51,7 @@
                                 i.Add().Text("Пациентов").Action("Index", "Patients");
                                 i.Add().Text("Рефералов").Action("Index", "Referals");
                                 i.Add().Text("Сотрудников").Action("Index", "Users");
+                                i.Add().Text("Групп процедур").Action("Index", "ProcedureGroups");
                                 i.Add().Text("Процедур").Action("Index", "Procedures");
                                 i.Add().Text("Городов").Action("Index", "Cities");
                                 i.Add().Text("Медицинских учреждений").Action("Index", "Hospitals");
@@ -62,6 +63,7 @@
                             items.Add().Text("Мониторинг").Items(i =>
                             {
                                 i.Add().Text("Oбщее состояние расписаний").Action("SchedulerState", "Monitoring");
+                                i.Add().Text("Форма списка визитов").Action("VisitList", "Monitoring");
                             });
                             items.Add().Text("Правила").Action("UnderConstruction", "Home");
                             items.Add().Text("Материалы").Action("UnderConstruction", "Home");

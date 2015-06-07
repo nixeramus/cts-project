@@ -60,16 +60,19 @@ function SetContentBlock(block){
 }
 
 function StretchGrid(conteiner, grid) {
-    var conteinerHeight = conteiner.height();
+    var conteinerTop = conteiner.offset().top;
+    var gridTop = grid.offset().top;
+    var conteinerHeight = conteiner.height() - gridTop + conteinerTop;
 
     var gridHeight = grid.height();
 
     var delta = conteinerHeight - gridHeight;
 
     var gridContent = grid.find(">.k-grid-content");
-    var contentHeight = gridContent.height();
+    var contentHeight = gridContent.height() + delta - 2;
 
-    gridContent.height(contentHeight + delta - 2);
+    gridContent.height(contentHeight);
+    grid.find(">.k-grid-content-locked").height(contentHeight);
 }
 
 function AjaxError(e) {

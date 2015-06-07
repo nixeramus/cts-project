@@ -359,6 +359,60 @@ namespace TD.CTS.MsSqlData
             return true;
         }
 
-        
+        public void MargeTrialProcedures(string trialCode, int trialVersion, string[] procedureCodes)
+        {
+            var trialProcedures = GetList(new TrialProcedureDataFilter { TrialCode = trialCode, TrialVersion = trialVersion });
+
+            var deletedProcedures = trialProcedures.Where(x => !procedureCodes.Contains(x.ProcedureCode)).ToArray();
+
+            var addedProcedures = procedureCodes.Where(x => !trialProcedures.Any(y => y.ProcedureCode == x))
+                .Select(x => new TrialProcedure
+                {
+                    TrialCode = trialCode,
+                    TrialVersion = trialVersion,
+                    ProcedureCode = x
+                }).ToArray();
+
+            if (deletedProcedures.Length == 0 && addedProcedures.Length == 0)
+                return;
+
+            var connection = new SqlConnection(connectionString);
+
+            dynamic builder = builders[typeof(TrialProcedure)];
+
+            SqlTransaction tran = null;
+            try
+            {
+                connection.Open();
+                tran = connection.BeginTransaction();
+
+                foreach(var procedure in deletedProcedures)
+                {
+                    var command = builder.CreateDeleteCommand(connection, procedure);
+                    command.Transaction = tran;
+                    command.ExecuteNonQuery();
+                }
+
+                foreach (var procedure in addedProcedures)
+                {
+                    var command = builder.CreateAddCommand(connection, procedure);
+                    command.Transaction = tran;
+                    command.ExecuteNonQuery();
+                }
+
+                tran.Commit();
+            }
+            catch (Exception ex)
+            {
+                if (tran != null)
+                    tran.Rollback();
+
+                throw LogException(MethodBase.GetCurrentMethod().Name, typeof(TrialProcedure), ex);
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
     }
 }

@@ -141,6 +141,7 @@
     <Compile Include="Common\Theme.cs" />
     <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\ProcedureGroupsController.cs" />
     <Compile Include="Controllers\MonitoringController.cs" />
     <Compile Include="Controllers\TasksController.cs" />
     <Compile Include="Controllers\TrialsController_RolesEdit.cs" />
@@ -159,6 +160,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\ProcedureSelectModel.cs" />
     <Compile Include="Models\ScheduleCalend.cs" />
     <Compile Include="Models\ScheduleProcedure.cs" />
     <Compile Include="Models\ProcedureCountSchedulerEvent.cs" />
@@ -782,6 +784,10 @@
     <Content Include="Views\Schedules\EditorTemplates\VisitRoleEmployeeEditor.cshtml" />
     <Content Include="Views\Monitoring\SchedulerState.cshtml" />
     <Content Include="Views\Trials\EditorTemplates\VisitBaseDay.cshtml" />
+    <Content Include="Views\Monitoring\VisitList.cshtml" />
+    <Content Include="Views\Trials\EditorTemplates\SelectProceduresEditor.cshtml" />
+    <Content Include="Views\ProcedureGroups\Index.cshtml" />
+    <Content Include="Views\ProcedureGroups\EditorTemplates\PriorityEditor.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\Report\" />
