@@ -138,6 +138,7 @@
 <script>
     var validator = $("#scheduleForm").kendoValidator().data("kendoValidator");
     /*--------------------------------Расписание------------------------------------------------------------*/
+
     function SaveSchedule() {
         if (validator.validate()) {
             $.ajax({
@@ -151,30 +152,34 @@
                     "TrialCenterID": $("#TrialCenterID").val(),
                     "ScheduleStatus": $("#ScheduleStatus").val(),
                     //"TrialCode": $("#TrialCode").val(),
-                    "Comment": $("#Comment").val()
+                    "Comment": $("#Comment").val(),
+                    "RandN": $("#RandN").val(),
+                    "ScrN": $("#ScrN").val()
                 },
-            success: function (result) {
-                kendo_grid_reload($("#VisitsGrid"));
-                var saveNotification = $("#SaveNotification").data("kendoNotification");
-                saveNotification.show("Сохранено", "success");
-            },
-            error: AjaxError
-        });
-    }
+                success: function(result) {
+                    kendo_grid_reload($("#VisitsGrid"));
+                    var saveNotification = $("#SaveNotification").data("kendoNotification");
+                    saveNotification.show("Сохранено", "success");
+                },
+                error: AjaxError
+            });
+        }
     }
 
     function CalcSchedule() {
+        if (confirm("Заполнить расписание?")) {
             $.ajax({
                 type: "POST",
                 url: "@Url.Action("CalcSchedule", "Schedules")",
-                data: {"Id": @Model.Id},
+                data: { "Id": @Model.Id},
                 success: function (result) {
                     kendo_grid_reload($("#VisitsGrid"));
                     $('#VisitsStrip').data().kendoTabStrip.reload($('#VisitsStrip .k-item:nth-child(3)'));
                     $("#SaveNotification").data("kendoNotification").show("Выполнено", "success");
             },
             error: AjaxError
-        });
+            });
+        }
     }
 
 //------------------------------Визиты-----------------------------------------------------------------------
