@@ -20,6 +20,7 @@
         columns.ButtonsCrud(filterRow);
         columns.ForeignKey(e => e.HospitalId, hospitals, "Id", "Name", filterRow).Width(200).Title("Мед. учреждение");
         columns.Bound(e => e.FullName, filterRow).Width(300).Title("ФИО");
+        columns.Bound(e => e.Initials, filterRow).Width(200).Title("Инициалы");
         columns.Bound(e => e.BirthDate).Width(265).Title("Дата рождения").Format("{0:dd.MM.yyyy}").EditorTemplateName("Date");
         filterRow.AddCell(new TD.Common.Kendo.Mvc5.Grid.Filters.DateRangeFilterCell("BirthDate"));
         columns.Bound(e => e.SourceType).Width(200).Title("Тип источника").EditorTemplateName("SourceTypeEditor");

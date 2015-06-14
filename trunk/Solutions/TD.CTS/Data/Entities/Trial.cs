@@ -35,5 +35,7 @@ namespace TD.CTS.Data.Entities
         public string VersionStatus { get; set; }
 
         public TrialStatus OriginalStatus { get; set; }
+
+        public bool UseRandN { get; set; }
     }
 }

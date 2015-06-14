@@ -42,6 +42,7 @@ namespace TD.CTS.MsSqlData.Builders
             command.Parameters.AddWithValue("@TrialName", entity.Name);
             command.Parameters.AddWithValue("@TaxiBooking", entity.TaxiBooking);
             command.Parameters.AddWithValue("@TaxiService", entity.TaxiService.GetNullableParameterValue());
+            command.Parameters.AddWithValue("@UseRandN", entity.UseRandN);
             
             return command;
         }
@@ -58,6 +59,7 @@ namespace TD.CTS.MsSqlData.Builders
             command.Parameters.AddWithValue("@TrialName", entity.Name);
             command.Parameters.AddWithValue("@TaxiBooking", entity.TaxiBooking);
             command.Parameters.AddWithValue("@TaxiService", entity.TaxiService.GetNullableParameterValue());
+            command.Parameters.AddWithValue("@UseRandN", entity.UseRandN);
             
             return command;
         }
@@ -89,6 +91,7 @@ namespace TD.CTS.MsSqlData.Builders
             entity.Version = reader.GetValue<int>("TrialVersionNo");
             entity.VersionDate = reader.GetValue<DateTime>("VersionDate");
             entity.VersionStatus = reader.GetString("VersionStatus");
+            entity.UseRandN = reader.GetValue<bool>("UseRandN");
        }
 
         public override void LoadNewEntityAttributes(SqlDataReader reader, Trial entity)

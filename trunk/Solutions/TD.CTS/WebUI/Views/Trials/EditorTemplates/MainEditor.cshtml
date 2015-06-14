@@ -39,6 +39,12 @@
         </td>
     </tr>
     <tr>
+        <td class="td-formTable-caption" colspan="2">Использовать RandN</td>
+        <td>
+            @Html.EditorFor(model => model.UseRandN)
+        </td>
+    </tr>
+    <tr>
         <td class="td-formTable-caption" style="width:100px;">Заказ такси</td>
         <td colspan="2">
             @Html.EditorFor(model => model.TaxiBooking)
@@ -126,7 +132,8 @@
                     AdministratorLogin: $("#AdministratorLogin").val(),
                     TaxiBooking: $("#TaxiBooking").is(":checked"),
                     TaxiService: $("#TaxiService").val(),
-                    Status: $("#Status").data("kendoDropDownList").value()
+                    Status: $("#Status").data("kendoDropDownList").value(),
+                    UseRandN: $("#UseRandN").is(":checked")
                 },
                 success: function (result) {
                     if(isNew) {

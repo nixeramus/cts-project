@@ -55,6 +55,7 @@ namespace TD.CTS.MsSqlData.Builders
             entity.Id = reader.GetValue<int>("ScheduleVisitProcedureID");
             entity.IsDone = reader.GetValue<bool>("Completed");
             entity.PatientFullName = reader.GetString("PatientFullName");
+            entity.Initials = reader.GetString("Initials");
             entity.PatientId = reader.GetValue<int>("PatientCode");
             entity.ProcedureCode = reader.GetString("ProcedureCode").Trim();
             entity.TrialCode = reader.GetString("TrialCode").Trim();

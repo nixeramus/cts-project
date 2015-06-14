@@ -35,5 +35,7 @@ namespace TD.CTS.Data.Filters
         public string Address { get; set; }
 
         public string ContactRelatives { get; set; }
+
+        public string Initials { get; set; }
     }
 }
