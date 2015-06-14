@@ -788,6 +788,7 @@
     <Content Include="Views\Trials\EditorTemplates\SelectProceduresEditor.cshtml" />
     <Content Include="Views\ProcedureGroups\Index.cshtml" />
     <Content Include="Views\ProcedureGroups\EditorTemplates\PriorityEditor.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\FormForeignKey.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\Report\" />

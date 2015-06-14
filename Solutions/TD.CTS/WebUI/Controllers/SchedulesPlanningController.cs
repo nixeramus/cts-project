@@ -10,35 +10,20 @@ namespace TD.CTS.WebUI.Controllers
 {
     public class SchedulesPlanningController : BaseController
     {
-        public ActionResult Index(int? year,int? month)
+        public ActionResult Index(int? year, int? month, int? PatientCode)
         {
             ViewBag.Title = "Планирование визитов";
-
-            //DateTime defaultDate;
-            //if (year.HasValue && month.HasValue)
-            //{
-            //    defaultDate = new DateTime(year.Value, month.Value, 1);
-               
-            //}
-            //else
-            //{
-            //    defaultDate = DateTime.Today;
-            //}
-
-            ////var datestart=defaultDate.
-            //var firstDayOfMonth = new DateTime(defaultDate.Year, defaultDate.Month, 1);
-            //var lastDayOfMonth = firstDayOfMonth.AddMonths(1).AddDays(-1);
 
             //ViewBag.Users = DataProvider.GetList(new UserDataFilter());
             //var datestart = new DateTime(2015, 05, 01);
             //var dateend = new DateTime(2015, 06, 01);
+            var patients = DataProvider.GetList(new PatientDataFilter());
+            ViewBag.PatientCode_Data = new SelectList(patients, "Id", "FullName");
 
-
-
-            //var calend = new ScheduleCalend(firstDayOfMonth, lastDayOfMonth);
             var calend = new ScheduleCalend(year, month);
             ViewBag.Calend = calend;
-            return View();
+            var filter = new SchedulePlaningVisitDataFilter { MonthYearDate = calend.MonthYearDate, PatientCode = PatientCode };
+            return View(filter);
         }
 
 
