@@ -38,5 +38,8 @@ namespace TD.CTS.Data.Entities
         public string Address { get; set; }
 
         public string ContactRelatives { get; set; }
+
+        [StringLength(3, ErrorMessage="Максимальная длинна инициалов 3 символа")]
+        public string Initials { get; set; }
     }
 }

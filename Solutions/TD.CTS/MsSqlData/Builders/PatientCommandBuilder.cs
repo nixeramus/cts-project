@@ -28,6 +28,7 @@ namespace TD.CTS.MsSqlData.Builders
             command.Parameters.AddWithValue("@Email", entityFilter.Email.GetLikeParameterValue());
             command.Parameters.AddWithValue("@PhysicalAddress", entityFilter.Address.GetLikeParameterValue());
             command.Parameters.AddWithValue("@ContactRelatives", entityFilter.ContactRelatives.GetLikeParameterValue());
+            command.Parameters.AddWithValue("@Initials", entityFilter.Initials.GetNullableParameterValue());
             
             return command;
         }
@@ -49,6 +50,7 @@ namespace TD.CTS.MsSqlData.Builders
             command.Parameters.AddWithValue("@Email", entity.Email.GetNullableParameterValue());
             command.Parameters.AddWithValue("@PhysicalAddress", entity.Address);
             command.Parameters.AddWithValue("@ContactRelatives", entity.ContactRelatives.GetNullableParameterValue());
+            command.Parameters.AddWithValue("@Initials", entity.Initials.GetNullableParameterValue());
             
             return command;
         }
@@ -71,6 +73,7 @@ namespace TD.CTS.MsSqlData.Builders
             command.Parameters.AddWithValue("@Email", entity.Email.GetNullableParameterValue());
             command.Parameters.AddWithValue("@PhysicalAddress", entity.Address);
             command.Parameters.AddWithValue("@ContactRelatives", entity.ContactRelatives.GetNullableParameterValue());
+            command.Parameters.AddWithValue("@Initials", entity.Initials.GetNullableParameterValue());
             
             return command;
         }
@@ -100,6 +103,7 @@ namespace TD.CTS.MsSqlData.Builders
             entity.Email = reader.GetNullableString("Email");
             entity.Address = reader.GetString("PhysicalAddress");
             entity.ContactRelatives = reader.GetNullableString("ContactRelatives");
+            entity.Initials = reader.GetNullableString("Initials");
        }
 
         public override void LoadNewEntityAttributes(SqlDataReader reader, Patient entity)
