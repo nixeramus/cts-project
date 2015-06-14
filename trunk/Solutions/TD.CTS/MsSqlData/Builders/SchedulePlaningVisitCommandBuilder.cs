@@ -17,6 +17,7 @@ namespace TD.CTS.MsSqlData.Builders
 
             var entityFilter = (SchedulePlaningVisitDataFilter)filter;
             command.Parameters.AddWithValue("@ScheduleVisitID", entityFilter.ScheduleVisitID.GetNullableParameterValue());
+            command.Parameters.AddWithValue("@PatientCode", entityFilter.PatientCode.GetNullableParameterValue());
             return command;
         }
 

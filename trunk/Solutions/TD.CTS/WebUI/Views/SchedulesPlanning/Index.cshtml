@@ -1,6 +1,8 @@
 ﻿@using TD.Common.Kendo.Mvc5.Grid
 @using TD.CTS.WebUI.Models
 
+@model TD.CTS.Data.Filters.SchedulePlaningVisitDataFilter
+
 @section head{
     <link href="@Url.Content("~/Content/td/td.kendo.grid.css")" rel="stylesheet" type="text/css" />
     <script src="@Url.Content("~/Scripts/td/td.kendo.grid.js")"></script>
@@ -17,6 +19,8 @@
     .lwd-day-hdr{
          border-right-width: 2px !important;
     }
+
+    .dayOfWeek { }
 </style>
 
 }
@@ -38,11 +42,17 @@
                   .Start(CalendarView.Year)
                   .Depth(CalendarView.Year)
                   .Format("MMMM yyyy")
-                    //.Value("November 2011")
+                  //.Value("November 2011")
                   .Value(dt)
                   .HtmlAttributes(new { style = "width:150px", @onkeydown = "javascript:return false;" }))
 
         </td>
+        <td class="td-formTable-caption" style="width:100px;">Пациент</td>
+        <td style="width:250px;">@Html.EditorFor(model => model.PatientCode, "FormForeignKey")</td>
+        
+        
+        
+
         <td style="width:250px;">
             @(Html.Kendo().Button().Name("ShowReportButton").SpriteCssClass("k-icon k-i-search").Content("Показать").HtmlAttributes(new { style = "width:230px;" }).Events(e => e.Click("ShowReport")))
         </td>
@@ -59,16 +69,16 @@
     {
         columns.Buttons(buttons => buttons.Edit()).Width(80).Locked(true).HtmlAttributes(new { @class = "k-group-cell" }); 
         columns.Bound(e => e.TrialCode).Width(80).Title("Код иссл.").Locked(true).HtmlAttributes(new { @class = "k-group-cell" }); 
-        columns.Bound(e => e.TrialName).Width(200).Title("Наименование иссл.").Locked(true).HtmlAttributes(new { @class = "k-group-cell" }); 
+        columns.Bound(e => e.TrialName).Width(200).Title("Наименование иссл.").Locked(true).HtmlAttributes(new { @class = "k-group-cell" });
         columns.Bound(e => e.PatientFullName).Width(250).Title("ФИО пациента").Locked(true).HtmlAttributes(new { @class = "k-group-cell" }); 
         columns.Bound(e => e.TrialVisitName).Width(200).Title("Наименование визита").Locked(true).HtmlAttributes(new { @class = "k-group-cell" });
         columns.Bound(e => e.MinDate).Width(100).Title("Дата нач.").Format("{0:dd.MM.yyyy}").Locked(true).HtmlAttributes(new { @class = "k-group-cell" }); 
         columns.Bound(e => e.MaxDate).Width(100).Title("Дата кон.").Format("{0:dd.MM.yyyy}").Locked(true).HtmlAttributes(new { @class = "k-group-cell" }); 
         columns.Bound(e => e.ScheduleDate).Width(100).Title("Дата план").Format("{0:dd.MM.yyyy}").Locked(true).HtmlAttributes(new { @class = "k-group-cell" }); 
-        columns.Bound(e => e.VisitEmployees).Width(200).Title("Сотрудники").Locked(true).HtmlAttributes(new { @class = "k-group-cell" }); ;
+        columns.Bound(e => e.VisitEmployees).Width(200).Title("Сотрудники").Locked(true).HtmlAttributes(new { @class = "k-group-cell" }); 
 
         var calend = (ScheduleCalend)ViewBag.Calend;
-        var calendDates = calend.dateList;
+        //var calendDates = calend.dateList;
         foreach (var calendDate in calend.dateList)
         {
             columns.Template(e => { })
@@ -110,7 +120,7 @@
 
 
         })
-        .Read(read => read.Action("GetVisits", "SchedulesPlanning")/*.Data("kendo_grid_getfilters")*/)
+        .Read(read => read.Action("GetVisits", "SchedulesPlanning", new { PatientCode = Model.PatientCode })/*.Data("kendo_grid_getfilters")*/)
         .Update(update => update.Action("UpdateScheduleVisit", "SchedulesPlanning"))
         .Events(events => events.Error("kendo_grid_error_handler"))
      )
@@ -120,7 +130,7 @@
 <script>
     var minColDate = kendo.parseDate('@dtColMin.ToString("dd.MM.yyyy")', "dd.MM.yyyy");
     var maxColDate = kendo.parseDate('@dtColMax.ToString("dd.MM.yyyy")', "dd.MM.yyyy");
-    
+
     var urlSaveVisit = "@Url.Action("UpdateScheduleVisit", "SchedulesPlanning")";
     var urlDelVisit = "@Url.Action("DeleteScheduleVisit", "SchedulesPlanning")";
     var grid;
@@ -146,6 +156,8 @@
         //}
 
         kendo_grid_init(grid, true);
+
+        //kendo_grid_init(grid, true, '@Html.Raw(filterRow.HtmlFilterRow())');
         grid.on("change", "input:checkbox", function() {
             if ($(this).is(":checked")) {
                 grid.find('input:checkbox').not(this).prop('checked', false);
@@ -243,12 +255,7 @@
                 //selectedCell.html(SelectedVisit(visitId, rowData));
             },
             error: function(error) {
-                //result = false;
                 AjaxError(error);
-                //NotChange = true;
-                //grid.select(selectedCell);
-                //OnSelect(grid);
-                //NotChange = false;
             }
         });
     }
@@ -264,15 +271,15 @@
         if (calendDate >= data.MinDate && calendDate <= data.MaxDate) {
             div.addClass('timewindow');
             div.append(input);
-            
+
         }
         //если дата календаря равна дате визита
         if (data.ScheduleDate != null && calendDate.sameDay(data.ScheduleDate)) {
             input.attr('checked', 'checked');
             div.append('<span class=\"k-icon k-i-tick td-activeTick\"></span>');
         }
-      
-      
+
+
         retStr = div[0].outerHTML;
 
         return retStr;
@@ -316,12 +323,13 @@
             var data =
             {
                 year: monthControlVal.getFullYear(),
-                month: monthControlVal.getMonth() + 1
+                month: monthControlVal.getMonth() + 1,
+                PatientCode: $('#PatientCode').val()
             };
 
             $().redirect("@Url.Action("Index", "SchedulesPlanning")", data);
-            }
-          //  }
+        }
+        //  }
     }
 
 
@@ -333,7 +341,7 @@
 
 
 
-//function ClearSelection() {
+    //function ClearSelection() {
     //    var grid = $("#SchedulePlaningVisitsGrid").data("kendoGrid");
     //    selectedCell = null;
     //    grid.clearSelection();
@@ -390,7 +398,7 @@
             && this.getDate() === d.getDate()
             && this.getMonth() === d.getMonth();
     };
-    Date.prototype.withoutTime = function() {
+    Date.prototype.withoutTime = function () {
         var d = new Date(this);
         d.setHours(0, 0, 0, 0, 0);
         return d;
