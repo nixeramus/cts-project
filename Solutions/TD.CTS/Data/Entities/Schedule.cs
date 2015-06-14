@@ -28,5 +28,10 @@ namespace TD.CTS.Data.Entities
 
         public int TrialVersionNo { get; set; }
 
+        public decimal? RandN { get; set; }
+        public decimal? ScrN { get; set; }
+
+        public bool UseRandN { get; set; }
+
     }
 }

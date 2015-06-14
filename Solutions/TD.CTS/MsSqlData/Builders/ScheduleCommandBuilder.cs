@@ -62,7 +62,8 @@ namespace TD.CTS.MsSqlData.Builders
             command.Parameters.AddWithValue("@BeginDate", entity.BeginDate);
             command.Parameters.AddWithValue("@Comment", entity.Comment.GetNullableParameterValue());
             command.Parameters.AddWithValue("@ScheduleStatus", entity.ScheduleStatus);
-
+            command.Parameters.AddWithValue("@RandN", entity.RandN.GetNullableParameterValue());
+            command.Parameters.AddWithValue("@ScrN", entity.ScrN.GetNullableParameterValue());
             return command;
         }
 
@@ -97,6 +98,10 @@ namespace TD.CTS.MsSqlData.Builders
             entity.Comment = reader.GetNullableString("Comment");
             entity.ScheduleStatus = reader.GetString("ScheduleStatus");
             entity.TrialVersionNo = reader.GetValue<int>("TrialVersionNo");
+            entity.RandN = reader.GetNullableValue<decimal>("RandN");
+            entity.ScrN = reader.GetNullableValue<decimal>("ScrN");
+            entity.UseRandN = reader.GetValue<bool>("UseRandN");
+
         }
 
         public override void LoadNewEntityAttributes(SqlDataReader reader, Schedule entity)
