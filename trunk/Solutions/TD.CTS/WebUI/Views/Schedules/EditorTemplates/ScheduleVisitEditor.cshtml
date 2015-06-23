@@ -1,0 +1,52 @@
+﻿@using TD.Common.Kendo.Mvc5.Grid
+@using TD.CTS.Data.Entities
+
+@model Schedule
+@(Html.Kendo().Grid<ScheduleVisit>()
+                                      .Init("VisitsGrid")
+                                      .Editable()
+                                      .Reorderable(conf => conf.Columns(false))
+                                      .Columns(columns =>
+                                      {
+                                          columns.Buttons(buttons =>
+                                          {
+                                              buttons.Edit();
+                                              buttons.Delete();
+                                              //buttons.Custom().Tag(ButtonTag.a).Title("Изменить сотрудников").HtmlAttributes(new { onclick = "OpenVisitRoleEmployeeWindow(#=Id#,'#=TrialVisitName#')" }).ImageCssClass("k-i-custom");
+                                          }).Width(80);
+                                          columns.Bound(e => e.TrialVisitName).Width(200).Title("Наименование");
+                                          columns.Bound(e => e.BaseDay).Width(150).Title("Смещение").ClientTemplate("#=BaseDay#&nbsp;&plusmn;&nbsp;#=Limit#");
+                                          columns.Bound(e => e.ScheduleDate).Width(200).EditorTemplateName("Date").Format("{0:dd.MM.yyyy}").Title("Назначенная дата");
+                                          columns.Bound(e => e.Canceled).Width(100).Title("Отменен").ClientTemplate("#= Canceled ? '<span  class=\"k-icon k-i-tick\"></span>' : '' #").HtmlAttributes(new { style = "text-align:center;" });
+                                          columns.Template(e => { }).ClientTemplate(" ").Width("100%").HtmlAttributes(new { @class = "k-group-cell" });
+                                      })
+                                      .DataSource(dataSource => dataSource
+                                          .Ajax()
+                                          .PageSize(20)
+                                          .Model(model =>
+                                          {
+                                              model.Id(e => e.Id);
+                                              model.Id(e => e.ScheduleID);
+                                              model.Id(e => e.TrialVisitID);
+                                              model.Field(e => e.TrialCode).DefaultValue(Model.TrialCode);
+                                              model.Field(e => e.TrialCenterID).DefaultValue(Model.TrialCenterID);
+                                              model.Field(e => e.BaseDay).Editable(false);
+                                              model.Field(e => e.TrialVisitName).Editable(false);
+                                          })
+                                          .Read(read => read.Action("GetScheduleVisits", "Schedules", new { ScheduleID = Model.Id })/*.Data("VisitsGetDataRead")*/)
+                                          .Update(update => update.Action("UpdateScheduleVisit", "Schedules"))
+                                          .Destroy(destroy => destroy.Action("DeleteScheduleVisit", "Schedules"))
+                                          .Events(events => events.Error("OnVisitsError").RequestEnd("VisitsRequestEnd"))
+                                      )
+                                         .Events(events => events.Edit("OnVisitsEdit")/*.DataBinding("VisitsOnDataBinding")*/)
+)
+                     
+<script>
+
+
+
+  
+
+    
+
+</script>
