@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 using TD.CTS.Data.Entities;
 using TD.CTS.Data.Filters;
+using TD.CTS.Data.Helpers;
 
 namespace TD.CTS.MsSqlData.Builders
 {
@@ -82,6 +84,8 @@ namespace TD.CTS.MsSqlData.Builders
             entity.MaxDate = reader.GetValue<DateTime>("MaxDate");
             entity.RankState = reader.GetValue<int>("RankState");
             entity.Id = reader.GetNullableValue<int>("ScheduleVisitID");
+            entity.VisitEmployees = SerializeHelper.Deserialize<List<User>>(reader.GetString("VisitEmployees"), "Users");
+            //entity.VisitEmployees = reader.GetString("VisitEmployees");
         }
 
         public override void LoadNewEntityAttributes(SqlDataReader reader, SchedulePlaningVisit entity)

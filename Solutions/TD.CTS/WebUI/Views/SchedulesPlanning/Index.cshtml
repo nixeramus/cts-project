@@ -20,7 +20,7 @@
          border-right-width: 2px !important;
     }
 
-    .dayOfWeek { }
+    .dayOfWeek { text-align:center;}
 </style>
 
 }
@@ -74,8 +74,8 @@
         columns.Bound(e => e.TrialVisitName).Width(200).Title("Наименование визита").Locked(true).HtmlAttributes(new { @class = "k-group-cell" });
         columns.Bound(e => e.MinDate).Width(100).Title("Дата нач.").Format("{0:dd.MM.yyyy}").Locked(true).HtmlAttributes(new { @class = "k-group-cell" }); 
         columns.Bound(e => e.MaxDate).Width(100).Title("Дата кон.").Format("{0:dd.MM.yyyy}").Locked(true).HtmlAttributes(new { @class = "k-group-cell" }); 
-        columns.Bound(e => e.ScheduleDate).Width(100).Title("Дата план").Format("{0:dd.MM.yyyy}").Locked(true).HtmlAttributes(new { @class = "k-group-cell" }); 
-        columns.Bound(e => e.VisitEmployees).Width(200).Title("Сотрудники").Locked(true).HtmlAttributes(new { @class = "k-group-cell" }); 
+        columns.Bound(e => e.ScheduleDate).Width(100).Title("Дата план").Format("{0:dd.MM.yyyy}").Locked(true).HtmlAttributes(new { @class = "k-group-cell" });
+        columns.Bound(e => e.VisitEmployeesString).Width(200).Title("Сотрудники").Locked(true).HtmlAttributes(new { @class = "k-group-cell", @style = "white-space: nowrap", title = "#= VisitEmployeesString #" }); //HtmlAttributes(new { style = "white-space: normal" })
 
         var calend = (ScheduleCalend)ViewBag.Calend;
         //var calendDates = calend.dateList;
@@ -83,7 +83,7 @@
         {
             columns.Template(e => { })
                 .ClientTemplate("#= SelectedVisit(" + "\"" + calendDate.CalendDate.ToString("dd.MM.yyyy") + "\"" + ", data) #")
-                .HeaderTemplate(string.Format(@"<span class='dayOfWeek' style='text-align:center;' title='{1}'><input type='hidden' value='{1}'/>{0}</span>", calendDate.CalendDate.ToString("ddd"), calendDate.CalendDate.ToString("dd.MM.yyyy")))
+                .HeaderTemplate(string.Format(@"<span class='dayOfWeek' title='{1}'><input type='hidden' value='{1}'/>{0}</span>", calendDate.CalendDate.ToString("ddd"), calendDate.CalendDate.ToString("dd.MM.yyyy")))
                 .HeaderHtmlAttributes(new { @class = (calendDate.LastDayInWeek) ? "lwd-day-hdr" : "day-hdr" })
                 .Width(40)
                 .HtmlAttributes(new {@style = "text-align:center;",@class=(calendDate.LastDayInWeek)?"lwd-day":""});
@@ -120,7 +120,7 @@
 
 
         })
-        .Read(read => read.Action("GetVisits", "SchedulesPlanning", new { PatientCode = Model.PatientCode })/*.Data("kendo_grid_getfilters")*/)
+        .Read(read => read.Action("GetVisits", "SchedulesPlanning", new {Model.PatientCode })/*.Data("kendo_grid_getfilters")*/)
         .Update(update => update.Action("UpdateScheduleVisit", "SchedulesPlanning"))
         .Events(events => events.Error("kendo_grid_error_handler"))
      )
@@ -164,6 +164,20 @@
 
             }
         });
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
     });
 
     function OnSchedulesPlanningSave(arg) {
@@ -244,7 +258,7 @@
             url: url,
             data: sendData,
             async: false,
-            success: function(newVisit) {
+            success: function(/*newVisit*/) {
                 //alert(newVisit);
                 //if (checked) {
                 //    rowData.Visits.push(newVisit);
@@ -262,7 +276,7 @@
 
     function SelectedVisit(calendDateStr, data) {
         var calendDate = kendo.parseDate(calendDateStr, "dd.MM.yyyy");
-        var retStr = '';
+        //var retStr = '';
         var div = $('<div>');
         //Созлаем инпут
         var input = $('<input type=\"checkbox\" class=\"k-checkbox\" style=\"margin:0;display:none;\" />').val(calendDateStr);
@@ -280,13 +294,13 @@
         }
 
 
-        retStr = div[0].outerHTML;
+        var retStr = div[0].outerHTML;
 
         return retStr;
 
     }
 
-    function onDataBound(arg) {
+    function onDataBound(/*arg*/) {
         $('.timewindow').parents('td').addClass("timewindow-color");
         var grid = $("#SchedulePlaningVisitsGrid").data("kendoGrid");
         var data = grid.dataSource.data();
