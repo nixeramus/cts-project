@@ -2,14 +2,12 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TD.CTS.Data.Entities
 {
     public class Patient : Entity
     {
-        public static readonly List<string> SourceTypes = new List<string>() { "Реферал", "База пациентов", "Реклама", "Прочее" };
+        public static readonly List<string> SourceTypes = new List<string> { "Реферал", "База пациентов", "Реклама", "Прочее" };
 
         public int Id { get; set; }
 
@@ -31,10 +29,12 @@ namespace TD.CTS.Data.Entities
 
         public DateTime BirthDate { get; set; }
 
+        [Required(ErrorMessage = "Телефон не задан")]
         public string Phone { get; set; }
 
         public string Email { get; set; }
 
+        [Required(ErrorMessage = "Физический адрес не задан")]
         public string Address { get; set; }
 
         public string ContactRelatives { get; set; }
