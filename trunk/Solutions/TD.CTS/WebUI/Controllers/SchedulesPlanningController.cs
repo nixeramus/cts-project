@@ -13,24 +13,13 @@ namespace TD.CTS.WebUI.Controllers
         public ActionResult Index(int? year, int? month, int? PatientCode)
         {
             ViewBag.Title = "Планирование визитов";
-
-            //ViewBag.Users = DataProvider.GetList(new UserDataFilter());
-            //var datestart = new DateTime(2015, 05, 01);
-            //var dateend = new DateTime(2015, 06, 01);
             var patients = DataProvider.GetList(new PatientDataFilter());
             ViewBag.PatientCode_Data = new SelectList(patients, "Id", "FullName");
-
             var calend = new ScheduleCalend(year, month);
             ViewBag.Calend = calend;
             var filter = new SchedulePlaningVisitDataFilter { MonthYearDate = calend.MonthYearDate, PatientCode = PatientCode };
             return View(filter);
         }
-
-
-
-
-
-
 
         public ActionResult GetVisits([DataSourceRequest]DataSourceRequest request, SchedulePlaningVisitDataFilter dataFilter)
         {
@@ -39,12 +28,7 @@ namespace TD.CTS.WebUI.Controllers
             return Json(response.ToDataSourceResult(request));
         }
         #region ScheduleVist
-        //public ActionResult GetScheduleVisits([DataSourceRequest]DataSourceRequest request, ScheduleVisitDataFilter dataFilter)
-        //{
-        //    var response = DataProvider.GetList(dataFilter ?? new ScheduleVisitDataFilter());
-
-        //    return Json(response.ToDataSourceResult(request));
-        //}
+      
         public ActionResult UpdateScheduleVisit([DataSourceRequest] DataSourceRequest request, ScheduleVisit scheduleVisit)
         {
             if (scheduleVisit != null && ModelState.IsValid)
