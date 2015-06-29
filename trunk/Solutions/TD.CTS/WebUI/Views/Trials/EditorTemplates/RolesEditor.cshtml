@@ -35,6 +35,12 @@
                     .DataTextField("Number")
                     .DataValueField("Id")
                 )
+                @(Html.Kendo().Button()
+                    .Name("DefaultRolesButton")
+                    .HtmlAttributes( new { @class = "k-primary" } )
+                    .Content("Роли по умолчанию")
+                    .Events(events => events.Click("DefaultRolesLoad"))
+                )
             </div>
         </text>);
     })
@@ -126,6 +132,22 @@
 
                 var saveNotification = $("#SaveNotification").data("kendoNotification");
                 saveNotification.show("Сохранено", "success");
+            },
+            error: function (error) {
+                AjaxError(error);
+            }
+        });
+    }
+
+    function DefaultRolesLoad() {
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("LoadProcedureDefaultRoles", "Trials")",
+            data: GetTrialCode(),
+            async: false,
+            success: function () {
+                var grid = $("#ProcedureRolesGrid").data("kendoGrid");
+                grid.dataSource.read();
             },
             error: function (error) {
                 AjaxError(error);

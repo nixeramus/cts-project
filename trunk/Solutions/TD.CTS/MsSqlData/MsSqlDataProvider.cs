@@ -414,5 +414,34 @@ namespace TD.CTS.MsSqlData
                 connection.Close();
             }
         }
+        
+        public void LoadProcedureDefaultRoles(string trialCode, int trialVersion)
+        {
+            SqlConnection connection = new SqlConnection(connectionString);
+            SqlCommand command = new SqlCommand("", connection)
+            {
+                CommandType = CommandType.StoredProcedure,
+                CommandTimeout = Settings.CommandTimeout
+            };
+
+            command.Parameters.AddWithValue("@", trialCode);
+            command.Parameters.AddWithValue("@", trialVersion);
+
+            try
+            {
+                connection.Open();
+                command.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                var dataException = LogException(MethodBase.GetCurrentMethod().Name, ex);
+
+                throw dataException;
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
     }
 }

@@ -61,6 +61,12 @@ namespace TD.CTS.WebUI.Controllers
             return Json(role);
         }
 
+        public ActionResult LoadProcedureDefaultRoles(string trialCode, int trialVersion)
+        {
+            DataProvider.LoadProcedureDefaultRoles(trialCode, trialVersion);
+            return Json(new { });
+        }
+
         #endregion
 
         #region TrialIncomeArticle
