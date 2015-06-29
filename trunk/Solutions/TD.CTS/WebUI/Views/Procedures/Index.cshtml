@@ -9,6 +9,7 @@
 @{
     System.Collections.IEnumerable procedureGroups = ViewBag.ProcedureGroups;
     var filterRow = new TD.Common.Kendo.Mvc5.Grid.Filters.FilterRow(Html);
+    System.Collections.IEnumerable roles = ViewBag.Roles;
 }
 
 @(Html.Kendo().Grid<TD.CTS.Data.Entities.Procedure>()
@@ -16,6 +17,7 @@
     .Editable()
     .Columns(columns =>
     {
+        filterRow.AddCell(new TD.Common.Kendo.Mvc5.Grid.Filters.EmptyFilterCell());
         columns.ButtonsCrud(filterRow);
         columns.Bound(e => e.Code, filterRow).Width(100).Title("Код");
         columns.Bound(e => e.Name, filterRow).Width(300).Title("Наименование");
@@ -35,12 +37,46 @@
         .Events(events => events.Error("kendo_grid_error_handler"))
      )
      .Events(events => events.Edit("OnEdit"))
+     .ClientDetailTemplateId("rolesTemplate")
 
 )
 
+<script id="rolesTemplate" type="text/kendo-tmpl">
+    @(Html.Kendo().Grid<TD.CTS.Data.Entities.ProcedureDefaultRole>()
+            .Name("RoleGrid_#=Code#")
+            .Editable()
+            .Columns(columns =>
+            {
+                columns.Buttons(buttons => { buttons.Add(); buttons.Delete(); }).Width(50);
+                columns.ForeignKey(e => e.RoleCode, roles, "Code", "Name").Width("100%").Title("Роль");
+            })
+            .DataSource(dataSource => dataSource
+                .Ajax()
+                .PageSize(20)
+                .Model(model =>
+                {
+                    model.Id(e => e.ProcedureCode);
+                })
+                .Read(read => read.Action("GetProcedureRoles", "Procedures", new { ProcedureCode = "#=Code#" }))
+                .Create(create => create.Action("AddProcedureRole", "Procedures", new { ProcedureCode = "#=Code#" }))
+                .Destroy(update => update.Action("DeleteProcedureRole", "Procedures", new { ProcedureCode = "#=Code#" }))
+                .Events(events => events.Error("kendo_grid_error_handler").RequestEnd("OnRoleRequestEnd"))
+             )
+            .Events(events => events.Edit("OnRoleEdit").Cancel("OnRoleCancel").Save("OnRoleSave"))
+        .ToClientTemplate()
+    )
+    @Html.Raw(@"<script>var grid_#=Code# = $(""\\\\#RoleGrid_#=Code#""); 
+        grid_#=Code#.find("".k-grid-add.td-grid-button"").click(function () { kendo_grid_createrow(grid_#=Code#); });<\/script>")
+</script>
+
 <script>
     $(document).ready(function () {
-        kendo_grid_init($("#Grid"), true, '@Html.Raw(filterRow.HtmlFilterRow())');
+        var procGrid = $("#Grid");
+        kendo_grid_init(procGrid, true, '@Html.Raw(filterRow.HtmlFilterRow())');
+
+        procGrid.on("click", ".td-add-role", function () {
+            
+        });
     });
 
     function OnEdit(e) {
@@ -49,6 +85,40 @@
         if (!e.model.isNew()) {
             $("#Code").attr("readonly", "readonly");
         }
+    }
+
+    function OnRoleCancel(e) {
+        $(e.sender.element).find("colgroup col").eq(0).css({ width: "50px" });
+        roleGrid = null;
+    }
+
+    var roleGrid = null;
+    function OnRoleEdit(e) {
+        roleGrid = $(e.sender.element);
+        roleGrid.find("colgroup col").eq(0).css({ width: "80px" });
+
+        e.container.find("a.k-grid-delete").closest("td").html('<a class="k-button k-button-icontext k-primary k-grid-update td-grid-button" href="#" title="Обновить"><span class="k-icon k-update td-grid-button-image"></span></a>' +
+                    '<a class="k-button k-button-icontext k-grid-cancel td-grid-button" href="#" title="Отмена"><span class="k-icon k-cancel td-grid-button-image"></span></a>');
+    }
+
+    function OnRoleSave(e) {
+        e.model.ProcedureCode = GetProcedureCode(e.container);
+    }
+
+    function OnRoleRequestEnd(e){
+        if(e.type === "create" && roleGrid){
+            roleGrid.find("colgroup col").eq(0).css({ width: "50px" });
+            roleGrid = null;
+        }
+            
+    }
+
+    function GetProcedureCode(tr) {
+        var currentGridElement = $(tr).closest("[data-role=grid]");
+        var parentRow = currentGridElement.closest(".k-detail-row").prev();
+        var parentGrid = parentRow.closest("[data-role=grid]").data("kendoGrid");
+        var parentModel = parentGrid.dataItem(parentRow);
+        return parentModel.Code;
     }
 
 </script>

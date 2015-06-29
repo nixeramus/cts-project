@@ -52,6 +52,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Builders\ProcedureDefaultRoleCommandBuilder.cs" />
     <Compile Include="Builders\ProcedureGroupCommandBuilder.cs" />
     <Compile Include="Builders\ProcedureCountCommandBuilder.cs" />
     <Compile Include="Builders\TaskCommandBuilder.cs" />

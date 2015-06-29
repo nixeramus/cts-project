@@ -14,7 +14,7 @@ namespace TD.CTS.Data.Entities
         [Required(ErrorMessage = "Имя не задано")]
         public string FullName { get; set; }
 
-        [Required(ErrorMessage = "Мед. учреждение не выбран")]
+        [Required(ErrorMessage = "Мед. учреждение не выбрано")]
         public int HospitalId { get; set; }
 
         public int? CityId { get; set; }
