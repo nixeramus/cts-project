@@ -143,5 +143,10 @@ namespace TD.CTS.MockData
         {
             dataProvider.MargeTrialProcedures(trialCode, trialVersion, procedureCodes);
         }
+
+        public void LoadProcedureDefaultRoles(string trialCode, int trialVersion)
+        {
+            dataProvider.LoadProcedureDefaultRoles(trialCode, trialVersion);
+        }
     }
 }
