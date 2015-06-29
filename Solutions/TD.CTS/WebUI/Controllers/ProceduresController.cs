@@ -18,6 +18,7 @@ namespace TD.CTS.WebUI.Controllers
             ViewBag.Title = "Процедуры";
 
             ViewBag.ProcedureGroups = DataProvider.GetList(new ProcedureGroupDataFilter());
+            ViewBag.Roles = DataProvider.GetList(new RoleDataFilter());
 
             return View();
         }
@@ -60,6 +61,35 @@ namespace TD.CTS.WebUI.Controllers
             }
 
             return Json(new[] { procedure }.ToDataSourceResult(request, ModelState));
+        }
+
+        public ActionResult GetProcedureRoles([DataSourceRequest]DataSourceRequest request, ProcedureDefaultRoleDataFilter dataFilter)
+        {
+            var response = DataProvider.GetList<ProcedureDefaultRole>(dataFilter ?? new ProcedureDefaultRoleDataFilter());
+
+            return Json(response.ToDataSourceResult(request));
+        }
+
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult AddProcedureRole([DataSourceRequest] DataSourceRequest request, ProcedureDefaultRole procedureRole)
+        {
+            if (procedureRole != null && ModelState.IsValid)
+            {
+                DataProvider.Add(procedureRole);
+            }
+
+            return Json(new[] { procedureRole }.ToDataSourceResult(request, ModelState));
+        }
+
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult DeleteProcedureRole([DataSourceRequest] DataSourceRequest request, ProcedureDefaultRole procedureRole)
+        {
+            if (procedureRole != null)
+            {
+                DataProvider.Delete(procedureRole);
+            }
+
+            return Json(new[] { procedureRole }.ToDataSourceResult(request, ModelState));
         }
     }
 }
