@@ -64,5 +64,12 @@ namespace TD.CTS.WebUI.Controllers
 
             return Json(new[] { patient }.ToDataSourceResult(request, ModelState));
         }
+
+        public ActionResult GetPatientTrials([DataSourceRequest]DataSourceRequest request, PatientTrialDataFilter dataFilter)
+        {
+            var response = DataProvider.GetList(dataFilter);
+
+            return Json(response.ToDataSourceResult(request));
+        }
     }
 }
