@@ -17,6 +17,7 @@
     .Editable()
     .Columns(columns =>
     {
+        filterRow.AddCell(new TD.Common.Kendo.Mvc5.Grid.Filters.EmptyFilterCell());
         columns.ButtonsCrud(filterRow);
         columns.ForeignKey(e => e.HospitalId, hospitals, "Id", "Name", filterRow).Width(200).Title("Мед. учреждение");
         columns.Bound(e => e.FullName, filterRow).Width(300).Title("ФИО");
@@ -45,9 +46,30 @@
         .Destroy(update => update.Action("DeletePatient", "Patients"))
         .Events(events => events.Error("kendo_grid_error_handler"))
      )
-         .Events(events => events.Edit("onEdit").Save("onSave"))
-
+     .Events(events => events.Edit("onEdit").Save("onSave"))
+     .ClientDetailTemplateId("trialsTemplate")
 )
+
+<script id="trialsTemplate" type="text/kendo-tmpl">
+    @(Html.Kendo().Grid<TD.CTS.Data.Entities.PatientTrial>()
+            .Name("TrialGrid_#=Id#")
+            .Columns(columns =>
+            {
+                columns.Bound(x => x.ScrNCode).Title("ScrNCode").Width(100);
+                columns.Bound(x => x.RandNCode).Title("RandNCode").Width(150);
+                columns.Bound(x => x.TrialCode).Title("Код").Width(100);
+                columns.Bound(x => x.TrialName).Title("Наименование").Width(200);
+                columns.Bound(x => x.BeginDate).Title("Дата начала").Width(150);
+                columns.Bound(x => x.EndDate).Title("Дата окончания").Width("100%");
+            })
+            .DataSource(dataSource => dataSource
+                .Ajax()
+                .Read(read => read.Action("GetPatientTrials", "Patients", new { PatientId = "#=Id#" }))
+                .Events(events => events.Error("kendo_grid_error_handler"))
+             )
+        .ToClientTemplate()
+    )
+</script>
 
 <script>
     $(document).ready(function () {
