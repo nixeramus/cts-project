@@ -6,6 +6,7 @@
     .DataSource(source => source
         .Read(read => read.Action("GetTasks", "Monitoring").Data("GetDates"))
         .ServerOperation(true)
+        .Events(events => events.Error("kendo_error_handler"))
     )
     .Events(events => events.DataBound("DataBound"))
 )
