@@ -200,6 +200,8 @@ namespace TD.CTS.WebUI.Controllers
             ViewBag.Visits = DataProvider.GetList(new TrialVisitDataFilter { TrialCode = trialCode, TrialVersion = trialVersion })
                 .OrderBy(v => v.Days);
 
+            ViewBag.ProcedureGroups = DataProvider.GetList(new ProcedureGroupDataFilter());
+
             return PartialView("EditorTemplates/ProceduresEditor", new Trial { Code = trialCode, Version = trialVersion });
         }
 

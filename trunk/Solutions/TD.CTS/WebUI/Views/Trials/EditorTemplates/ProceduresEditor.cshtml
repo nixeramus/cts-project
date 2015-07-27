@@ -314,11 +314,11 @@
 
     var visitValidator;
     function OpenVisitEdit() {
-        var window = $("#VisitEdit").data("kendoWindow");
+        var visitWindow = $("#VisitEdit").data("kendoWindow");
         visitValidator = $("#visitForm").kendoValidator().data("kendoValidator");
-        window.center().open();
+        visitWindow.center().open();
         $("#cancelVisit").click(function () {
-            window.close();
+            visitWindow.close();
         });
         $("#saveVisit").click(function () {
             if (visitValidator.validate()) {
@@ -337,7 +337,8 @@
                     },
                     success: function (result) {
                         $("#TabStrip-1").html(result);
-                        window.close();
+                        $(window).trigger('resize');
+                        visitWindow.close();
                     },
                     error: AjaxError
                 });
