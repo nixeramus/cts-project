@@ -6,14 +6,30 @@
     var isNew = ViewBag.IsNew;
 }
 
+@*@Html.Partial("EditorTemplates/TrialVersionEditor", Model)*@
+
 <table id="trialForm" class="td-formTable" style="width:auto;margin-bottom:20px;">
-    @*@Html.Partial("EditorTemplates/TrialVersionEditor", Model)*@
     <tr>
         <td class="td-formTable-caption" colspan="2" style="width:250px;">Код исследования</td>
         <td>
             @Html.EditorFor(model => model.Code)
         </td>
     </tr>
+    @if (!isNew)
+    { 
+    <tr>
+        <td class="td-formTable-caption" colspan="2" style="width:150px;">Версия исследования</td>
+        <td>
+            @(Html.Kendo().DropDownListFor(model => model.Version)
+                .BindTo((System.Collections.IEnumerable)ViewBag.Versions)
+                .DataTextField("Name")
+                .DataValueField("Id")
+            )
+            @Html.Kendo().Button().Name("NewVersionButton").Content("Создать версию")
+            @Html.Kendo().Button().Name("ActivateVersionButton").Content("Сделать активной")
+        </td>
+    </tr>
+    }
     <tr id="StatusRow" style="display:none;">
         <td class="td-formTable-caption" colspan="2" style="width:250px;">Статус исследования</td>
         <td>
@@ -106,7 +122,10 @@
 
 <script>
     function GetTrialCode() {
-        return { TrialCode: $("#Code").val() };
+        return { 
+            TrialCode: $("#Code").val(), 
+            TrialVersion: $("#Version").data("kendoDropDownList").value() 
+        };
     }
 
     var validator = $("#trialForm").kendoValidator().data("kendoValidator");
@@ -128,6 +147,7 @@
                 url: "@Url.Action(isNew ? "AddTrial" : "UpdateTrial", "Trials")",
                 data: {
                     Code: $("#Code").val(),
+                    Version: isNew ? 1 : $("#Version").data("kendoDropDownList").value(),
                     Name: $("#Name").val(),
                     AdministratorLogin: $("#AdministratorLogin").val(),
                     TaxiBooking: $("#TaxiBooking").is(":checked"),
@@ -151,6 +171,7 @@
 
     function OnCenterSave(e){
         e.model.TrialCode = $("#Code").val();
+        e.model.TrialVersion = $("#Version").data("kendoDropDownList").value();
     }
 
     function OnCenterEdit(e) {

@@ -418,14 +418,14 @@ namespace TD.CTS.MsSqlData
         public void LoadProcedureDefaultRoles(string trialCode, int trialVersion)
         {
             SqlConnection connection = new SqlConnection(connectionString);
-            SqlCommand command = new SqlCommand("", connection)
+            SqlCommand command = new SqlCommand("ProcedureRoleDefaultFill", connection)
             {
                 CommandType = CommandType.StoredProcedure,
                 CommandTimeout = Settings.CommandTimeout
             };
 
-            command.Parameters.AddWithValue("@", trialCode);
-            command.Parameters.AddWithValue("@", trialVersion);
+            command.Parameters.AddWithValue("@TrialCode", trialCode);
+            command.Parameters.AddWithValue("@TrialVersionNo", trialVersion);
 
             try
             {

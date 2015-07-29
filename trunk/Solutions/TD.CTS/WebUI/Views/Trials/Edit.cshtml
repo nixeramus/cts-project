@@ -108,7 +108,7 @@ else
             var tabStrip = $("#TabStrip").data("kendoTabStrip");
             var tab = tabStrip.select();
             var index = tab.index();
-            if (index === 1 || index === 2) {
+            if (index === 1 || index === 2 || index === 3) {
                 var conteiner = tabStrip.contentElements[0];
                 StretchGrid($(conteiner), $(conteiner).find(".k-grid"));
             }

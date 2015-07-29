@@ -52,60 +52,11 @@
            model.Field(e => e.ProcedureCode).Editable(false);
        })
        .Read(read => read.Action("GetTrialProcedures", "Trials").Data("GetTrialCode"))
-       //.Create(create => create.Action("AddTrialProcedure", "Trials"))
        .Destroy(destroy => destroy.Action("DeleteTrialProcedure", "Trials"))
-       //.Sort(sort => sort.Add(e => e.Id))
        .Events(events => events.Error("OnProcedureError"))//.RequestEnd("RequestEnd"))
     )
-    .Events(events => events
-        //.Edit("OnProcedureEdit")
-        .Change("OnChange")
-        //.Save("OnProcedureSave")
-        //.Cancel("OnProcedureCancel")
-    )
+    .Events(events => events.Change("OnChange"))
 )
-
-@*<div id="VisitMaterials" style="display:none;">
-    <h4>Материалы</h4>
-    @(Html.Kendo().Grid<TD.CTS.WebUI.Models.TrialVisitMaterialViewModel>()
-        .Name("VisitMaterialsGrid")
-        .Editable()
-        .AutoBind(false)
-        .Scrollable()
-        .Columns(columns =>
-        {
-            columns.Buttons(buttons =>
-            {
-                buttons.Add();
-                buttons.Delete();
-            }).Width(50).HeaderHtmlAttributes(new { style = "text-align:right;" });
-            columns.Bound(e => e.TrialMaterialId)
-                .ClientTemplate("#= MaterialName #")
-                .EditorTemplateName("VisitMaterialEditor")
-                .Width(250).Title("Наименование материала");
-
-            //columns.Bound(e => e.Quantity).Width(120).Title("Количество");
-            columns.Template(e => { }).ClientTemplate(" ").Width("100%");
-        })
-        .DataSource(dataSource => dataSource
-           .Ajax()
-           .Model(model =>
-           {
-               model.Id(e => e.Id);
-               //model.Field(e => e.Quantity).DefaultValue(1);
-           })
-           .Read(read => read.Action("GetTrialVisitMaterials", "Trials").Data("VisitMaterialsData"))
-           .Create(create => create.Action("AddTrialVisitMaterial", "Trials"))
-           .Destroy(destroy => destroy.Action("DeleteTrialVisitMaterial", "Trials"))
-           .Events(events => events.Error("kendo_grid_error_handler").RequestEnd("OnVisitMaterialRequestEnd"))
-        )
-        .Events(events => events
-            .Edit("OnVisitMaterialEdit")
-            .Save("OnVisitMaterialsSave")
-            .Cancel("OnVisitMaterialCancel"))
-        .AutoBind(false)
-    )
-</div>*@
 
 @(Html.Kendo().Window()
     .Name("VisitEdit")
@@ -174,23 +125,6 @@
     </text>)
 )
 
-@*<script id="procedureTemplate" type="text/x-kendo-template">
-    @(Html.Kendo().DropDownList()
-        .Name("ProcedureCode")
-        .DataTextField("Name")
-        .DataValueField("Code")
-        .DataSource(source =>
-        {
-            source.Read(read =>
-            {
-                read.Action("GetProcedures", "Trials").Data("GetTrialCode");
-            });
-        })
-        .Value("#: value #")
-        .ToClientTemplate()
-    )
-</script>*@
-
 <script>
     var procGrid = $("#ProceduresGrid");
 
@@ -232,58 +166,12 @@
         $("#SelectProceduresGrid").data("kendoGrid").dataSource.read();
         var window = $("#ProceduresWindow").data("kendoWindow");
         window.center().open();
-        @*window.refresh({
-            url: "@Url.Action("GetVisitEditor", "Trials")",
-            data: { Id: id, TrialCode: $("#Code").val(), TrialVersion: $("#Version").data("kendoDropDownList").value() }
-        });*@
     }
-
-    //var isProcedureEdit = false;
-    //function RequestEnd(e) {
-    //    if (e.type === "update" || e.type === "create") {
-    //        isProcedureEdit = false;
-    //        $('#ProceduresGrid .k-grid-header th:eq(0)').css("min-width", "");
-    //    }
-    //}
-
-    //function OnProcedureCancel(e) {
-    //    isProcedureEdit = false;
-    //    $('#ProceduresGrid .k-grid-header th:eq(0)').css("min-width", "");
-    //}
-
-    //function OnProcedureEdit(e) {
-    //    isProcedureEdit = true;
-    //    ClearSelection();
-
-    //    $('#ProceduresGrid .k-grid-header th:eq(0)').css("min-width", "60px");
-
-    //    e.container.find("a.k-grid-delete").closest("td").html('<a class="k-button k-button-icontext k-primary k-grid-update td-grid-button" href="#" title="Обновить"><span class="k-icon k-update td-grid-button-image"></span></a>' +
-    //                '<a class="k-button k-button-icontext k-grid-cancel td-grid-button" href="#" title="Отмена"><span class="k-icon k-cancel td-grid-button-image"></span></a>');
-
-    //    var dropDown = kendo.template($("#procedureTemplate").html());
-    //    e.container.find("td:eq(1)").html(dropDown({ value: e.model.ProcedureCode }));
-    //}
-
-    //function OnProcedureSave(e) {
-    //    e.model.ProcedureCode = e.container.find("#ProcedureCode").val();
-    //    e.model.dirty = true;
-    //    if (e.model.isNew()) {
-    //        e.model.TrialCode = $("#Code").val();
-    //        e.model.TrialVersion = $("#Version").data("kendoDropDownList").value();
-    //    }
-    //}
 
     var NotChange = false;
     function OnChange(e) {
         if (NotChange)
             return;
-
-        //if (isProcedureEdit) {
-        //    var grid = $("#ProceduresGrid").data("kendoGrid");
-        //    if (grid.select().length > 0)
-        //        grid.clearSelection();
-        //    return;
-        //}
 
         OnSelect($("#ProceduresGrid").data("kendoGrid"));
     }
