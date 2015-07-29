@@ -13,6 +13,8 @@ namespace TD.CTS.Data.Entities
 
         public string TrialCode { get; set; }
 
+        public int TrialVersion { get; set; }
+
         [Required(ErrorMessage = "Мед. учериждение не выбрано")]
         public int HospitalId { get; set; }
 

@@ -9,7 +9,7 @@
     .Columns(columns =>
     {
         columns.ForeignKey(e => e.ProcedureCode, (System.Collections.IEnumerable)ViewBag.Procedures, "Code", "Name")
-            .Width(250).Title("Процедура").HtmlAttributes(new { @class = "k-group-cell k-header" });
+            .Width(250).Title("Процедура").HtmlAttributes(new { @class = "k-group-cell k-header" }).Locked(true);
         var roles = (IEnumerable<TD.CTS.Data.Entities.Role>)ViewBag.Roles;
         foreach (var role in roles)
         {

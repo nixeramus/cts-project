@@ -11,6 +11,8 @@ namespace TD.CTS.Data.Filters
     {
         public int? Id { get; set; }
 
-        public string TrialCode { get; set; } 
+        public string TrialCode { get; set; }
+
+        public int? TrialVersion { get; set; }
     }
 }
