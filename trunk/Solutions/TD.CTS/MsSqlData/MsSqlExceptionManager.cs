@@ -72,7 +72,7 @@ namespace TD.CTS.MsSqlData
                 return new DataException("Ошибка базы данных", exception);
             }
 
-            return new DataException("Ошибка работы с данными", exception); ;
+            return new DataException("Ошибка работы с данными", exception); 
         }
 
         //public static DBExceptionManager CreateSqlDBExceptionManager(string connectionString, 
