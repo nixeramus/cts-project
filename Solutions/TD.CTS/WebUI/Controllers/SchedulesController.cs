@@ -14,7 +14,7 @@ namespace TD.CTS.WebUI.Controllers
     {
         public ActionResult Index()
         {
-            ViewBag.Title = "Расписания";
+            ViewBag.Title = "Управление расписаниями";
 
             ViewBag.Users = DataProvider.GetList(new UserDataFilter());
 

@@ -11,6 +11,24 @@ namespace TD.CTS.Data.Entities
         {
             VisitEmployees = new List<User>();
         }
+
+
+        private static string ExtractIni(string s)
+        {
+            if (string.IsNullOrWhiteSpace(s))
+                return string.Empty;
+            string[] results = s.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            switch (results.Length)
+            {
+                case 1:
+                    return results[0];
+                case 2:
+                    return string.Format("{0} {1}.", results[0], results[1][0]);
+                default:
+                    return string.Format("{0} {1}. {2}.", results[0], results[1][0], results[2][0]);
+            }
+        }
+
         public int ScheduleID { get; set; }
         public int TrialVisitID { get; set; }
         public int TrialCenterID { get; set; }
@@ -18,7 +36,18 @@ namespace TD.CTS.Data.Entities
         public string TrialName { get; set; }
 
         public int PatientCode { get; set; }
-        public string PatientFullName { get; set; }
+
+        private string patientFullName;
+        public string PatientFullName
+        {
+            get { return patientFullName; }
+            set
+            {
+                patientFullName = value;
+                PatientShortName = ExtractIni(value);
+            }
+        }
+        public string PatientShortName { get; protected set; }
         public int TrialVersionNo { get; set; }
         [Required(ErrorMessage = "Дата не задана")]
         public DateTime? ScheduleDate { get; set; }
