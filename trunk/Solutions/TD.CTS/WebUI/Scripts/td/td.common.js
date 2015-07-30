@@ -85,6 +85,6 @@ function AjaxError(e) {
 }
 
 function ShowError(message) {
-    errorContent = $("<div style='text-align:center;color:Red;vertical-align:middle;font-weight:500;font-size:large;'>" + message + "</div>")
+    var errorContent = $("<div style='text-align:center;color:Red;vertical-align:middle;font-weight:500;font-size:large;'>" + message + "</div>");
     ShowErrorWindow(errorContent);
 }

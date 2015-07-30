@@ -67,15 +67,20 @@
     .Reorderable(reorderable => reorderable.Columns(false))
     .Columns(columns =>
     {
-        columns.Buttons(buttons => buttons.Edit()).Width(80).Locked(true).HtmlAttributes(new { @class = "k-group-cell" }); 
+        columns.Buttons(buttons => buttons.Edit()).Width(80).Locked(true).HtmlAttributes(new { @class = "k-group-cell" });
         columns.Bound(e => e.TrialCode).Width(80).Title("Код иссл.").Locked(true).HtmlAttributes(new { @class = "k-group-cell" }); 
-        columns.Bound(e => e.TrialName).Width(200).Title("Наименование иссл.").Locked(true).HtmlAttributes(new { @class = "k-group-cell" });
-        columns.Bound(e => e.PatientFullName).Width(250).Title("ФИО пациента").Locked(true).HtmlAttributes(new { @class = "k-group-cell" }); 
-        columns.Bound(e => e.TrialVisitName).Width(200).Title("Наименование визита").Locked(true).HtmlAttributes(new { @class = "k-group-cell" });
-        columns.Bound(e => e.MinDate).Width(100).Title("Дата нач.").Format("{0:dd.MM.yyyy}").Locked(true).HtmlAttributes(new { @class = "k-group-cell" }); 
-        columns.Bound(e => e.MaxDate).Width(100).Title("Дата кон.").Format("{0:dd.MM.yyyy}").Locked(true).HtmlAttributes(new { @class = "k-group-cell" }); 
-        columns.Bound(e => e.ScheduleDate).Width(100).Title("Дата план").Format("{0:dd.MM.yyyy}").Locked(true).HtmlAttributes(new { @class = "k-group-cell" });
-        columns.Bound(e => e.VisitEmployeesString).Width(200).Title("Сотрудники").Locked(true).HtmlAttributes(new { @class = "k-group-cell", @style = "white-space: nowrap", title = "#= VisitEmployeesString #" }); //HtmlAttributes(new { style = "white-space: normal" })
+        columns.Bound(e => e.TrialName).Width(100).Title("Исследование").Locked(true).HtmlAttributes(new { @class = "k-group-cell" });
+        columns.Bound(e => e.PatientShortName).Width(150).Title("Пациент").Locked(true).HtmlAttributes(new { @class = "k-group-cell" }); 
+        columns.Bound(e => e.TrialVisitName).Width(150).Title("Визит").Locked(true).HtmlAttributes(new { @class = "k-group-cell" });
+        columns.Bound(e => e.MinDate).Width(90).Title("Дата нач.").Format("{0:dd.MM.yyyy}").Locked(true).HtmlAttributes(new { @class = "k-group-cell" }); 
+        columns.Bound(e => e.MaxDate).Width(90).Title("Дата кон.").Format("{0:dd.MM.yyyy}").Locked(true).HtmlAttributes(new { @class = "k-group-cell" });
+        //columns.Command(command => command.Custom("ViewVisitEmployees").Click("showVisitEmployees")).Locked(true).HtmlAttributes(new { @class = "k-group-cell" });
+        columns.Bound(e => e.ScheduleDate).Width(90).Title("Дата план").Format("{0:dd.MM.yyyy}").Locked(true).HtmlAttributes(new { @class = "k-group-cell" });
+        
+        
+        columns.Bound(e => e.VisitEmployeesString).Width(100).Locked(true)
+            .ClientTemplate("<a class='k-button k-button-icontext k-grid-SchedulePlaningVisitsGrid' onclick='showVisitEmployees(" + "\"" + "#= VisitEmployeesString #" + "\"" + ")'><span></span>. . .</a>").Sortable(false)
+            .Title("Сотрудники").Locked(true).HtmlAttributes(new { @class = "k-group-cell", @style = "white-space: nowrap", title = "#= VisitEmployeesString #" }); //HtmlAttributes(new { style = "white-space: normal" })
 
         var calend = (ScheduleCalend)ViewBag.Calend;
         //var calendDates = calend.dateList;
@@ -117,6 +122,7 @@
             model.Field(e => e.MaxDate).Editable(false);
             model.Field(e => e.ScheduleDate).Editable(false);
             model.Field(e => e.VisitEmployees).Editable(false);
+            model.Field(e => e.VisitEmployeesString).Editable(false);
 
 
         })
@@ -125,8 +131,27 @@
         .Events(events => events.Error("kendo_grid_error_handler"))
      )
     .Events(events => events.DataBound("onDataBound").Edit("OnSchedulesPlanningEdit").Cancel("OnSchedulesPlanningCancel").Save("OnSchedulesPlanningSave"))
+)
 
-        )
+
+@(Html.Kendo().Window().Name("VisitEmployeesWindow")
+    .Title("Сотрудники")
+    .Visible(false)
+    .Modal(true)
+    .Draggable(true)
+    .Width(300)
+      )
+<script type="text/x-kendo-template" id="templateqwert">
+    <div id="details-container">
+        @*<h2>#= FirstName # #= LastName #</h2>
+            <em>#= Title #</em>
+            <dl>
+                <dt>City: #= City #</dt>
+                <dt>Address: #= Address #</dt>
+            </dl>*@
+        @*<p>Peoples: #=VisitEmployeesString #</p>*@
+    </div>
+</script>
 <script>
     var minColDate = kendo.parseDate('@dtColMin.ToString("dd.MM.yyyy")', "dd.MM.yyyy");
     var maxColDate = kendo.parseDate('@dtColMax.ToString("dd.MM.yyyy")', "dd.MM.yyyy");
@@ -164,20 +189,6 @@
 
             }
         });
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
     });
 
     function OnSchedulesPlanningSave(arg) {
@@ -417,5 +428,21 @@
         d.setHours(0, 0, 0, 0, 0);
         return d;
     };
+
+
+    var detailsTemplate = kendo.template($("#templateqwert").html());
+    //-------------------------- Нажатие кнопки показа сотрудников ------------------------
+    function showVisitEmployees(e) {
+        //e.preventDefault();
+        //находим строку
+        //var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+        //находим окно
+        var wnd = $("#VisitEmployeesWindow").data("kendoWindow");
+        //вставляем темплейт
+        //wnd.content(detailsTemplate(dataItem));
+        wnd.content(e);
+        //открываем окно
+        wnd.center().open();
+    }
 
 </script>

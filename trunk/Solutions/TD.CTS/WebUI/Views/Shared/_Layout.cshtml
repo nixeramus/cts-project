@@ -58,7 +58,12 @@
                                 i.Add().Text("Медицинских учреждений").Action("Index", "Hospitals");
                             });
                             items.Add().Text("Исследования").Action("Index", "Trials");
-                            items.Add().Text("Расписания").Action("Index", "Schedules").Items(i => i.Add().Text("Планирование визитов").Action("Index", "SchedulesPlanning"));
+                            items.Add().Text("Расписания").Items(i =>
+                            {
+                                i.Add().Text("Управление расписаниями").Action("Index", "Schedules");
+                                i.Add().Text("Планирование визитов").Action("Index", "SchedulesPlanning");
+                            }
+                                );
                             items.Add().Text("Процедуры").Action("Index", "Tasks");
                             //items.Add().Text("Мониторинг").Action("UnderConstruction", "Home");
                             items.Add().Text("Мониторинг").Items(i =>
