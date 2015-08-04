@@ -7,6 +7,7 @@ namespace TD.CTS.Data.Entities
     {
         public int Id { get; set; }
         [Required(ErrorMessage = "Пациент не заполнен")]
+        
         public int PatientCode { get; set; }
         public string PatientFullName { get; set; }
         public DateTime BirthDate { get; set; }

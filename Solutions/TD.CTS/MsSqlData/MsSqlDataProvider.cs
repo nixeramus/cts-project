@@ -131,6 +131,32 @@ namespace TD.CTS.MsSqlData
             }
         }
 
+        public void Calc(ScheduleVisit scheduleVisit)
+        {
+            var connection = new SqlConnection(connectionString);
+            var calcCommand = new SqlCommand("ScheduleCalcByVisit", connection)
+            {
+                CommandType = CommandType.StoredProcedure,
+                CommandTimeout = Settings.CommandTimeout
+            };
+
+            calcCommand.Parameters.AddWithValue("@ScheduleVisitID", scheduleVisit.Id);
+
+            try
+            {
+                connection.Open();
+                calcCommand.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                throw LogException(MethodBase.GetCurrentMethod().Name, typeof(Schedule), ex);
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
+
         public List<TEntity> GetList<TEntity>(DataFilter<TEntity> filter)
             where TEntity : Entity, new()
         {

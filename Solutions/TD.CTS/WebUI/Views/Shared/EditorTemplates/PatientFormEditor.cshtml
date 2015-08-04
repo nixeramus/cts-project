@@ -1,0 +1,24 @@
+﻿@model object
+
+@(
+ //Html.Kendo().DropDownListFor(m => m)
+ //           .BindTo((SelectList)ViewData[ViewData.TemplateInfo.GetFullHtmlFieldName("") + "_Data"])
+ //            .HtmlAttributes(new { style = "width:250px;" })
+ //           .OptionLabel("Не выбрано")
+
+        Html.Kendo().ComboBoxFor(m => m)
+            .Value((int)Model == 0 ? string.Empty : Model.ToString())
+        .DataSource(source =>source.Read(read => read.Action("GetPatients", "Schedules"))
+        //.ServerFiltering(true)
+        )
+        .Suggest(true)
+        .Filter(FilterType.Contains)
+        .IgnoreCase(true)
+        .HighlightFirst(true)
+        .DataTextField("FullName")
+        .Placeholder("Не выбрано")
+        .DataValueField("Id")
+            .HtmlAttributes(new { style = "width:250px; font-weight:500;" , data_val_number = "Значение не выбрано"})
+            
+
+)

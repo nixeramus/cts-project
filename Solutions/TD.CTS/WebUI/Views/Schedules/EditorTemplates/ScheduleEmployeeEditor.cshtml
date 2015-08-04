@@ -35,12 +35,12 @@
                                            .Destroy(destroy => destroy.Action("DeleteScheduleEmployee", "Schedules"))
                                            .Events(events => events.Error("kendo_grid_error_handler").RequestEnd("EmployeesRequestEnd"))
                                       )
-                                      .Events(events => events.Edit("kendo_grid_onrowedit"))
+                                          .Events(events => events.Edit("kendo_grid_onrowedit").DataBound("OnEmployeeGridDataBound"))
 )
                      
 <script>
 
-
+   
 
   
 
