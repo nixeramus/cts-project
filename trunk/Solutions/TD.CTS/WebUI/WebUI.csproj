@@ -791,6 +791,7 @@
     <Content Include="Views\Shared\EditorTemplates\FormForeignKey.cshtml" />
     <Content Include="Views\Schedules\EditorTemplates\ScheduleEmployeeEditor.cshtml" />
     <Content Include="Views\Schedules\EditorTemplates\ScheduleVisitEditor.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\PatientFormEditor.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\Report\" />

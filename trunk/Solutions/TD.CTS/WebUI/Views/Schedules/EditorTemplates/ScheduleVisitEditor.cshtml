@@ -18,6 +18,13 @@
                                           columns.Bound(e => e.BaseDay).Width(150).Title("Смещение").ClientTemplate("#=BaseDay#&nbsp;&plusmn;&nbsp;#=Limit#");
                                           columns.Bound(e => e.ScheduleDate).Width(200).EditorTemplateName("Date").Format("{0:dd.MM.yyyy}").Title("Назначенная дата");
                                           columns.Bound(e => e.Canceled).Width(100).Title("Отменен").ClientTemplate("#= Canceled ? '<span  class=\"k-icon k-i-tick\"></span>' : '' #").HtmlAttributes(new { style = "text-align:center;" });
+
+                                          //columns.Template(e => { }).Title("Пересчет").ClientTemplate("#= Id!=null ? <button onclick='CalcVisitButtonClick(#=Id#)' id='CalcVisitButton' class='k-button k-button-icon'><span class='k-sprite k-icon k-i-seek-s'></span></button>").Width(100).HtmlAttributes(new { @class = "k-group-cell", @style = "text-align:center;" });
+
+                                          columns.Template(e => { }).Title("Пересчет").ClientTemplate("#if(Id!=null) {#<button onclick='CalcVisitButtonClick(#=Id#)' id='CalcVisitButton' class='k-button k-button-icon'><span class='k-sprite k-icon k-i-seek-s'></span></button>#}#").Width(100).HtmlAttributes(new { @class = "k-group-cell", @style = "text-align:center;" });
+                                         
+                                          
+                                          
                                           columns.Template(e => { }).ClientTemplate(" ").Width("100%").HtmlAttributes(new { @class = "k-group-cell" });
                                       })
                                       .DataSource(dataSource => dataSource
@@ -38,12 +45,12 @@
                                           .Destroy(destroy => destroy.Action("DeleteScheduleVisit", "Schedules"))
                                           .Events(events => events.Error("OnVisitsError").RequestEnd("VisitsRequestEnd"))
                                       )
-                                         .Events(events => events.Edit("OnVisitsEdit")/*.DataBinding("VisitsOnDataBinding")*/)
+                                          .Events(events => events.Edit("OnVisitsEdit")/*.DataBinding("VisitsOnDataBinding")*/)
 )
                      
 <script>
 
-
+   
 
   
 

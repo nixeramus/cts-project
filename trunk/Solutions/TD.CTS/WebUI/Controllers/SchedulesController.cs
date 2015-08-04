@@ -21,6 +21,18 @@ namespace TD.CTS.WebUI.Controllers
             return View();
         }
 
+        //Метод получения пациентов
+        public ActionResult GetPatients(string text)
+        {
+            var response = DataProvider.GetList(new PatientDataFilter {FullName = text});
+
+            //return Json(response.ToDataSourceResult(request));
+
+            return Json(response, JsonRequestBehavior.AllowGet);
+        }
+
+
+
         #region Schedule
         public ActionResult GetSchedules([DataSourceRequest]DataSourceRequest request, ScheduleDataFilter dataFilter)
         {
@@ -45,7 +57,7 @@ namespace TD.CTS.WebUI.Controllers
             ViewBag.Title = "Создание расписания";
             ViewBag.IsNew = true;
             var schedule = new Schedule {BeginDate = DateTime.Today};
-            ViewBag.PatientCode_Data = new SelectList(DataProvider.GetList(new PatientDataFilter()), "Id", "FullName");
+            //ViewBag.PatientCode_Data = new SelectList(DataProvider.GetList(new PatientDataFilter()), "Id", "FullName");
             ViewBag.TrialCenterID_Data = new SelectList(DataProvider.GetList(new TrialCenterDataFilter()), "Id", "Number");
             ViewBag.ScheduleStatuses = ScheduleStatus.GetScheduleStatuses();
             return View(schedule);
@@ -68,7 +80,7 @@ namespace TD.CTS.WebUI.Controllers
             //получаем список пользователей
             var users = DataProvider.GetList(new UserDataFilter());
             //Получаем список пациентов
-            var patients = DataProvider.GetList(new PatientDataFilter());
+            //var patients = DataProvider.GetList(new PatientDataFilter());
             //Получаем список исследований
             //var trials = DataProvider.GetList(new TrialDataFilter());
             //Получаем список исследовательских центров
@@ -76,7 +88,7 @@ namespace TD.CTS.WebUI.Controllers
             //получаем список ролей
             var systemRoles = DataProvider.GetList(new RoleDataFilter());
             ViewBag.Users = users;
-            ViewBag.PatientCode_Data = new SelectList(patients, "Id", "FullName");
+            //ViewBag.PatientCode_Data = new SelectList(patients, "Id", "FullName");
             ViewBag.TrialCenterID_Data = new SelectList(trialCenters, "Id", "Number");
             ViewBag.SystemRoles = systemRoles;
             ViewBag.ScheduleStatuses = ScheduleStatus.GetScheduleStatuses();
@@ -124,7 +136,14 @@ namespace TD.CTS.WebUI.Controllers
            return Json(new[] { schedule });
         }
 
-
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult CalcScheduleByVisit(ScheduleVisit scheduleVisit)
+        {
+            if (scheduleVisit.Id==null)
+                throw new DataException("Не выбран базовый визит для расчета или не назначена дата");
+            DataProvider.Calc(scheduleVisit);
+            return Json(new[] { scheduleVisit });
+        }
 
 
         #endregion
@@ -246,6 +265,8 @@ namespace TD.CTS.WebUI.Controllers
         {
             if (scheduleEmployee != null)
             {
+                if (scheduleEmployee.Id==null)
+                    throw new ApplicationException("Сотрудник для удаления не задан");
                 DataProvider.Delete(scheduleEmployee);
             }
 

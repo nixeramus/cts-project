@@ -23,6 +23,8 @@ namespace TD.CTS.Data
 
         void Calc(Schedule schedule);
 
+        void Calc(ScheduleVisit scheduleVisit);
+
         void MargeTrialProcedures(string trialCode, int trialVersion, string[] procedureCodes);
 
         void LoadProcedureDefaultRoles(string trialCode, int trialVersion);

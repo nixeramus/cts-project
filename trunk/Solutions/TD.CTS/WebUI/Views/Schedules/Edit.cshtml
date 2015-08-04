@@ -91,6 +91,8 @@
         }
     }
 
+//функция пересчета запланированных дат в рассписании
+
     function CalcSchedule() {
         if (confirm("Заполнить расписание?")) {
             $.ajax({
@@ -106,6 +108,24 @@
             });
         }
     }
+    //функция пересчета запланированных дат в рассписании начиная с указанного визита
+    function CalcVisitButtonClick(ScheduleVisitId) {
+        if (confirm("Пересчетать плановые даты последующих визитов от данного визита ?")) {
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("CalcScheduleByVisit", "Schedules")",
+                data: { "Id": ScheduleVisitId},
+            success: function (result) {
+                kendo_grid_reload($("#VisitsGrid"));
+                $('#VisitsStrip').data().kendoTabStrip.reload($('#VisitsStrip .k-item:nth-child(3)'));
+                $("#SaveNotification").data("kendoNotification").show("Выполнено", "success");
+            },
+            error: AjaxError
+        });
+    }
+        }
+
+
 
 //------------------------------Визиты-----------------------------------------------------------------------
 
@@ -184,12 +204,25 @@
         //Вызываем базовое редактирование
         //kendo_grid_onrowedit(e);
     }
-    //-------------------------Сотрудники по умолчанию-------------------------------------------------------------------------------------
+    //-------------------------Сотрудники по умолчанию-----------------------------------------------------------------------------------------------------
     function EmployeesRequestEnd(e) {
-            if(e.type === "destroy")
+        if(e.type === "destroy" || e.type ==="update")
             {
                 kendo_grid_reload($("#EmployeeGrid"));
             }
+    }
+    //Прячем кнопку удаления
+    function OnEmployeeGridDataBound() {
+        //Selects all delete buttons
+        $("#EmployeeGrid tbody tr .k-grid-delete").each(function () {
+
+            var currentDataItem = $("#EmployeeGrid").data("kendoGrid").dataItem($(this).closest("tr"));
+            //Check in the current dataItem if the row is deletable
+            if (currentDataItem.Id == null) {
+                $(this).remove();
+            }
+
+        });
     }
     //------------------------Сотрудники для визита (Не используется)--------------------------------------------------------------------------------------
     function OpenVisitRoleEmployeeWindow(scheduleVisitId,scheduleVisitName) {
