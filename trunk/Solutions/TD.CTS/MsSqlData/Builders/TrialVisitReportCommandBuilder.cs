@@ -48,7 +48,7 @@ namespace TD.CTS.MsSqlData.Builders
             entity.Date = reader.GetNullableValue<DateTime>("Date");
             entity.PatientId = reader.GetValue<int>("PatientCode");
             entity.PatientName = reader.GetString("PatientFullName");
-            entity.Status = reader.GetString("Status");
+            entity.Completed = reader.GetValue<bool>("Completed");
             entity.ScheduleVisitID = reader.GetValue<int>("ScheduleVisitID");
         }
 

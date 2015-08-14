@@ -5,18 +5,18 @@
     var filterRow = new TD.Common.Kendo.Mvc5.Grid.Filters.FilterRow(Html);
 }
 
-<div class="k-edit-form-container" style="width:600px;">
+<div class="k-edit-form-container">
     @(Html.Kendo().Grid<TD.CTS.WebUI.Models.ProcedureSelectModel>()
         .Name("SelectProceduresGrid")
         .AutoBind(false)
-        .Scrollable(s => s.Height(350))
+        .Scrollable()
         .Sortable()
         .Columns(columns =>
         {
             filterRow.AddCell(new TD.Common.Kendo.Mvc5.Grid.Filters.EmptyFilterCell());
             columns.Template(e => { }).ClientTemplate("<input class='td-procSelect-checkbox' type=\"checkbox\" value=\"#= Code #\" #: Selected ? \"checked\" : \"\" # />").Width(50);
-            columns.Bound(e => e.Name, filterRow).Title("Наименование процедуры").Width(300);
-            columns.ForeignKey(e => e.ProcedureGroupId, procedureGroups, "Id", "Name", filterRow).Width("100%").Title("Группа");
+            columns.Bound(e => e.Name, filterRow).Title("Наименование процедуры").Width("70%");
+            columns.ForeignKey(e => e.ProcedureGroupId, procedureGroups, "Id", "Name", filterRow).Width("30%").Title("Группа");
         })
         .DataSource(dataSource => dataSource
            .Ajax()

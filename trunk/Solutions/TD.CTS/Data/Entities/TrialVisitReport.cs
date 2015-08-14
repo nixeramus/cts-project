@@ -20,8 +20,20 @@ namespace TD.CTS.Data.Entities
 
         public string PatientName { get; set; }
 
-        public string Status { get; set; }
+        public bool Completed { get; set; }
 
         public int ScheduleVisitID { get; set; }
+
+        public string Status
+        {
+            get
+            { 
+                if (Completed) 
+                    return "Выполнен";
+                if (Date < DateTime.Today)
+                    return "Просрочен";
+                return "Не выполнен";
+            }
+        }
     }
 }

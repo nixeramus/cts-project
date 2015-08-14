@@ -45,31 +45,33 @@ namespace TD.CTS.WebUI.Controllers
             return Json(response.ToDataSourceResult(request));
         }
 
+        public ActionResult VisitListByDay(DateTime? date)
+        {
+            var dataFilter = date.HasValue ? new TrialVisitReportDataFilter(date.Value) : new TrialVisitReportDataFilter();
+            TempData["DataFilter"] = dataFilter;
+            return RedirectToAction("VisitList");
+        }
+
         public ActionResult VisitList(TrialVisitReportDataFilter dataFilter)
         {
             ViewBag.Title = "Форма списка визитов";
-
+            if (TempData["DataFilter"] != null)
+                dataFilter = (TrialVisitReportDataFilter)TempData["DataFilter"];
             return View(dataFilter ?? new TrialVisitReportDataFilter());
         }
 
         public ActionResult GetVisits([DataSourceRequest]DataSourceRequest request, TrialVisitReportDataFilter dataFilter)
         {
-            //var response = DataProvider.GetList(dataFilter ?? new TrialVisitReportDataFilter());
+            if (dataFilter == null)
+                dataFilter = new TrialVisitReportDataFilter();
+            var response = DataProvider.GetList(dataFilter);            
+            return Json(response.ToDataSourceResult(request));
+        }
 
-            var response = new List<TrialVisitReport> { 
-                new TrialVisitReport{
-                    Date = DateTime.Today,
-                    PatientId = 1,
- PatientName = "Vasya",
- Status = "Compl",
- TrialCode = "T1",
- TrialName = "Trial1",
- TrialVersion = 1,
- TrialVisitId = 1,
- TrialVisitName = "V1"
-}
-            };
-            
+        public ActionResult GetVisitProcedures([DataSourceRequest]DataSourceRequest request, TrialVisitProcedureReportDataFilter dataFilter)
+        {
+            var response = DataProvider.GetList(dataFilter ?? new TrialVisitProcedureReportDataFilter());
+
             return Json(response.ToDataSourceResult(request));
         }
     }
