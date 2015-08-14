@@ -74,16 +74,17 @@
     .Title("Процедуры")
     .HtmlAttributes(new { @class = "k-popup-edit-form" })
     .Visible(false)
+    .Events(e => e.Activate("OnProceduresWindowActivate"))
     .Content(@<text>@Html.Partial("EditorTemplates/SelectProceduresEditor")</text>)
 )
 
 @(Html.Kendo().Window()
     .Name("VisitMaterialsWindow")
     .Modal(true)
-    .Draggable(true)
     .Title("Процедуры")
     .HtmlAttributes(new { @class = "k-popup-edit-form" })
     .Visible(false)
+    .Events(e => e.Activate("OnVisitMaterialsWindowActivate"))
     .Content(@<text>
         @(Html.Kendo().Grid<TD.CTS.WebUI.Models.TrialVisitMaterialViewModel>()
         .Name("VisitMaterialsGrid")
@@ -100,8 +101,7 @@
             columns.Bound(e => e.TrialMaterialId)
                 .ClientTemplate("#= MaterialName #")
                 .EditorTemplateName("VisitMaterialEditor")
-                .Width(250).Title("Наименование материала");
-
+                .Width("100%").Title("Наименование материала");
             //columns.Bound(e => e.Quantity).Width(120).Title("Количество");
             //columns.Template(e => { }).ClientTemplate(" ").Width("100%");
         })
@@ -165,7 +165,13 @@
         ClearSelection();
         $("#SelectProceduresGrid").data("kendoGrid").dataSource.read();
         var window = $("#ProceduresWindow").data("kendoWindow");
-        window.center().open();
+        window.open().maximize();
+    }
+
+    function OnProceduresWindowActivate(e) {
+        var emptyHeight = GetEmptyHeight($("#ProceduresWindow .k-edit-buttons"));
+        var gridContent = $("#SelectProceduresGrid .k-grid-content");
+        gridContent.height(gridContent.height() + emptyHeight - 16);
     }
 
     var NotChange = false;
@@ -349,6 +355,8 @@
     function OnSelect(grid) {
         var cell = grid.select();
         if (selectedCell != null) {
+            if (!NotChange && cell.length > 0 && selectedCell.html() === cell.html())
+                return;
             var input = selectedCell.find("input");
             var visitId = parseInt(input.val());
             var row = selectedCell.closest("tr");
@@ -412,34 +420,14 @@
         grid.dataSource.read();
 
         var window = $("#VisitMaterialsWindow").data("kendoWindow");
-        window.center().open();
+        window.open().maximize();
     }
-        
-    //function UpdateVisitMaterials() {
-    //    var div = $("#VisitMaterials");
-    //    if (selectedCell == null) {
-    //        div.hide();
-    //        visitMaterialsData = null;
-    //        return;
-    //    }
 
-    //    var input = selectedCell.find("input");
-    //    var checked = input.is(':checked');
-
-    //    if (!checked) {
-    //        div.hide();
-    //        visitMaterialsData = null;
-    //        return;
-    //    }
-
-    //    var visitMaterialId = input.attr("dataId");
-
-    //    var grid = $("#VisitMaterialsGrid").data("kendoGrid");
-    //    visitMaterialsData = { TrialVisitProcedureId: visitMaterialId };
-    //    grid.dataSource.read();
-
-    //    div.show();
-    //}
+    function OnVisitMaterialsWindowActivate(e) {
+        var gridContent = $("#VisitMaterialsGrid .k-grid-content");
+        var emptyHeight = GetEmptyHeight(gridContent);
+        gridContent.height(gridContent.height() + emptyHeight);
+    }
 
     function VisitMaterialsData() {
         return visitMaterialsData;
@@ -475,5 +463,14 @@
 
     #ProceduresGrid .k-grid-content td{
         padding:1px;
+    }
+
+    #ProceduresWindow, #VisitMaterialsWindow{
+        padding: 0;
+    }
+
+    #ProceduresWindow .k-edit-buttons{
+        bottom: 0;
+        border-width: 0;
     }
 </style>

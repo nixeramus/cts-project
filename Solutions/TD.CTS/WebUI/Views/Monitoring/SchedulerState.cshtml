@@ -11,6 +11,16 @@
     .Events(events => events.DataBound("DataBound"))
 )
 
+@*(Html.Kendo().ContextMenu()
+    .Name("proceduresMenu")
+    .Target("#TasksScheduler")
+    .Filter(".td-task")
+    .ShowOn("click")
+    //.AlignToAnchor(true)
+    .Items(items => { items.Add(); })
+    .Events(e => e.Open("ProceduresMenuOpen"))
+)*@
+
 <script>
     var viewMode = "visit";
     $(document).ready(function () {
@@ -24,7 +34,19 @@
             scheduler.dataSource.read();
         });
 
-        SetContentBlock($("#TasksScheduler"));
+        var scheduler = $("#TasksScheduler");
+        scheduler.on("click", ".k-event", function () {
+            var uid = $(this).attr("data-uid");
+            var events = $("#TasksScheduler").data("kendoScheduler")._data;
+            for (var i = 0; i < events.length; i++) {
+                if (events[i].uid === uid) {
+                    $().redirect("@Url.Action("VisitListByDay", "Monitoring")",
+                        { date: kendo.toString(events[i].start, "yyyy-MM-dd") });
+                }
+            }
+        });
+
+        SetContentBlock(scheduler);
     });
 
     function GetDates() {
@@ -45,6 +67,19 @@
             $(this).attr("href", "@Url.Action("Details", "Tasks")" + id);
         });*@
     }
+
+    @*function ProceduresMenuOpen(e) {
+        var target = $(e.target);
+        var procs = target.attr("procs").split(/, /);
+        var ids = target.attr("ids").split(/,/);
+        var menu = $("#proceduresMenu").data("kendoContextMenu");
+        menu.element.children("li").each(function (i, item) {
+            menu.remove(item);
+        });
+        for (var i = 0; i < procs.length; i++){
+            menu.append({ text: procs[i], url: "@Url.Action("Details", "Tasks")"+ids[i] });
+        }
+    }*@
 </script>
 
 <style>
@@ -54,6 +89,7 @@
         overflow-x: hidden;
         background: transparent;
         border-style: none;
+        cursor: pointer;
     }
 
     .td-task-undone {

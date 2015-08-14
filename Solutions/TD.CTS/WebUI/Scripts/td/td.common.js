@@ -38,9 +38,9 @@ function StretchBlock(block) {
     var top = block.offset().top;
     var blockBottom = top + block.height();
 
-    var end = $(".td-endPage");
+    var endBlock = $(".td-endPage");
 
-    var footerHeight = end.offset().top - blockBottom;
+    var footerHeight = endBlock.offset().top - blockBottom;
     
     var height = windowHeight - top - footerHeight;
 
@@ -50,6 +50,18 @@ function StretchBlock(block) {
     } else {
         block.height(initializer.minHeight);
     }
+}
+
+function GetEmptyHeight(lastBlock) {
+    var windowHeight = $(window).height();
+    var endBottom = lastBlock.offset().top + lastBlock.height();
+    return windowHeight - endBottom;
+}
+function StretchContentBlock(contentBlock, endBlock) {
+    var windowHeight = $(window).height();
+    var endBottom = endBlock.offset().top + endBlock.height();
+    var contentHeight = contentBlock.height();
+    contentBlock.height(contentHeight + windowHeight - endBottom);
 }
 
 function SetContentBlock(block){

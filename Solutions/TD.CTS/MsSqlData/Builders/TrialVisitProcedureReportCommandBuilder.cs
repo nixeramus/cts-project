@@ -46,7 +46,7 @@ namespace TD.CTS.MsSqlData.Builders
             entity.Completed = reader.GetValue<bool>("Completed");
             //entity.Notes = reader.GetString("Notes");
             entity.Users = SerializeHelper.Deserialize<List<User>>(reader.GetString("Users"), "Users");
-          
+            entity.Date = reader.GetNullableValue<DateTime>("Date");
         }
 
         public override void LoadNewEntityAttributes(SqlDataReader reader, TrialVisitProcedureReport entity)

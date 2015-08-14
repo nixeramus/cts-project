@@ -10,8 +10,8 @@
     .Name("VisitsGrid")
     .Columns(columns =>
     {
-        columns.Bound(e => e.TrialCode).Width(90).Title("Код иссл.");
-        columns.Bound(e => e.TrialName).Width(250).Title("Наименование исследования");
+        columns.Bound(e => e.TrialCode).Width(100).Title("Код иссл.");
+        columns.Bound(e => e.TrialName).Width(200).Title("Наименование иссл.");
         columns.Bound(e => e.TrialVisitName).Width(150).Title("Визит");
         columns.Bound(e => e.Date).Width(150).Title("Дата").Format("{0:dd.MM.yyyy}");
         columns.Bound(e => e.PatientName).Width(200).Title("ФИО пациента");
@@ -30,6 +30,12 @@
                 @(Html.Kendo().DatePickerFor(m => m.DateEnd)
                     .HtmlAttributes(new { style = "margin-bottom: 2px;" })
                 )
+                @(Html.Kendo().Button()
+                    .Name("Apply")
+                    .Content("Найти")
+                    .Icon("search")
+                    .Events(e => e.Click("GetReport"))
+                )
             </div>
         </text>);
     })
@@ -38,10 +44,43 @@
        .PageSize(50)
        .Read(read => read.Action("GetVisits", "Monitoring").Data("GetParameters"))
        .Events(events => events.Error("kendo_grid_error_handler"))
+       .Sort(s => s.Add(x => x.Date))
     )
     .Scrollable()
+    .Sortable()
     .Pageable()
+    .ClientDetailTemplateId("visitProceduresTemplate")
+    .Events(e => e.DataBound("OnDataBound"))
 )
+
+<script id="visitProceduresTemplate" type="text/kendo-tmpl">
+    @(Html.Kendo().Grid<TD.CTS.Data.Entities.TrialVisitProcedureReport>()
+        .Name("proceduresGrid_#=ScheduleVisitID#")
+        .Columns(columns =>
+        {
+            columns.Bound(o => o.ProcedureCode).Title("Код проц.").Width(100);
+            columns.Bound(o => o.ProcedureName).Title("Наименование процедуры").Width(250);
+            columns.Bound(o => o.Users).Title("Сотрудники").Width(200)
+                .Sortable(false)
+                .Encoded(false)
+                .ClientTemplate("\\\\#= CreateUlList(Users, 'FullName') \\\\#")
+                .HtmlAttributes(new { @class = "td-grid-listCell" });
+            columns.Bound(o => o.Completed).Title("Вып.").Width(70)
+                .ClientTemplate("\\\\#= Completed ? '<span class=\"k-icon k-i-tick\"></span>' : '' \\\\#");
+            columns.Bound(o => o.Notes).Title("Примечание").Width(150);
+            columns.Template(e => { }).ClientTemplate(" ").Width("100%").HtmlAttributes(new { @class = "k-group-cell" });
+        })
+        .DataSource(dataSource => dataSource
+            .Ajax()
+            .PageSize(10)
+            .Read(read => read.Action("GetVisitProcedures", "Monitoring", new { ScheduleVisitID = "#=ScheduleVisitID#" }))
+            .Events(events => events.Error("kendo_grid_error_handler"))
+        )
+        .Sortable()
+        .Scrollable(s => s.Height(200))
+        .Events(e => e.DataBound("OnDataBound"))
+        .ToClientTemplate())
+</script>
 
 <script>
     $(document).ready(function () {
@@ -54,4 +93,33 @@
             DateEnd: $("#DateEnd").data("kendoDatePicker").value()
         };
     }
+
+    function GetReport() {
+        $('#VisitsGrid').data("kendoGrid").dataSource.read();
+    }
+
+    function OnDataBound(e) {
+        //var grid = $("#VisitsGrid").data("kendoGrid");
+        var grid = e.sender;
+        var rows = grid.dataSource.data();
+
+        $.each(rows, function (i, row) {
+            var status = row.Status;
+
+            if (status === "Не выполнен") {
+                $('tr[data-uid="' + row.uid + '"] ').css("color", "#FFC000");
+                return;
+            }
+
+            if (status === "Выполнен") {
+                $('tr[data-uid="' + row.uid + '"] ').css("color", "#00B050");
+                return;
+            }
+
+            if (status === "Просрочен") {
+                $('tr[data-uid="' + row.uid + '"] ').css("color", "#FF0000");
+            }
+        });
+    }
+
 </script>
