@@ -122,7 +122,7 @@ namespace TD.CTS.WebUI.Models
                 StringBuilder sb = new StringBuilder();
                 var groups = tasks.GroupBy(x => new { x.TrialCode, x.PatientId, x.PatientShortName });
                 foreach (var group in groups)
-                    sb.AppendLine(string.Format(@"<span class=""td-task td-task-{3}"" title=""{0} {1} ({2})"">{0} {1} ({2})</span>", group.Key.TrialCode, group.Key.PatientShortName, string.Join(", ", group.Select(x => x.ProcedureCode)), GetTasksStatus(group)));
+                    sb.AppendLine(string.Format(@"<span class=""td-task td-task-{3}"" codes=""{2}"" ids=""{4}"" title=""{0} {1} ({2})"">{0} {1} ({2})</span>", group.Key.TrialCode, group.Key.PatientShortName, string.Join(", ", group.Select(x => x.ProcedureCode)), GetTasksStatus(group), string.Join(",", group.Select(x => x.Id))));
 
                 //foreach (var task in tasks)
                 //    sb.AppendLine(string.Format(@"<a class=""td-task td-task-{3} k-link"" title=""{0} {1} ({2})"" href=""/{4}"">{0} {1} ({2})</a>", task.TrialCode, task.PatientShortName, task.ProcedureCode, GetTaskStatus(task), task.Id));
@@ -136,7 +136,7 @@ namespace TD.CTS.WebUI.Models
 
         private string GetTasksStatus(IEnumerable<Task> task)
         {
-            if (tasks.All(x => x.IsDone))
+            if (task.All(x => x.IsDone))
                 return "done";
 
             if (date < DateTime.Today)

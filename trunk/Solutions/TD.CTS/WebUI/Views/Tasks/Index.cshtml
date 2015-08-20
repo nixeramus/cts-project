@@ -8,7 +8,16 @@
         .ServerOperation(true)
         .Events(events => events.Error("kendo_error_handler"))
     )
-    .Events(events => events.DataBound("DataBound"))
+    //.Events(events => events.DataBound("DataBound"))
+)
+
+@(Html.Kendo().ContextMenu()
+    .Name("TasksMenu")
+    .ShowOn("click")
+    .Target("#TasksScheduler")
+    .Filter(".td-task")
+    .Items(items => { items.Add().Text("Выполнить все"); })
+    .Events(e => e.Open("TasksMenuOpen"))
 )
 
 <script>
@@ -25,17 +34,30 @@
         };
     }
 
-    function DataBound(e) {
+    //function DataBound(e) {
         @*$("#TasksScheduler").find(".td-task").click(function () {
             var id = $(this).attr("value");
             window.location.replace("@Url.Action("Details", "Tasks")" + "/" + id);
             $().redirect("@Url.Action("Details", "Tasks")" + "/" + id);
         });*@
 
-        $("#TasksScheduler").find(".td-task").each(function () {
+        @*$("#TasksScheduler").find(".td-task").each(function () {
             var id = $(this).attr("href");
             $(this).attr("href", "@Url.Action("Details", "Tasks")" + id);
-        });
+        });*@
+    //}
+
+    function TasksMenuOpen(e) {
+        var target = $(e.target);
+        var ids = target.attr("ids").split(',');
+        var codes = target.attr("codes").split(', ');
+        var menu = $("#TasksMenu").data("kendoContextMenu");
+
+        menu.remove(e.item.find("li"));
+        
+        for (var i = 0; i < codes.length; i++) {
+            menu.append({ text: codes[i], url: "@Url.Action("Details", "Tasks")" + "/" + ids[i] })
+        }
     }
 </script>
 
@@ -66,5 +88,9 @@
 
     pre {
         font-size: 1.2em;
+    }
+
+    .td-task{
+        cursor: pointer;
     }
 </style>
