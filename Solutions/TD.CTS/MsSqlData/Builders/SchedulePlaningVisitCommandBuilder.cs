@@ -80,8 +80,8 @@ namespace TD.CTS.MsSqlData.Builders
             entity.Limit = reader.GetValue<int>("Limit");
 
             entity.PatientFullName = reader.GetString("PatientFullName");
-            entity.MinDate = reader.GetValue<DateTime>("MinDate");
-            entity.MaxDate = reader.GetValue<DateTime>("MaxDate");
+            entity.MinDate = reader.GetNullableValue<DateTime>("MinDate");
+            entity.MaxDate = reader.GetNullableValue<DateTime>("MaxDate");
             entity.RankState = reader.GetValue<int>("RankState");
             entity.Id = reader.GetNullableValue<int>("ScheduleVisitID");
             entity.VisitEmployees = SerializeHelper.Deserialize<List<User>>(reader.GetString("VisitEmployees"), "Users");

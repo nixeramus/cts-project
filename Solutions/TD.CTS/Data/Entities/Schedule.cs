@@ -11,7 +11,7 @@ namespace TD.CTS.Data.Entities
         public int PatientCode { get; set; }
         public string PatientFullName { get; set; }
         public DateTime BirthDate { get; set; }
-        public DateTime BeginDate { get; set; }
+        public DateTime? BeginDate { get; set; }
         public DateTime CreateDate { get; set; }
 
         [Required(ErrorMessage = "Исследовательский центр не заполнен")]

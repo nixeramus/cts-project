@@ -41,7 +41,7 @@ namespace TD.CTS.MsSqlData.Builders
             command.Parameters.AddWithValue("@PatientCode", entity.PatientCode);
             command.Parameters.AddWithValue("@TrialCenterID", entity.TrialCenterID);
             //command.Parameters.AddWithValue("@TrialCode", entity.TrialCode);
-            command.Parameters.AddWithValue("@BeginDate", entity.BeginDate);
+            //command.Parameters.AddWithValue("@BeginDate", entity.BeginDate);
             command.Parameters.AddWithValue("@Comment", entity.Comment.GetNullableParameterValue());
             command.Parameters.AddWithValue("@ScheduleStatus", entity.ScheduleStatus);
             return command;
@@ -59,7 +59,7 @@ namespace TD.CTS.MsSqlData.Builders
             command.Parameters.AddWithValue("@PatientCode", entity.PatientCode);
             command.Parameters.AddWithValue("@TrialCenterID", entity.TrialCenterID);
             //command.Parameters.AddWithValue("@TrialCode", entity.TrialCode);
-            command.Parameters.AddWithValue("@BeginDate", entity.BeginDate);
+            //command.Parameters.AddWithValue("@BeginDate", entity.BeginDate);
             command.Parameters.AddWithValue("@Comment", entity.Comment.GetNullableParameterValue());
             command.Parameters.AddWithValue("@ScheduleStatus", entity.ScheduleStatus);
             command.Parameters.AddWithValue("@RandN", entity.RandN.GetNullableParameterValue());
@@ -86,7 +86,7 @@ namespace TD.CTS.MsSqlData.Builders
             entity.PatientCode = reader.GetValue<int>("PatientCode");
             entity.PatientFullName = reader.GetString("PatientFullName");
             entity.BirthDate = reader.GetValue<DateTime>("BirthDate");
-            entity.BeginDate = reader.GetValue<DateTime>("BeginDate");
+            entity.BeginDate = reader.GetNullableValue<DateTime>("BeginDate");
             entity.CreateDate = reader.GetValue<DateTime>("CreateDate");
             entity.TrialCenterID = reader.GetValue<int>("TrialCenterID");
             entity.TrialCode = reader.GetString("TrialCode").TrimEnd();

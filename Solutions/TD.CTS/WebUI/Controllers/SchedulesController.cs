@@ -56,7 +56,7 @@ namespace TD.CTS.WebUI.Controllers
         {
             ViewBag.Title = "Создание расписания";
             ViewBag.IsNew = true;
-            var schedule = new Schedule {BeginDate = DateTime.Today};
+            var schedule = new Schedule {/*BeginDate = DateTime.Today*/};
             //ViewBag.PatientCode_Data = new SelectList(DataProvider.GetList(new PatientDataFilter()), "Id", "FullName");
             ViewBag.TrialCenterID_Data = new SelectList(DataProvider.GetList(new TrialCenterDataFilter()), "Id", "Number");
             ViewBag.ScheduleStatuses = ScheduleStatus.GetScheduleStatuses();
@@ -129,12 +129,12 @@ namespace TD.CTS.WebUI.Controllers
 
 
 
-        [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult CalcSchedule(Schedule schedule)
-        {
-           DataProvider.Calc(schedule);
-           return Json(new[] { schedule });
-        }
+        //[AcceptVerbs(HttpVerbs.Post)]
+        //public ActionResult CalcSchedule(Schedule schedule)
+        //{
+        //   DataProvider.Calc(schedule);
+        //   return Json(new[] { schedule });
+        //}
 
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult CalcScheduleByVisit(ScheduleVisit scheduleVisit)

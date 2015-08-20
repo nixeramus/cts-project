@@ -21,7 +21,7 @@ namespace TD.CTS.Data
 
         void Update(Trial entity);
 
-        void Calc(Schedule schedule);
+        //void Calc(Schedule schedule);
 
         void Calc(ScheduleVisit scheduleVisit);
 
