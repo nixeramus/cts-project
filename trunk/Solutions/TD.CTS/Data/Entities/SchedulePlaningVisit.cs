@@ -56,8 +56,8 @@ namespace TD.CTS.Data.Entities
         public int VisitNo { get; set; }
 
         public DateTime BeginDate { get; set; }
-        public DateTime MinDate { get; set; }
-        public DateTime MaxDate { get; set; }
+        public DateTime? MinDate { get; set; }
+        public DateTime? MaxDate { get; set; }
 
         //public string VisitEmployees { get; set; }
         public IEnumerable<User> VisitEmployees { get; set; }
