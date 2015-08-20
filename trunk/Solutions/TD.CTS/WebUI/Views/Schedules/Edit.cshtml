@@ -1,6 +1,4 @@
-﻿@using TD.Common.Kendo.Mvc5.Common
-@using TD.Common.Kendo.Mvc5.Grid
-
+﻿
 @model TD.CTS.Data.Entities.Schedule
 
 @section head{
@@ -72,7 +70,7 @@
                 data: {
                     "Id": $("#Id").val(),
                     //"BeginDate": $("#BeginDate").val(),
-                    "BeginDate": $("#BeginDate").data("kendoDatePicker").value().toISOString(),
+                    //"BeginDate": $("#BeginDate").data("kendoDatePicker").value().toISOString(),
                     "PatientCode": $("#PatientCode").val(),
                     "TrialCenterID": $("#TrialCenterID").val(),
                     "ScheduleStatus": $("#ScheduleStatus").val(),
@@ -91,9 +89,9 @@
         }
     }
 
-//функция пересчета запланированных дат в рассписании
+    //функция пересчета запланированных дат в рассписании
 
-    function CalcSchedule() {
+    @*function CalcSchedule() {
         if (confirm("Заполнить расписание?")) {
             $.ajax({
                 type: "POST",
@@ -107,7 +105,7 @@
             error: AjaxError
             });
         }
-    }
+    }*@
     //функция пересчета запланированных дат в рассписании начиная с указанного визита
     function CalcVisitButtonClick(ScheduleVisitId) {
         if (confirm("Пересчетать плановые даты последующих визитов от данного визита ?")) {
@@ -270,6 +268,11 @@
             var conteiner = tabStrip.contentElements[index];
             StretchGrid($(conteiner), $(conteiner.firstElementChild));
         });
+
+
+        //var input = $('<input type=\"checkbox\" class=\"k-checkbox\" style=\"margin:0; \" />').val(1);
+        var input = $('<a style=\"float:right;\" class=\"k-button k-button-icontext td-grid-button\" href=\"/Schedules/Create\" title=\"Создать новое расписание\"><span class=\"k-add k-icon td-grid-button-image\">Создать</span></a>');
+        $('div.k-header.td-pagetitle').append(input);
     });
 
     function ShowTab(e) {
