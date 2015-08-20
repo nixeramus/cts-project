@@ -5,33 +5,35 @@
 <table id="scheduleForm" class="td-formTable k-content" style="margin-top:0;/*width:auto;margin-bottom:10px;*/">
     @*margin-top: 0 k-content*@
     <tr>
-        <td class="td-formTable-caption"  title="Дата начала исследования" style="width:100px;">@Html.LabelFor(e => e.BeginDate, "Дата начала")</td>
+        @*<td class="td-formTable-caption"  title="Дата начала исследования" style="width:100px;">@Html.LabelFor(e => e.BeginDate, "Дата начала")</td>
         <td style="width:250px;">
             @Html.HiddenFor(model => model.Id)
             @Html.EditorFor(model => model.BeginDate, "Date")
+        </td>*@
+        
+        <td class="td-formTable-caption" style="width:100px;">@Html.LabelFor(e => e.PatientCode, "Пациент")</td>
+        <td style ="width:250px;">
+            @Html.EditorFor(model => model.PatientCode, "PatientFormEditor")
         </td>
         <td class="td-formTable-caption" rowspan="1" style="width:100px;">@Html.LabelFor(e => e.Comment, "Примечание")</td>
         <td rowspan="2">@Html.EditorFor(model => model.Comment, "Text")</td>
     </tr>
     <tr>
-        <td class="td-formTable-caption">@Html.LabelFor(e => e.PatientCode, "Пациент")</td>
+        <td class="td-formTable-caption">@Html.LabelFor(e => e.TrialCenterID, "Центр")</td>
         <td>
-            @Html.EditorFor(model => model.PatientCode, "PatientFormEditor")
+            @Html.EditorFor(model => model.TrialCenterID, "FormForeignKey")
         </td>
         <td></td>
         <td></td>
     </tr>
     <tr>
-        <td class="td-formTable-caption" >@Html.LabelFor(e => e.TrialCenterID, "Центр")</td>
-        <td>
-            @Html.EditorFor(model => model.TrialCenterID, "FormForeignKey")
-        </td>
-
         <td class="td-formTable-caption">@Html.LabelFor(e => e.ScheduleStatus, "Статус")</td>
         <td>
             @*@Html.EditorFor(model => model.ScheduleStatus)*@
-            @Html.Kendo().DropDownListFor(m => m.ScheduleStatus).BindTo(ViewBag.ScheduleStatuses).DataTextField("ScheduleStatusName").DataValueField("ScheduleStatusName")
+            @Html.Kendo().DropDownListFor(m => m.ScheduleStatus).BindTo(ViewBag.ScheduleStatuses).DataTextField("ScheduleStatusName").DataValueField("ScheduleStatusName").HtmlAttributes(new { style = "width:250px;" })
         </td>
+        <td></td>
+        <td></td>
     </tr>
     @if (!isNew)
     { 
@@ -55,10 +57,10 @@
         </td>
         <td>
             @(Html.Kendo().Button().Name("SaveButton").SpriteCssClass("k-icon k-update").Content("Сохранить").HtmlAttributes(new { style = "width:230px;" }).Events(e => e.Click("SaveSchedule")))
-            @if(!isNew)
+            @*@if(!isNew)
             {
                 @(Html.Kendo().Button().Name("CalcButton").SpriteCssClass("k-icon k-i-seek-s").Content("Заполнить").HtmlAttributes(new { style = "width:230px;" }).Events(e => e.Click("CalcSchedule")))
-            }
+            }*@
         </td>
     </tr>
 </table>

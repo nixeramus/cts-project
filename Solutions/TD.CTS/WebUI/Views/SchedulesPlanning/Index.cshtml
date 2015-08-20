@@ -293,11 +293,11 @@
         var input = $('<input type=\"checkbox\" class=\"k-checkbox\" style=\"margin:0;display:none;\" />').val(calendDateStr);
 
         //Проверяем входит ли заданная дата из колонки в окно визита
-        if (calendDate >= data.MinDate && calendDate <= data.MaxDate) {
-            div.addClass('timewindow');
+        //if (calendDate >= data.MinDate && calendDate <= data.MaxDate) {
+        //    div.addClass('timewindow');
             div.append(input);
 
-        }
+        //}
         //если дата календаря равна дате визита
         if (data.ScheduleDate != null && calendDate.sameDay(data.ScheduleDate)) {
             input.attr('checked', 'checked');
